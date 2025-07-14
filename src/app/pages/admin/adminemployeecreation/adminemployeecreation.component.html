@@ -1,0 +1,427 @@
+
+<div class="">
+    <form >
+
+    <div class="card">
+        <div class="card-header">
+        Employee Creation
+        </div>
+        <div class="card-body">
+
+          <div class="textRight">
+            <button type="button" class="btn btn-raised btn-md btnSubmitApproval"  (click)="newEmployeeCreation(newEmployeeTemplate)">
+                Create New Employee
+              </button>
+          </div>
+              
+            <div class="table-responsive tableFixHead">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                           
+                            <th>Employee ID</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Email</th>
+                            <th>Contact</th>
+                            <th>Activity</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of EmployeeList">
+                            
+                            <td>{{data.employeeID}}</td>
+                            <td>{{data.employeeFirstName}}</td>
+                            <td>{{data.employeeLastName}}</td>
+                            <td>{{data.employeeEmail}}</td>
+                            <td>{{data.employeeContact}}</td>
+                            <td>{{data.employeeActivity}}</td>
+                            <td>
+                              {{ data.employeeStatus ? 'Active' : 'Inactive' }}
+                            </td>
+
+                           <td class="text-center">
+                           
+                            <i class="edit-btn fa fa-edit"  (click)="openEditModal(data, editEmployeeTemplate)"></i>
+                            <i class="delete-btn bx bx-trash"  (click)="delete(data)"></i>
+                          
+                           </td>
+                            
+                        </tr>
+                       
+                        
+                    </tbody>
+                </table>
+
+            </div>
+            
+        </div>
+
+    </div>
+    
+
+</form>
+
+</div>
+
+<ng-template #newEmployeeTemplate let-c="close">
+ 
+      <div class="modal-header">
+          Create New Employee
+      </div>
+      <div class="modal-body">
+          <form [formGroup]="employeeCreationForm" autocomplete="off"> <!-- FIXED: Added formGroup -->
+              <div class="row">
+                  <!-- Employee ID -->
+                  <div class="col-lg-4 col-md-4 col-sm-4">
+                      <div class="form-group">
+                          <label>Employee ID<span class="text-danger">*</span></label>
+                          <input class="form-control form-control-sm" formControlName="employeeID" type="text" placeholder="Enter employeeID" autocomplete="off">
+                          <div class="text-danger" *ngIf="submit && f['employeeID'].errors">
+                              Employee ID is required.
+                          </div>
+                      </div>
+                  </div>
+                  <!-- Employee Name -->
+                  <div class="col-lg-4 col-md-4 col-sm-4">
+                      <div class="form-group">
+                          <label>Employee Name<span class="text-danger">*</span></label>
+                          <input class="form-control form-control-sm" formControlName="firstName" type="text" placeholder="Enter Employee Name"  
+                          >
+                          <div class="text-danger" *ngIf="submit && f['firstName'].errors">
+                              Employee Name is required.
+                          </div>
+                      </div>
+                  </div>
+                  <!-- Employee Last Name -->
+                  <div class="col-lg-4 col-md-4 col-sm-4">
+                      <div class="form-group">
+                          <label>Employee Last Name<span class="text-danger">*</span></label>
+                          <input class="form-control form-control-sm" formControlName="lastName" type="text" placeholder="Enter Employee Last Name"  
+                          >
+                          <div class="text-danger"*ngIf="submit && f['lastName'].errors">
+                              Employee Last Name is required.
+                          </div>
+                      </div>
+                  </div>
+                  <!-- Email -->
+                  <div class="col-lg-4 col-md-4 col-sm-4 alert-email">
+                      <div class="form-group">
+                          <label for="contactemail">Email <span class="text-danger">*</span></label>
+                          <input type="email" id="contactemail" class="form-control form-control-sm" formControlName="email" placeholder="Enter Email" required/>
+                          <div class="text-danger" *ngIf="submit && f['email'].errors">
+                              Email is required.
+                          </div>
+                          
+                      </div>
+                  </div>
+                  <!-- Contact -->
+                  <div class="col-lg-4 col-md-4 col-sm-4">
+                    <div class="form-group">
+                        <label>Contact<span class="text-danger">*</span></label>
+                        <input class="form-control form-control-sm"
+                               formControlName="contact"
+                               type="text"
+                               placeholder="Enter Contact Number"
+                               maxlength="10"
+                               pattern="[0-9]{10}"
+                               oninput="this.value = this.value.replace(/[^0-9]/g, '')"  
+                               >
+                        <div class="text-danger" *ngIf="submit && f['contact'].errors">
+                             Contact is required.
+                        </div>
+                    </div>
+                </div>
+                  <!-- Password -->
+                  <div class="col-md-4">
+                    <label for="password">Password<span class="text-danger">*</span></label>
+                    <div class="input-group auth-pass-inputgroup">
+                        <input
+                            [type]="fieldTextType ? 'text' : 'password'"
+                            class="form-control"
+                            formControlName="password"
+                            placeholder="Enter password"
+                            [ngClass]="{ 'is-invalid': submitted && f.password.errors }" autocomplete="new-password"
+                           />
+                        <button class="btn btn-light ms-0" type="button" (click)="toggleFieldTextType()">
+                            <i
+                                class="mdi mdi-eye-outline"
+                                [ngClass]="{ 'mdi-eye-off-outline': !fieldTextType, 'mdi-eye-outline': fieldTextType }"
+                            ></i>
+                        </button>
+                    </div>
+                    <!-- <div class="text-danger"  *ngIf="submit && f['password'].errors">
+                        Password is required.
+                    </div> -->
+                </div>
+
+                  <!-- Confirm Password -->
+                   <!-- Confirm Password -->
+                   <div class="col-md-4">
+                    <label for="confirmPassword">Confirm Password<span class="text-danger">*</span></label>
+                    <div class="input-group auth-pass-inputgroup">
+                        <input
+                            [type]="confirmFieldTextType ? 'text' : 'password'"
+                            class="form-control"
+                            formControlName="confirmPassword"
+                            placeholder="Confirm password"
+                            [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }"
+                            />
+                        <button class="btn btn-light ms-0" type="button" (click)="toggleConfirmFieldTextType()">
+                            <i
+                                class="mdi mdi-eye-outline"
+                                [ngClass]="{ 'mdi-eye-off-outline': !confirmFieldTextType, 'mdi-eye-outline': confirmFieldTextType }" autocomplete="new-password"
+                            ></i>
+                        </button>
+                    </div>
+                    <div class="text-danger" *ngIf="submit && f['confirmPassword'].errors">
+                        Confirm password is required.
+                    </div>
+                    <!-- <div class="text-danger" *ngIf="f.confirmPassword?.hasError('mustMatch')">
+                        Password and Confirm Password do not match.
+                    </div> -->
+                </div>
+
+                  <!-- Activity -->
+                  <div class="col-md-4">
+                      <label>Activity<span class="text-danger">*</span></label>
+                      <select class="form-control" formControlName="activity">
+                        <option value="ADMIN">ADMIN</option>
+                        <option value="MD">MD</option>
+                        <option value="MANAGER">MANAGER</option>
+                        <option value="TEAM LEAD">TEAM LEAD</option>
+                        <option value="CONSULTANT">CONSULTANT</option>
+                        <option value="ACCOUNTS">ACCOUNTS</option>
+                        <option value="HUMAN RESOURCE">HUMAN RESOURCE</option>
+
+                        
+                      </select>
+                      <div class="text-danger" *ngIf="submit && f['activity'].errors">
+                        Activity is required.
+                   </div>
+                  </div>
+                  <div class="col-md-4 d-flex align-items-center">
+                      <label class="me-2">Active</label>
+                      <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" formControlName="status" 
+                          >
+                      </div>
+                      <label class="ms-2">Inactive</label>
+                  </div>
+                  <div class="col-md-4">
+                    <!-- <input type="text" formControlName="userImageUpload" placeholder="Invoice" class="w-50"> -->
+                    <label class="mt-2">User Image Upload</label>
+                    <div class="logo-upload" (click)="logoInput.click()" (mouseenter)="isHoveringLogo = true"
+                      (mouseleave)="isHoveringLogo = false">
+                      <input #logoInput type="file" (change)="onLogoSelected($event)" accept="image/*" style="display: none">
+                      <div *ngIf="!logoUrl" class="logo-placeholder">
+                        <i>+ Logo</i>
+                        <div>Upload Image </div>
+                      </div>
+                      <ng-container *ngIf="logoUrl">
+                        <button class="remove-logo" (click)="removeLogo($event)" (mouseenter)="isHoveringRemove = true"
+                          (mouseleave)="isHoveringRemove = false">×</button>
+                        <div class="hover-text">{{ isHoveringRemove ? 'Remove Uploaded Image' : 'Update Uploaded Image' }}</div>
+                        <img [src]="logoUrl" alt="Company Logo">
+                      </ng-container>
+                    </div>
+                   
+                  </div>
+              </div>
+          </form>
+      </div>
+      <div class="modal-footer">
+          <button type="button" class="btn btnSave btn-raised" (click)="submitEmployeeForm()">Submit</button> <!-- FIXED: Removed modal param -->
+          <button type="button" class="btn btnClose btn-raised" (click)="c('Close click')">Close</button>
+      </div>
+  
+</ng-template>
+
+  <ng-template #editEmployeeTemplate let-c="close">
+    
+      <div class="modal-header">
+        Edit Employee
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="EmployeeEditForm"> <!-- FIXED: Added formGroup -->
+            <div class="row">
+                <!-- Employee ID -->
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                    <div class="form-group">
+                        <label>Employee ID<span class="text-danger">*</span></label>
+                        <input class="form-control form-control-sm" formControlName="employeeID" type="text" placeholder="" 
+                       >
+                        <div class="text-danger" *ngIf="submit && f['employeeID'].errors">
+                            Employee ID is required.
+                        </div>
+                    </div>
+                </div>
+                <!-- Employee Name -->
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                    <div class="form-group">
+                        <label>Employee Name<span class="text-danger">*</span></label>
+                        <input class="form-control form-control-sm" formControlName="firstName" type="text" placeholder="" 
+                        >
+                        <div class="text-danger" *ngIf="submit && f['firstName'].errors">
+                            Employee Name is required.
+                        </div>
+                    </div>
+                </div>
+                <!-- Employee Last Name -->
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                    <div class="form-group">
+                        <label>Employee Last Name<span class="text-danger">*</span></label>
+                        <input class="form-control form-control-sm" formControlName="lastName" type="text" placeholder="" 
+                        >
+                        <div class="text-danger"*ngIf="submit && f['lastName'].errors">
+                            Employee Last Name is required.
+                        </div>
+                    </div>
+                </div>
+                <!-- Email -->
+                <div class="col-lg-4 col-md-4 col-sm-4 alert-email">
+                    <div class="form-group">
+                        <label for="contactemail">EMAIL: <span class="text-danger">*</span></label>
+                        <input type="email" id="contactemail" class="form-control form-control-sm" formControlName="email" required/>
+                        <div class="text-danger" *ngIf="submit && f['email'].errors">
+                            Email is required.
+                        </div>
+                    </div>
+                </div>
+                <!-- Contact -->
+                <!-- <div class="col-lg-4 col-md-4 col-sm-4">
+                  <div class="form-group">
+                      <label>Contact<span class="text-danger">*</span></label>
+                      <input class="form-control form-control-sm" formControlName="contact" 
+                      type="text" placeholder="" maxlength="10" pattern="[0-9]{10}">
+                                         <div class="text-danger"  *ngIf="submit && f['contact'].errors">
+                          Contact is required.
+                      </div>
+                  </div>
+              </div> -->
+
+              
+              <div class="col-lg-4 col-md-4 col-sm-4">
+                <div class="form-group">
+                    <label>Contact<span class="text-danger">*</span></label>
+                    <input class="form-control form-control-sm"
+                           formControlName="contact"
+                           type="text"
+                           placeholder="Enter Contact Number"
+                           maxlength="10"
+                           pattern="[0-9]{10}"
+                           oninput="this.value = this.value.replace(/[^0-9]/g, '')" 
+                           >
+                    <div class="text-danger" *ngIf="submit && f['contact'].errors">
+                         Contact is required.
+                    </div>
+                </div>
+            </div>
+                <!-- Password -->
+                <div class="col-md-4">
+                  <label for="password">Password<span class="text-danger">*</span></label>
+                  <div class="input-group auth-pass-inputgroup">
+                      <input
+                          [type]="fieldTextType ? 'text' : 'password'"
+                          class="form-control"
+                          formControlName="password"
+                          placeholder="Enter password"
+                          [ngClass]="{ 'is-invalid': submitted && f.password.errors }"
+                         />
+                      <button class="btn btn-light ms-0" type="button" (click)="toggleFieldTextType()">
+                          <i
+                              class="mdi mdi-eye-outline"
+                              [ngClass]="{ 'mdi-eye-off-outline': !fieldTextType, 'mdi-eye-outline': fieldTextType }"
+                          ></i>
+                      </button>
+                  </div>
+                  <div class="text-danger"  *ngIf="submit && f['password'].errors">
+                      Password is required.
+                  </div>
+              </div>
+
+                <!-- Confirm Password -->
+                 <!-- Confirm Password -->
+                 <div class="col-md-4">
+                  <label for="confirmPassword">Confirm Password<span class="text-danger">*</span></label>
+                  <div class="input-group auth-pass-inputgroup">
+                      <input
+                          [type]="confirmFieldTextType ? 'text' : 'password'"
+                          class="form-control"
+                          formControlName="confirmPassword"
+                          placeholder="Confirm password"
+                          [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }"
+                         />
+                      <button class="btn btn-light ms-0" type="button" (click)="toggleConfirmFieldTextType()">
+                          <i
+                              class="mdi mdi-eye-outline"
+                              [ngClass]="{ 'mdi-eye-off-outline': !confirmFieldTextType, 'mdi-eye-outline': confirmFieldTextType }"
+                          ></i>
+                      </button>
+                  </div>
+                  <div class="text-danger" *ngIf="submit && f['confirmPassword'].errors">
+                      Confirm password is required.
+                  </div>
+                  <div class="text-danger" *ngIf="f.confirmPassword?.hasError('mustMatch')">
+                      Password and Confirm Password do not match.
+                  </div>
+              </div>
+
+                <!-- Activity -->
+                <div class="col-md-4">
+                    <label>Activity<span class="text-danger">*</span></label>
+                    <select class="form-control" formControlName="activity">
+                        <option value="ADMIN">ADMIN</option>
+                          <option value="MD">MD</option>
+                          <option value="MANAGER">MANAGER</option>
+                          <option value="TEAM LEAD">TEAM LEAD</option>
+                          <option value="CONSULTANT">CONSULTANT</option>
+                          <option value="ACCOUNTS">ACCOUNTS</option>
+                          <option value="HUMAN RESOURCE">HUMAN RESOURCE</option>
+                    </select>
+                    <div class="text-danger" *ngIf="submit && f['activity'].errors">
+                        Activity is required.
+                   </div>
+                    
+                </div>
+                <div class="col-md-4 d-flex align-items-center">
+                    <label class="me-2">Active</label>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" formControlName="status" 
+                        >
+                    </div>
+                    <label class="ms-2">Inactive</label>
+                </div>
+                <div class="col-md-4">
+                    <!-- <input type="text" formControlName="userImageUpload" placeholder="Invoice" class="w-50"> -->
+                    <label class="mt-2">User Image Upload</label>
+                    <div class="logo-upload" (click)="logoInput.click()" (mouseenter)="isHoveringLogo = true"
+                      (mouseleave)="isHoveringLogo = false">
+                      <input #logoInput type="file" (change)="onLogoSelected($event)" accept="image/*" style="display: none">
+                      <div *ngIf="!logoUrl" class="logo-placeholder">
+                        <i>+ Logo</i>
+                        <div>Upload Image </div>
+                      </div>
+                      <ng-container *ngIf="logoUrl">
+                        <button class="remove-logo" (click)="removeLogo($event)" (mouseenter)="isHoveringRemove = true"
+                          (mouseleave)="isHoveringRemove = false">×</button>
+                        <div class="hover-text">{{ isHoveringRemove ? 'Remove Uploaded Image' : 'Update Uploaded Image' }}</div>
+                        <img [src]="logoUrl" alt="Company Logo">
+                      </ng-container>
+                    </div>
+                   
+                  </div>
+            </div>
+        </form>
+    </div>
+      <div class="card-footer" style="text-align: right;">
+        <button type="button" class="btn btn-primary" (click)="updateEmployeeCreation(c)">Update</button>
+        <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
+      </div>
+    
+  </ng-template>
+  
+  

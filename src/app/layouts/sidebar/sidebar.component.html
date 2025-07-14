@@ -1,0 +1,81 @@
+<!-- ========== Left Sidebar Start ========== -->
+
+<ng-template #contentTemplate>
+  <!--- Sidemenu -->
+  <div id="sidebar-menu">
+    <ul class="metismenu list-unstyled" id="side-menu" #sideMenu>
+      @for (item of menuItems; track $index) {
+        <ng-container *ngIf="item">
+          <ng-container *ngIf="item?.isTitle; else notTitle">
+            <li class="menu-title">{{ item.label | translate }}</li>
+          </ng-container>
+          <ng-template #notTitle>
+            <ng-container *ngIf="!item?.isLayout">
+              <li>
+                <ng-container *ngIf="hasItems(item); else noChildren">
+                  <a href="javascript:void(0);" class="is-parent" [ngClass]="{'has-arrow': !item.badge, 'has-dropdown': item.badge}">
+                    <i *ngIf="item.icon" class="bx {{item.icon}}"></i>
+                    <span>{{ item.label | translate }}</span>
+                    <span *ngIf="item.badge" class="badge rounded-pill float-end bg-{{item.badge.variant}}">
+                      {{ item.badge.text | translate }}
+                    </span>
+                  </a>
+                  <ul class="sub-menu" aria-expanded="false">
+                    @for (subitem of item.subItems; track $index) {
+                      <li>
+                        <ng-container *ngIf="hasItems(subitem); else subNoChildren">
+                          <a class="side-nav-link-a-ref has-arrow" href="javascript:void(0);" [attr.data-parent]="subitem.parentId">
+                            <i *ngIf="subitem.icon" class="bx {{subitem.icon}}"></i>
+                            <span>{{ subitem.label | translate }}</span>
+                          </a>
+                          <ul class="sub-menu mm-collapse" aria-expanded="false">
+                            @for (subSubitem of subitem.subItems; track $index) {
+                              <li>
+                                <a [attr.data-parent]="subSubitem.parentId" [routerLink]="[subSubitem.link]" routerLinkActive="active" class="side-nav-link-ref">
+                                  <i *ngIf="subSubitem.icon" class="bx {{subSubitem.icon}}"></i>
+                                  <span>{{ subSubitem.label | translate }}</span>
+                                </a>
+                              </li>
+                            }
+                          </ul>
+                        </ng-container>
+                        <ng-template #subNoChildren>
+                          <a [routerLink]="[subitem.link]" class="side-nav-link-ref" [attr.data-parent]="subitem.parentId" routerLinkActive="active">
+                            <i *ngIf="subitem.icon" class="bx {{subitem.icon}}"></i>
+                            <span>{{ subitem.label | translate }}</span>
+                            <span *ngIf="subitem.badge" class="badge rounded-pill bg-{{subitem.badge.variant}} float-end">
+                              {{ subitem.badge.text | translate }}
+                            </span>
+                          </a>
+                        </ng-template>
+                      </li>
+                    }
+                  </ul>
+                </ng-container>
+                <ng-template #noChildren>
+                  <a [routerLink]="[item.link]" class="side-nav-link-ref" routerLinkActive="active">
+                    <i *ngIf="item.icon" class="bx {{item.icon}}"></i>
+                    <span>{{ item.label | translate }}</span>
+                    <span *ngIf="item.badge" class="badge rounded-pill bg-{{item.badge.variant}} float-end">
+                      {{ item.badge.text | translate }}
+                    </span>
+                  </a>
+                </ng-template>
+              </li>
+            </ng-container>
+          </ng-template>
+        </ng-container>
+      }
+    </ul>
+  </div>
+</ng-template>
+
+<!-- Sidebar -->
+<div class="vertical-menu">
+  <ngx-simplebar class="h-100" #componentRef>
+    <div>
+      <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+    </div>
+  </ngx-simplebar>
+</div>
+<!-- Left Sidebar End -->

@@ -1,0 +1,183 @@
+<div class="card">
+    <div class="card-header text-center">
+        Project Assignment
+    </div>
+    <div class="card-body">
+        <form [formGroup]="projectForm">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label>Employee Id<span class="text-danger">*</span></label>
+                        <ng-select [items]="EmployeeList" bindLabel="employeeID" placeholder="Select Employee"
+                            [multiple]="false" [searchable]="true" aria-placeholder="Employee Id" formControlName="employeeFirstName"
+                            (change)="onEmployeeChange($event)">
+                        </ng-select>
+                    </div>
+                    <div *ngIf="submit && f['employeeFirstName'].errors" class="text-danger">
+                        employeeFirstName is required.
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label>Employee Name<span class="text-danger">*</span></label>
+
+                        <input type="text" placeholder="Employee Name" class="form-control" formControlName="SelectedEmployeeName" readonly>
+
+                    </div>
+                    <div *ngIf="submit && f['SelectedEmployeeName'].errors" class="text-danger">
+                        SelectedEmployeeName is required.
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label>Project Name<span class="text-danger">*</span></label>
+                        <ng-select [items]="allProjects" aria-placeholder="Project Name" bindLabel="projectName" placeholder="Select Project"
+                            [multiple]="false" [searchable]="true" formControlName="projectName">
+                        </ng-select>
+                    </div>
+                    <div *ngIf="submit && f['projectName'].errors" class="text-danger">
+                        projectName is required.
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label>Project Start Date<span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" formControlName="projectStartDate">
+                    </div>
+                    <div *ngIf="submit && f['projectStartDate'].errors" class="text-danger">
+                        projectStartDate is required.
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label>Project End Date<span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" formControlName="projectEndDate">
+                    </div>
+                    <div *ngIf="submit && f['projectEndDate'].errors" class="text-danger">
+                        projectEndDate is required.
+                    </div>
+                </div>
+                <div class="col-lg-4 mt-4 textRight">
+                    <!-- <button type="submit" class="btn btn-success btn-sm mt-3">Save</button> -->
+                    <button type="button" class="btn btn-success" (click)="Save()">Save</button>
+
+                </div>
+            </div>
+        </form>
+
+        <div class="table-responsive tableFixHead mt-4">
+            <table class="table table-bordered text-center">
+                <thead>
+                    <tr>
+                        <th>Assignment Id</th>
+                        <th>Employee Id</th>
+                        <th>Employee Name</th>
+                        <th>Project</th>
+                        <th>Project Start Date</th>
+                        <th>Project End Date</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let assignment of allAssignment; let i = index">
+                        <td>{{assignment.assignmentUniqueId}}</td>
+                        <td>{{assignment.employeeID}}</td>
+                        <td>{{assignment.employeeName}}</td>
+                        <td>{{assignment.projectName}}</td>
+                        <!-- Looping over projectName array inside a td -->
+                        <!-- <td>
+                            <ng-container *ngFor="let project of assignment.projectName; let last = last">
+                                {{ project.projectName }}<span *ngIf="!last">, </span>
+                            </ng-container>
+                        </td> -->
+                        <td>{{assignment.projectStartDate | date:'yyyy-MM-dd'}}</td>
+                        <td>{{assignment.projectEndDate | date:'yyyy-MM-dd'}}</td>
+                        <td>
+                            <span [ngClass]="{
+                              'completed': assignment.status === 'completed',
+                              'pending': assignment.status === 'pending'
+                            }">
+                              {{ assignment.status }}
+                            </span>
+                          </td>
+                        
+                        <td class="text-center">
+                            <i class="edit-btn bx bx-edit-alt"
+                            [ngClass]="{ 'disabled': assignment.status === 'completed' }"
+                            (click)="editprojectAssignment(assignment)">
+                         </i>
+                            <!-- <i class="delete-btn bx bx-trash" (click)="delete(assignment)"></i> -->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<ng-template #editprojectAssignmentTemplate let-c="close">
+    <div class="modal-header" style="justify-content: space-between;">
+        <h5 class="modal-title">Edit Project Assignment</h5>
+        <button type="button" class="close" (click)="c('Close click')" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="editForm">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label>Employee Id<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" formControlName="employeeId" readonly>
+
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label>Employee Name<span class="text-danger">*</span></label>
+
+                        <input type="text" class="form-control" formControlName="SelectedEmployeeName" readonly>
+
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label>Project Name<span class="text-danger">*</span></label>
+                        <ng-select [items]="allProjects" bindLabel="projectName" placeholder="Select Project"
+                            [multiple]="false" [searchable]="true" formControlName="projectName">
+                        </ng-select>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label>Project Start Date<span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" formControlName="projectStartDate">
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label>Project End Date<span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" formControlName="projectEndDate">
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label>Status<span class="text-danger">*</span></label>
+                        <select class="form-select"  formControlName="status">
+                            <option value="completed">Completed</option>
+                            <option value="pending">Pending</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
+        <button type="button" class="btn btn-primary" (click)="UpdateAssignments()">Update</button>
+    </div>
+</ng-template>

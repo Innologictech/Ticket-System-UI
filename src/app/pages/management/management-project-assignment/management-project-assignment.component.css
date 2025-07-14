@@ -1,0 +1,16 @@
+
+.modal-header[_ngcontent-ng-c3406347071] {
+    display: flex
+;
+    justify-content: space-between;
+}
+.completed{
+  color: #059633 !important;
+  font-weight: bold !important;
+  font-size: 14px;
+}
+.pending{
+  color: orange !important;
+  font-weight: bold !important;
+  font-size: 14px;
+}

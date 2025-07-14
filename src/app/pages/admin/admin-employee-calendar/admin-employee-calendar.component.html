@@ -1,0 +1,149 @@
+
+
+
+<div class="">
+    <div class="card">
+      <div class="card-header">
+        Calender
+        </div>
+      <div class="card-body">
+        <!-- <div class="form-group">
+          <label>Employee ID <span class="text-danger">*</span></label>
+          <ng-select
+            [items]="EmployeeList"
+            bindLabel="employeeID"
+            bindValue="employeeID"
+            [(ngModel)]="employeeId"
+            placeholder="Enter or select Employee ID"
+            [searchable]="true"
+            [clearable]="true"
+            (focus)="loadEmployeeList()" 
+          >
+          
+          </ng-select>
+        </div> -->
+      <div class="row">
+        <div class="col-lg-4">
+          <div class="form-group">
+              <label>Employee Id<span class="text-danger">*</span></label>
+  
+              <select (change)="onEmployeeChange($event.target.value)" [(ngModel)]="employeeID">
+                <option value=""> Select</option>
+                <option *ngFor="let emp of EmployeeList" [value]="emp.employeeID">{{ emp.employeeID }}</option>
+              </select>
+          </div>
+      </div>
+      
+        <div class="col-lg-4 pt-4">
+          <button type="button" class="btn btnGet btn-raised btn-md" (click)="getEmployeeData()">
+            Get
+          </button>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xl-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="">
+              <!-- calendar -->
+              <full-calendar
+              #fullcalendar
+              [options]="calendarOptions"
+              cdkDropList
+              (cdkDropListDropped)="handleDrop($event)">
+            </full-calendar>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
+  <!-- Add New Event MODAL -->
+   <!-- <ng-template #modalShow let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title" id="modal-title">Add New Event</h5>
+      <button type="button" class="btn-close" (click)="closeEventModal()"></button>
+    </div>
+    <div class="modal-body p-4">
+      <form (ngSubmit)="saveEvent()" [formGroup]="formData">
+        <div class="row">
+          <div class="col-12">
+            <div class="mb-3">
+              <label class="control-label">Event Name</label>
+              <input class="form-control" placeholder="Insert Event Name" type="text" name="title" formControlName="title" [ngClass]="{'is-invalid': submitted && form.title.errors}" />
+              @if(submitted && form.title.errors){
+              <div class="invalid-feedback">
+                @if(form.title.errors.required){
+                <span>This value is required.</span>}
+              </div>}
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="mb-3">
+              <label class="control-label">Category</label>
+              <select class="form-control" name="category" formControlName="category" [ngClass]="{'is-invalid': submitted && form.category.errors }">
+                @for (option of category; track $index) {
+                <option value="{{ option.value }}">
+                  {{ option.name }}
+                </option>
+                }
+              </select>
+              @if(submitted && form.category.errors){
+              <div class="invalid-feedback">
+                @if(form.category.errors.required){
+                <div>This value is required</div>}
+              </div>}
+            </div>
+          </div>
+        </div>
+  
+        <div class="text-end mt-2">
+          <button type="button" class="btn btn-light me-1" (click)="closeEventModal()">
+            Close
+          </button>
+          <button type="submit" class="btn btn-success" id="btn-save-event">
+            Save
+          </button>
+        </div>
+      </form>
+    </div>
+   </ng-template> -->
+  
+  
+  
+  
+    <ng-template #editmodalShow let-modal>
+      <div class="modal-header">
+        <h5 class="modal-title">Daily Data</h5>
+        <button type="button" class="btn-close" aria-hidden="true" (click)="modalRef?.hide()"></button>
+      </div>
+      <div class="modal-body p-4">
+        <form [formGroup]="formEditData" (ngSubmit)="editEventSave()">
+          <div class="mb-3">
+            <label class="control-label">Project</label>
+            <input type="text" class="form-control" formControlName="editProject" readonly>
+          </div>
+          <div class="mb-3">
+            <label class="control-label">Task</label>
+            <input type="text" class="form-control" formControlName="editTask" readonly>
+          </div>
+          <div class="mb-3">
+            <label class="control-label">Hours</label>
+            <input type="number" class="form-control" formControlName="editHours" readonly>
+          </div>
+          <!-- <div class="d-flex justify-content-between">
+            <button type="button" class="btn btn-danger" (click)="confirm()">Delete</button>
+            <div>
+              <button type="button" class="btn btn-light me-2" (click)="modalRef?.hide()">Close</button>
+              <button type="submit" class="btn btn-success">Save</button>
+            </div>
+          </div> -->
+        </form>
+      </div>
+    </ng-template>
+    
+  

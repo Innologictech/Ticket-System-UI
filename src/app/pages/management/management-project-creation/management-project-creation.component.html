@@ -1,0 +1,121 @@
+<div class="card">
+    <div class="card-header text-center">
+      <h5>Project Management</h5>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="projectForm">
+        <div class="row">
+          <div class="col-lg-4">
+            <div class="form-group">
+              <label>Project Name<span class="text-danger">*</span></label>
+              <input type="text" class="form-control" formControlName="projectName" placeholder="Enter Project Name">
+            </div>
+            <div *ngIf="submit && f['projectName'].errors" class="text-danger">
+              projectName is required.
+          </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="form-group">
+              <label>Cost Center<span class="text-danger">*</span></label>
+              <input type="text" class="form-control" formControlName="costCenter" placeholder="Enter Cost Center">
+
+            </div>
+            <div *ngIf="submit && f['costCenter'].errors" class="text-danger">
+              costCenter is required.
+          </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="form-group">
+              <label>Status<span class="text-danger">*</span></label>
+              <ng-select
+                [items]="statusOptions"
+                bindLabel="label"
+                bindValue="value"
+                placeholder="Select Status"
+                [multiple]="false"
+                formControlName="status"
+              ></ng-select>
+            </div>
+            <div *ngIf="submit && f['status'].errors" class="text-danger">
+              status is required.
+          </div>
+          </div>
+          <div class="col-lg-12 mt-4 textRight">
+            <!-- <button type="submit" class="btn btn-success btn-sm mt-3">Save</button> -->
+            <button type="button" class="btn btn-success" (click)="Save()">Save</button>
+          </div>
+        </div>
+      </form>
+  
+      <div class="table-responsive tableFixHead mt-4" >
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Project Id</th>
+              <th>Project Name</th>
+              <th>Cost Center</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let project of allProjects; let i = index">
+              <td>{{ project.projectUniqueId }}</td>
+              <td>{{ project.projectName }}</td>
+              <td>{{ project.costCenter }}</td>
+              <td>{{ project.status }}</td>
+              <td class="text-center">
+                <i class="edit-btn bx bx-edit-alt" (click)="editProject(project)"></i>
+                <i class="delete-btn bx bx-trash" (click)="delete(project)"></i>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  
+  <ng-template #editProjectTemplate let-c="close">
+    <div class="modal-header" style="justify-content: space-between;">
+      <h5 class="modal-title">Edit Project</h5>
+      <button type="button" class="close" (click)="c('Close click')" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="projectForm">
+        <div class="row">
+          <div class="col-lg-4">
+            <div class="form-group">
+              <label>Project Name<span class="text-danger">*</span></label>
+              <input type="text" class="form-control" formControlName="projectName" placeholder="Enter Project Name">
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="form-group">
+              <label>Cost Center<span class="text-danger">*</span></label>
+              <input type="text" class="form-control" formControlName="costCenter" placeholder="Enter Cost Center">
+
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="form-group">
+              <label>Status<span class="text-danger">*</span></label>
+              <ng-select
+                [items]="statusOptions"
+                bindLabel="label"
+                bindValue="value"
+                placeholder="Select Status"
+                [multiple]="false"
+                formControlName="status"
+              ></ng-select>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
+      <button type="button" class="btn btn-primary" (click)="updateProject()">Update</button>
+    </div>
+  </ng-template>

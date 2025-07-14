@@ -1,0 +1,65 @@
+/* time-entry.component.css */
+.week-tabs .nav-tabs {
+    border-bottom: 1px solid #dee2e6;
+  }
+  
+  .week-tabs .nav-link {
+    cursor: pointer;
+    color: #495057;
+  }
+  
+ 
+  
+  .table th {
+    vertical-align: middle;
+    text-align: center;
+  }
+  
+  .table td {
+    padding: 0.5rem;
+  }
+  .week-tab {
+    cursor: pointer;
+  padding: 5px 10px;
+  margin: 0 2px;
+  border-radius: 4px;
+    font-size: 16px;
+    font-weight: bold;
+    min-width: 100px;
+    text-align: center;
+    border-radius: 8px;
+    transition: all 0.3s;
+  }
+  .nav-item{
+    width: 20% !important;
+  }
+  .week-tab:hover {
+    /* background-color: #007bff;
+    color: white; */
+    border: 5px solid !important;
+border-image: linear-gradient(135deg, #0cc685, #0736c5) 1 !important;
+  }
+  .week-tab.active {
+    /* background-color: #007bff !important; /* Bootstrap primary blue */
+    /* color: white !important; */
+    /* border-color: #007bff #007bff #fff !important;  */
+    border: 3px solid !important;
+border-image: linear-gradient(135deg, #0cc685, #0736c5) 1 !important;
+background-image: linear-gradient(to right, #82c4fa, #0072CF) !important;
+  }
+  .task-entered {
+    color: blue;
+    text-decoration: underline;
+    background-color: #e8f5e9; /* Light green */
+    font-weight: bold;
+    font-size: 15px;
+  }
+  input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield; /* Firefox */
+}

@@ -1,0 +1,203 @@
+<div class="card">
+    <div class="card-header text-center">
+        <h5>Designation Mapping</h5>
+    </div>
+    <div class="card-body">
+        <form [formGroup]="designationForm">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Employee ID <span class="text-danger">*</span></label>
+                        <ng-select [items]="EmployeeList" bindLabel="employeeID" placeholder="Select Employee"
+                            [multiple]="false" [searchable]="true" formControlName="employeeFirstName"
+                            (change)="onEmployeeChange($event)">
+                        </ng-select>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label>Employee Name <span class="text-danger">*</span></label>
+                        <input type="text" placeholder="Employee Name" class="form-control"
+                            formControlName="SelectedEmployeeName" readonly>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Designation<span class="text-danger">*</span></label>
+                        <ng-select [items]="humanResourceList" bindLabel="label" bindValue="value"
+                            placeholder="Select Designation" [multiple]="false" [searchable]="true"
+                            formControlName="humanResource">
+                        </ng-select>
+                        <div *ngIf="submit && f['humanResource'].errors" class="text-danger">
+                            Human Resource is required.
+                        </div>
+                    </div>
+                </div>
+        
+                
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Status<span class="text-danger">*</span></label>
+                        <select class="form-control" formControlName="status">
+                            <option value="">Select Status</option>
+                            <option value="Active">Active</option>
+                            <option value="Inactive">InActive</option>
+                        </select>
+                        <div *ngIf="submit && f['status'].errors" class="text-danger">
+                            Status is required.
+                        </div>
+                    </div>
+
+
+
+
+                   
+                </div>
+                <div class="col-lg-8 text-end">
+                    <button type="submit" class="btn btn-success btn-sm mt-3"
+                        (click)="saveDesignation()">Save</button>
+                </div>
+            </div>
+            
+        </form>
+
+        <div *ngIf="designationList.length > 0" class="mt-4">
+            <div *ngIf="isLoading" class="text-center">
+                <i class="fas fa-spinner fa-spin"></i> Loading...
+            </div>
+            <table *ngIf="!isLoading" class="table table-bordered">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Designation</th>
+                        <th>Employee ID</th>
+                        <th>Employee Name</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let designation of designationList">
+                        <td>{{ designation.designation }}</td>
+                        <td>{{ designation.employeeID }}</td>
+                        <td>{{ designation.employeeName }}</td>
+                        <td>{{ designation.status }}</td>
+                        <td>
+                            <i class="edit-btn bx bx-edit-alt" (click)="editdesignation(designation, editTemplate)"></i>
+                            <i class="delete-btn bx bx-trash" (click)="deletedesignation(designation)"></i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+<!-- <ng-template #editdesignationTemplate let-modal>
+    <div class="modal-header" style="justify-content: space-between;">
+        <h5 class="modal-title">Edit Designation</h5>
+        <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="editdesignationForm">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Designation<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" formControlName="designation" readonly>
+                        <div *ngIf="submit && f['designation'].errors" class="text-danger">
+                            designation is required.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label>Employee Id<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" formControlName="employeeID" readonly>
+
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label>Employee Name<span class="text-danger">*</span></label>
+
+                        <input type="text" class="form-control" formControlName="employeeName" readonly>
+
+                    </div>
+                </div>
+                
+
+  
+                  
+
+                
+               
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-update" (click)="UpdateAssignments()">Update</button>
+        <button type="button" class="btn btn-cancel" (click)="modal.dismiss('Close click')">Close</button>
+    </div>
+</ng-template> -->
+<ng-template #editdesignationTemplate let-modal>
+    <div class="modal-header" style="justify-content: space-between;">
+        <h5 class="modal-title">Edit Designation</h5>
+        <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="editdesignationForm">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Designation<span class="text-danger">*</span></label>
+                        <ng-select [items]="humanResourceList" bindLabel="label" bindValue="value"
+                            placeholder="Select Designation" [multiple]="false" [searchable]="true"
+                            formControlName="humanResource">
+                        </ng-select>
+                        <div *ngIf="submit && f['humanResource'].errors" class="text-danger">
+                            Human Resource is required.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Employee ID <span class="text-danger">*</span></label>
+                        <ng-select [items]="EmployeeList" bindLabel="employeeID" placeholder="Select Employee"
+                            [multiple]="false" [searchable]="true" formControlName="employeeFirstName"
+                            (change)="onEmployeeChange($event)">
+                        </ng-select>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label>Employee Name<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" formControlName="SelectedEmployeeName">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Status<span class="text-danger">*</span></label>
+                        <select class="form-control" formControlName="status">
+                            <option value="">Select Status</option>
+                            <option value="Active">Active</option>
+                            <option value="Inactive">InActive</option>
+                        </select>
+                        <div *ngIf="submit && f['status'].errors" class="text-danger">
+                            Status is required.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-update" (click)="updateDesignationMapping()">Update</button>
+        <button type="button" class="btn btn-cancel" (click)="modal.dismiss('Close click')">Close</button>
+    </div>
+</ng-template>

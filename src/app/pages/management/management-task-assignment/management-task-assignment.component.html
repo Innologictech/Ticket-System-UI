@@ -1,0 +1,179 @@
+<div class="card">
+    <div class="card-header text-center">
+        Task Assignment
+    </div>
+    <div class="card-body">
+        <form [formGroup]="taskForm"> <!-- Changed from Save() to save() -->
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Employee ID<span class="text-danger">*</span></label>
+                        <ng-select [items]="EmployeeList" bindLabel="employeeID" placeholder="Select Employee"
+                            formControlName="employeeID" (change)="onEmployeeSelect($event)">
+                        </ng-select>
+                        <div *ngIf="submit && f['employeeID'].errors" class="text-danger">
+                            employeeID is required.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Project Name<span class="text-danger">*</span></label>
+                        <ng-select [items]="allProjects" bindLabel="projectName" placeholder="Select Project"
+                            [multiple]="false" [searchable]="true" formControlName="SelectedProjectName">
+                        </ng-select>
+                    </div>
+                </div>
+
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Description<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" formControlName="description"
+                            placeholder="Enter description">
+                        <div *ngIf="submit && f['description'].errors" class="text-danger">
+                            Description is required.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Task Date<span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" formControlName="TaskDate">
+                        <div *ngIf="submit && f['TaskDate']?.errors" class="text-danger">
+                            Task Date is required.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Status<span class="text-danger">*</span></label>
+                        <select class="form-control" formControlName="status">
+                            <option value="">Select Status</option>
+                            <option value="Open">Open</option>
+                            <option value="Close">Close</option>
+                        </select>
+                        <div *ngIf="submit && f['status'].errors" class="text-danger">
+                            Status is required.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4  mt-4" style="text-align: right;">
+                    <button type="submit" class="btn btn-success btn-sm mt-3" (click)="saveTask()">Save</button>
+                </div>
+            </div>
+
+
+        </form>
+
+        <div class="mt-4" *ngIf="taskAssignments && taskAssignments.length > 0">
+            <table class="table table-bordered text-center">
+                <thead>
+                    <tr>
+                        <th>Project Name</th>
+                        <th>Employee Id</th>
+                        <th>Description</th>
+                        <th>Task Date</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let task of taskAssignments">
+                        <td>{{ task.projectName }}</td>
+                        <td>{{task.employeeID }}</td>
+                        <td>{{ task.description }}</td>
+                        <td>{{ task.TaskDate }}</td>
+                        <td>{{ task.status }}</td>
+                        <td>
+                            <i class="edit-btn bx bx-edit-alt" (click)="editTask(task, editTemplate)"></i>
+                            <i class="delete-btn bx bx-trash" (click)="deleteTask(task)"></i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<ng-template #edittaskTemplate let-modal>
+    <div class="modal-header" style="justify-content: space-between;">
+        <h5 class="modal-title">Edit Task Assignment</h5>
+        <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="edittaskForm">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Employee ID<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" formControlName="employeeID"
+                            placeholder="Select Employee">
+                        <!-- <ng-select [items]="EmployeeList" bindLabel="employeeID" placeholder="Select Employee"
+                            formControlName="employeeID" (change)="onEmployeeSelect($event)">
+                        </ng-select> -->
+                        <div *ngIf="submit && f['employeeID'].errors" class="text-danger">
+                            employeeID is required.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Project Name<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" formControlName="SelectedProjectName"
+                        placeholder="Select Project">
+                        <!-- <ng-select [items]="allProjects" bindLabel="projectName" placeholder="Select Project"
+                            [multiple]="false" [searchable]="true" formControlName="SelectedProjectName">
+                        </ng-select> -->
+                    </div>
+                </div>
+
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Description<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" formControlName="description"
+                            placeholder="Enter description">
+                        <div *ngIf="submit && f['description'].errors" class="text-danger">
+                            Description is required.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Task Date<span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" formControlName="TaskDate">
+                        <div *ngIf="submit && f['TaskDate']?.errors" class="text-danger">
+                            Task Date is required.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Status<span class="text-danger">*</span></label>
+                        <select class="form-control" formControlName="status">
+                            <option value="">Select Status</option>
+                            <option value="Open">Open</option>
+                            <option value="Close">Close</option>
+                        </select>
+                        <div *ngIf="submit && f['status'].errors" class="text-danger">
+                            Status is required.
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-update" (click)="UpdateAssignments()">Update</button>
+        <button type="button" class="btn btn-cancel" (click)="modal.dismiss('Close click')">Close</button>
+    </div>
+</ng-template>

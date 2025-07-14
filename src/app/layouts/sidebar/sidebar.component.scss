@@ -1,0 +1,78 @@
+.vertical-menu {
+  // background-image: linear-gradient(to bottom, #6ba3cd, #031c2e) !important;
+
+  // background: url("/assets/images/innologicslogo_sm.jpg") no-repeat center center / cover !important;
+  background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
+}
+ 
+.navbar-brand-box {
+  background-color: #6ba3cd !important;
+  background-image: linear-gradient(to bottom, #103554, #031c2e) !important;
+}
+ 
+.vertical-menu li:hover i,
+.vertical-menu li.mm-active i {
+  color: white !important;
+}
+ 
+.vertical-menu i {
+  // color: brown !important;
+  color: white !important;
+}
+ 
+.sub-menu .active {
+  // background-image: linear-gradient(to bottom, #828b84, #031c2e) !important;
+  background-color: #e8e4e4a1 !important;
+  color: #303773;
+  font-weight: bold;
+  border-left: 4px solid #7e56b6;
+}
+ 
+.sub-menu .active:hover {
+  background-color: #454754;
+  color: #303773;
+}
+ 
+.mm-active {
+  // background-image: linear-gradient(to bottom,  #6ba3cd, #031c2e) !important;
+  // background-color: #e8e4e4a1 !important;
+  color: #303773;
+  font-weight: bold;
+  border-left: 4px solid #7e56b6;
+}
+ 
+/* Override mm-active when a sub-menu item is active */
+.vertical-menu li.mm-active:has(.sub-menu .active) {
+  background: none !important;
+  color: inherit !important;
+  font-weight: normal !important;
+  border-left: none !important;
+}
+// add by vamshi
+// .sub-menu {
+//   padding-left: 0 !important;
+//   margin-left: 0 !important;
+//   list-style: none;
+// }
+
+// .sub-menu li a {
+//   padding-left: 24px !important; /* adjust this to match your icons/text spacing */
+// }
+/* Top-level items (closer to left edge) */
+#sidebar-menu > ul > li > a,
+#sidebar-menu > ul > li.menu-title {
+  padding-left: 0.75rem !important;  /* or try 0.5rem */
+}
+
+/* First-level subitems */
+#sidebar-menu .sub-menu > li > a {
+  padding-left: 1.5rem !important;
+}
+
+/* Second-level subitems (optional, if used) */
+#sidebar-menu .sub-menu .sub-menu > li > a {
+  padding-left: 2.6rem !important;
+}
+

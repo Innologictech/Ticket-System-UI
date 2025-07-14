@@ -1,0 +1,328 @@
+<div class="card">
+  <!-- Employee Info -->
+  <div class="card-header text-center">
+    <h5>Time Entry</h5>
+  </div>
+  <div class="card-body">
+    <form [formGroup]="timeSheetForm">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="employeeId">Employee ID</label>
+            <input type="text" id="employeeId" class="form-control" formControlName="employeeId" readonly>
+          </div>
+          <div class="text-danger" *ngIf="submited && f['employeeId'].errors">
+            Employee Id is required.
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="employeeName">Employee Name</label>
+            <input type="text" id="employeeName" class="form-control" formControlName="employeeName" readonly>
+          </div>
+          <div class="text-danger" *ngIf="submited && f['employeeName'].errors">
+            Employee Name is required.
+          </div>
+        </div>
+        <!-- <div class="col-md-4">
+            <div class="form-group">
+              <label for="projectName">Project Name</label>
+              <ng-select [items]="filteredUserProjects" bindLabel="projectName" placeholder="Select Employee"
+                                [multiple]="false" [searchable]="true" formControlName="selectedEmployee"
+                                (change)="onEmployeeChange()">>
+                            </ng-select>
+                            <div class="text-danger" *ngIf="submited && f['selectedEmployee'].errors">
+                              Project Name is required.
+                         </div>
+            </div>
+          </div> -->
+      </div>
+    </form>
+
+  </div>
+
+  <!-- <div class="row mb-3">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="monthSelect">Month</label>
+            <select id="monthSelect" class="form-control" [(ngModel)]="selectedMonth" (change)="onMonthYearChange()">
+              <option *ngFor="let month of months" [value]="month">{{month}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="yearSelect">Year</label>
+            <select id="yearSelect" class="form-control" [(ngModel)]="selectedYear" (change)="onMonthYearChange()">
+              <option *ngFor="let year of years" [value]="year">{{year}}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    
+      <div class="week-tabs mb-3">
+        <ul class="nav nav-tabs">
+          <li class="nav-item" *ngFor="let week of weeks">
+            <a class="nav-link" [class.active]="week.number === selectedWeek" 
+               (click)="selectWeek(week.number)">{{week.label}}</a>
+          </li>
+        </ul>
+      </div>
+  <div class="week-tabs mb-3">
+      <h5 class="mb-3">Week</h5> 
+      <ul class="nav nav-tabs">
+        <li class="nav-item" *ngFor="let week of weeks">
+          <a class="nav-link" [class.active]="week.number === selectedWeek" 
+             (click)="selectWeek(week.number)">
+            {{ week.label }} 
+          </a>
+        </li>
+      </ul>
+    </div> -->
+  <!-- <table class="table table-bordered text-center">
+      <thead>
+        <tr>
+          <th>Month</th>
+          <th>Year</th>
+          <th>Week</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <select id="monthSelect" class="form-control" [(ngModel)]="selectedMonth" (change)="onMonthYearChange()">
+              <option *ngFor="let month of months" [value]="month">{{ month }}</option>
+            </select>
+          </td>
+          <td>
+            <select id="yearSelect" class="form-control" [(ngModel)]="selectedYear" (change)="onMonthYearChange()">
+              <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+            </select>
+          </td>
+          <td>
+            <ul class="nav nav-tabs justify-content-center">
+              <li class="nav-item" *ngFor="let week of weeks">
+                <a class="nav-link" [class.active]="week.number === selectedWeek"
+                   (click)="selectWeek(week.number)">
+                  {{ week.label }}
+                </a>
+              </li>
+            </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+    
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th *ngFor="let day of weekDates" class="text-center">{{day.day}}<br>{{day.date}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td *ngFor="let day of weekDates">
+                <input *ngIf="day.date" type="text" class="form-control" placeholder="Hours">
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div> -->
+  <table class="table table-bordered text-center">
+    <thead>
+      <tr>
+        <th>Month</th>
+        <th>Year</th>
+        <th>Weeks</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <select id="monthSelect" class="form-control" [(ngModel)]="selectedMonth" (change)="onMonthYearChange()">
+            <option *ngFor="let month of months" [value]="month">{{ month }}</option>
+          </select>
+        </td>
+        <td>
+          <select id="yearSelect" class="form-control" [(ngModel)]="selectedYear" (change)="onMonthYearChange()">
+            <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+          </select>
+        </td>
+        <td>
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <ul class="nav nav-tabs">
+              <li class="nav-item" *ngFor="let week of weeks">
+                <a class="nav-link week-tab" [class.active]="week.number === selectedWeek"
+                  (click)="selectWeek(week.number)">
+                  {{ week.label }}
+                </a>
+              </li>
+            </ul>
+            <div class="d-flex">
+              <!-- <button class="btn btnAdd btn-raised btn-md" (click)="onGetWeekData()">
+                  Get Data
+                </button> -->
+              <button class="btn btnEdit btn-raised btn-md" (click)="onEditWeek()">
+                Edit
+              </button>
+
+            </div>
+          </div>
+
+
+        </td>
+
+      </tr>
+
+      <!-- Week Dates Row (inside main table) -->
+      <tr *ngIf="weekDates && weekDates.length">
+        <td colspan="3">
+          <div class="table-responsive">
+            <table class="table table-bordered mb-0">
+              <thead>
+                <tr>
+                  <th *ngFor="let day of weekDates" class="text-center">
+                    {{ day.day }}<br>{{ day.date }}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td *ngFor="let day of weekDates">
+                    <!-- Readonly View -->
+                    <div *ngIf="!isEditMode" (dblclick)="onDoubleClick(day, enteredHours)" [ngClass]="{
+                        'task-entered': taskArray[formatDateKey(day.fullDate)],
+                        'has-hours': enteredHours[formatDateKey(day.fullDate)]
+                      }">
+                      {{ enteredHours[formatDateKey(day.fullDate)] || '-' }}
+                    </div>
+
+                    <div class="position-relative">
+                      <input *ngIf="isEditMode && day.date" type="number" min="0" max="24"
+                        class="form-control mt-1 pr-4" placeholder="Hours"
+                        [ngClass]="{'task-entered': taskArray[formatDateKey(day.fullDate)]}"
+                        [ngModel]="enteredHours[formatDateKey(day.fullDate)]"
+                        (ngModelChange)="onHourChange($event, day)" (keydown)="blockNegative($event)"
+                        (blur)="rowData()" />
+
+                      <!-- Icon overlay -->
+                      <i *ngIf="enteredHours[formatDateKey(day.fullDate)]" class="fa"
+                        [ngClass]="taskArray[formatDateKey(day.fullDate)] ? 'fa-edit' : 'fa-plus'"
+                        style="position: absolute; right: 10px; top: 12px; cursor: pointer;"
+                        (click)="onDoubleClick(day, enteredHours)">
+                      </i>
+                    </div>
+                  </td>
+
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+  <!--   
+    <div class="text-end p-3">
+      <button type="button" class="btn btnSave btn-raised btn-md mr-1" *ngIf="!isSavedOrNot" (click)="submit()">Save</button>
+      <button type="button" class="btn btnSave btn-raised btn-md mr-1" *ngIf="isSavedOrNot"  (click)="Update()">Update</button>
+      <button type="button" class="btn btnFinalSubmit btn-raised btn-md"  (click)="FinalSubmit()" >Final Submit</button>
+    </div> -->
+    <div class="text-end p-3">
+      <!-- Save button: shows only if not saved -->
+      <button
+        type="button"
+        class="btn btnSave btn-raised btn-md mr-1"
+        *ngIf="!isSavedOrNot"
+        [disabled]="disableSaveUpdate"
+        (click)="submit()"
+      >
+        Save
+      </button>
+    
+      <!-- Update button: shows only if saved -->
+      <button
+        type="button"
+        class="btn btnSave btn-raised btn-md mr-1"
+        *ngIf="isSavedOrNot"
+        [disabled]="disableSaveUpdate"
+        (click)="Update()"
+      >
+        Update
+      </button>
+    
+      <!-- Final Submit button: enabled only when canFinalSubmit is true -->
+      <button
+        type="button"
+        class="btn btnFinalSubmit btn-raised btn-md"
+        [disabled]="!canFinalSubmit"
+        (click)="FinalSubmit()"
+      >
+        Final Submit
+      </button>
+    </div>
+
+    
+    
+
+</div>
+
+
+<ng-template #taskModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">
+      Enter Task for {{ selectedDay.fullDate | date: 'fullDate' }}
+    </h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+
+  <div class="modal-body">
+    <div class="form-group mb-3">
+      <label for="projectName">Project Name</label>
+      <ng-select [items]="filteredProjectList" bindLabel="projectName" [(ngModel)]="selectedProjectPerTask"
+        (change)="onProjectSelectChange()" [multiple]="false" [searchable]="true" placeholder="Select Project"
+        [disabled]="!isEditMode">
+      </ng-select>
+      <div *ngIf="projectValidationError" class="text-danger mt-1">
+        Project is required.
+      </div>
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="reportingTo">Reporting To</label>
+      <input type="text" class="form-control" [(ngModel)]="reportingTo" [disabled]='readOnlyReportTo' />
+    </div>
+
+    <!-- Status Field -->
+    <div class="form-group mb-3">
+      <label>Status<span class="text-danger">*</span></label>
+      <select class="form-control" [(ngModel)]="status" [disabled]="!isEditMode">
+        <option value="">Select Status</option>
+        <option value="Open">Open</option>
+        <option value="Close">Close</option>
+      </select>
+      <div *ngIf="submit && !status" class="text-danger mt-1">
+        Status is required.
+      </div>
+    </div>
+
+    <!-- Task Description -->
+    <div class="form-group mb-3">
+      <label>Task Description</label>
+      <textarea class="form-control" [(ngModel)]="taskText" (ngModelChange)="onTaskTextChange()" rows="4"
+        placeholder="Enter task here..." [readonly]="!isEditMode">
+        </textarea>
+      <div *ngIf="taskValidationError" class="text-danger mt-1">
+        Task is required.
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button class="btn btnSave btn-raised btn-md" (click)="saveTask()" [disabled]="!isEditMode">Add</button>
+    <button class="btn btnClose btn-raised btn-md" (click)="modal.dismiss('cancel')">Cancel</button>
+  </div>
+</ng-template>

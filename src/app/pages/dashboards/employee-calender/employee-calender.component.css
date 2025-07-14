@@ -1,0 +1,5 @@
+::ng-deep .fc-event-title {
+  white-space: pre-line !important; /* enables \n line breaks */
+  font-size: 12px !important;
+  padding: 4px !important;
+}

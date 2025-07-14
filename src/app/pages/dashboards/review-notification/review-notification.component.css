@@ -1,0 +1,347 @@
+.edit-btn{
+    background: green;
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 3px 6px;
+    border-radius: 3px;
+    margin-right: 5px;
+    margin-top: 5px;
+  }
+  .modal {
+  display: block;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  margin-left: 8%;
+  overflow: auto;
+  background-color: rgb(0,0,0);
+  background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 10% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  overflow-y: auto;
+  max-height: 80%;
+}
+
+.close-btn {
+  color: #ed0b0b;
+  float: right;
+  font-size: 32px;
+  font-weight: bold;
+  display: flex
+;
+  justify-content: end;
+}
+
+.table {
+  width: 100%;
+  margin-top: -10px;
+}
+
+.table th, .table td {
+  text-align: center;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: #f9f9f9;
+}
+.modal-content {
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.close-btn {
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.table {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+/* stepper */
+.hover-shadow {
+  display: inline-block;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+.hover-shadow:hover {
+  transform: scale(1.2);
+}
+
+.custom-btn {
+  background-color: #426994; /* Adjust the color as needed (for example, blue) */
+  color: white; /* Icon color */
+  font-size: 14px; /* Adjust the icon size */
+  width: 30px; /* Button width */
+  height: 30px; /* Button height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  transition: all 0.3s ease; /* Smooth transition */
+}
+.custom-btn:hover {
+  background-color: #426994; /* Darker shade on hover */
+  color: white;
+  transform: scale(1.1); /* Slightly enlarges on hover */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
+}
+.custom-btn:focus {
+  outline: none; /* Removes focus outline */
+}
+
+.qr-code-generation {
+  background-color: #f9f9f9;
+  padding: 25px;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+/* Button container: aligns buttons side-by-side with spacing */
+.btn-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.card-body {
+  background: url("/grn/assets/images/cardbgr.JPG") no-repeat center center /
+    cover !important;
+}
+/* Card styling for the QR code display */
+.qr-card {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  background-color: #fff;
+}
+
+/* Container for the QR items */
+.qr-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+/* Individual QR item styling set as a flex container */
+.qr-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  background-color: #fafafa;
+  width: 300px; /* Adjust width as needed */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Hover effect for QR items */
+.qr-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Styling for the QR code image wrapper */
+.qr-code-wrapper {
+  flex: 0 0 auto;
+  margin-right: 15px;
+}
+
+/* Styling for the QR info text to align next to the QR code */
+.qr-info {
+  flex: 1;
+  text-align: left;
+}
+
+.qr-info p {
+  margin: 4px 0;
+  font-size: 14px;
+  color: #333;
+}
+
+/* Overall table container styling */
+.styled-table {
+  border-collapse: collapse;
+  font-size: 0.9em;
+  width: 100%;
+  margin: 0 auto 20px;
+  border: 1px solid #ddd; /* Border for the table */
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Extra shadow for depth */
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+/* Colorful header with smooth transition */
+.styled-table thead tr {
+  background-color: #4a90e2;
+  color: #ffffff;
+  text-align: left;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.styled-table thead tr:hover {
+  background-color: #357ab8;
+}
+
+/* Cells styling with smooth transition */
+.styled-table th,
+.styled-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #dddddd;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* Alternating row colors */
+.styled-table tbody tr:nth-of-type(odd) {
+  background-color: #f7f9fc;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+  background-color: #eef3f8;
+}
+
+/* Row hover effect with smooth animation */
+.styled-table tbody tr:hover {
+  background-color: #d0e4f7;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Input field styling with smooth enlarge and rounded corners */
+.styled-table input[type="text"] {
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  width: 100%;
+  transition: border-color 0.3s ease, transform 0.3s ease;
+}
+
+.styled-table input[type="text"]:hover {
+  transform: scale(1.05); /* Smoothly enlarges the input field on hover */
+}
+
+.styled-table input[type="text"]:focus {
+  outline: none;
+  border-color: #4a90e2;
+}
+
+/* Action button styling with smooth transition */
+.btn-danger {
+  background-color: #e74c3c;
+  border: none;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.btn-danger:hover {
+  background-color: #c0392b;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+  .styled-table thead {
+    display: none;
+  }
+
+  .styled-table,
+  .styled-table tbody,
+  .styled-table tr,
+  .styled-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .styled-table tr {
+    margin-bottom: 15px;
+  }
+
+  .styled-table td {
+    text-align: right;
+    padding-left: 50%;
+  }
+
+  .styled-table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 15px;
+    width: calc(50% - 30px);
+    padding-right: 10px;
+    text-align: left;
+    font-weight: bold;
+  }
+}
+.mb-3 {
+  color: brown;
+}
+
+/* Container for the separator with flex layout */
+.separator-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px 0;
+}
+
+/* Styling for the horizontal lines */
+.separator-line {
+  flex: 1;
+  border: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #007bff, transparent);
+  margin: 0 10px;
+}
+
+/* Styling for the separator text */
+.separator-text {
+  color: #007bff;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Optional styling for the entire separator row */
+tr.group-separator {
+  background-color: #f9f9f9; /* Light background color */
+  border-top: 2px solid #007bff;
+  border-bottom: 2px solid #007bff;
+}
+.info-row {
+  display: flex;
+  /* justify-content: space-between;  Ensures the key and value are evenly spaced */
+  align-items: center;
+  margin-bottom: 8px; /* Adds space between rows */
+}
+
+.fs-6 {
+  font-size: 14px !important;
+}
+
+.brandcolor {
+  color: brown;
+}

@@ -1,0 +1,210 @@
+<div class="card">
+    <div class="card-header text-center">
+        <h5>Reporting Mapping</h5>
+    </div>
+    <div class="card-body">
+        <form [formGroup]="reportingForm">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>HR Name<span class="text-danger">*</span></label>
+                        <ng-select [items]="hrDropdownList"
+                                   bindLabel="name"
+                                   bindValue="name"
+                                   formControlName="HRname"
+                                   placeholder="Select HR Name">
+                        </ng-select>
+                        <div *ngIf="submit && f['HRname'].errors" class="text-danger">
+                            HR name is required.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>MD Name<span class="text-danger">*</span></label>
+                        <ng-select [items]="mdDropdownList"
+                                   bindLabel="name"
+                                   bindValue="name"
+                                   formControlName="MD"
+                                   placeholder="Select MD Name">
+                        </ng-select>
+                        <div *ngIf="submit && f['MD'].errors" class="text-danger">
+                            MD name is required.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Manager Name<span class="text-danger">*</span></label>
+                        <ng-select [items]="managerDropdownList"
+                                   bindLabel="name"
+                                   bindValue="name"
+                                   formControlName="ManagerName"
+                                   placeholder="Select Manager Name">
+                        </ng-select>
+                        <div *ngIf="submit && f['ManagerName'].errors" class="text-danger">
+                            Manager Name is required.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Team Lead<span class="text-danger">*</span></label>
+                        <ng-select [items]="teamLeadDropdownList"
+                                   bindLabel="name"
+                                   bindValue="name"
+                                   formControlName="TeamLead"
+                                   placeholder="Select Team Lead">
+                        </ng-select>
+                        <div *ngIf="submit && f['TeamLead'].errors" class="text-danger">
+                            Team Lead is required.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Team Members<span class="text-danger">*</span></label>
+                        <ng-select [items]="teamMemberDropdownList"
+                                   bindLabel="name"
+                                   bindValue="name"
+                                   formControlName="TeamMember"
+                                   placeholder="Select Team Member">
+                        </ng-select>
+                        <div *ngIf="submit && f['TeamMember'].errors" class="text-danger">
+                            Team Members is required.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 textRight mt-4">
+                    <button type="submit" class="btn btn-success btn-sm mt-1" (click)="savereporting()">Save</button>
+                </div>
+            </div>
+        </form>
+
+        <div class="mt-4" *ngIf="reportingManagement && reportingManagement.length > 0">
+            <table class="table table-bordered text-center">
+                <thead>
+                    <tr>
+                        <th>HR Names</th>
+                        <th>MD</th>
+                        <th>Managers</th>
+                        <th>Team Lead</th>
+                        <th>Team Members</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let reporting of reportingManagement">
+                        <td>{{ reporting.HRName}}-{{ reporting.HRId}}</td>
+                        <td>{{ reporting.MDName }}-{{ reporting.MDId}}</td>
+                        <td>{{ reporting.ManagerName }}-{{ reporting.ManagerId}}</td>
+                        <td>{{ reporting.TeamLead }}-{{ reporting.TeamId}}</td>
+                        <td>{{ reporting.TeamMemberName }}-{{ reporting.TeamMemberId}}</td>
+                        <td>
+                            <i class="edit-btn bx bx-edit-alt" (click)="editreporting(reporting, editTemplate)"></i>
+                            <i class="delete-btn bx bx-trash" (click)="deletereporting(reporting)"></i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<ng-template #editreportingTemplate let-modal>
+    <div class="modal-header" style="justify-content: space-between;">
+        <h5 class="modal-title">Edit reporting</h5>
+        <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="editreportingForm">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>HR Name<span class="text-danger">*</span></label>
+                        <ng-select [items]="hrDropdownList"
+                                   bindLabel="name"
+                                   bindValue="name"
+                                   formControlName="HRname"
+                                   placeholder="Select HR Name">
+                        </ng-select>
+                        <div *ngIf="submit && f['HRname'].errors" class="text-danger">
+                            HR name is required.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>MD Name<span class="text-danger">*</span></label>
+                        <ng-select [items]="mdDropdownList"
+                                   bindLabel="name"
+                                   bindValue="name"
+                                   formControlName="MD"
+                                   placeholder="Select MD Name">
+                        </ng-select>
+                        <div *ngIf="submit && f['MD'].errors" class="text-danger">
+                            MD name is required.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Manager Name<span class="text-danger">*</span></label>
+                        <ng-select [items]="managerDropdownList"
+                                   bindLabel="name"
+                                   bindValue="name"
+                                   formControlName="ManagerName"
+                                   placeholder="Select Manager Name">
+                        </ng-select>
+                        <div *ngIf="submit && f['ManagerName'].errors" class="text-danger">
+                            Manager Name is required.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Team Lead<span class="text-danger">*</span></label>
+                        <ng-select [items]="teamLeadDropdownList"
+                                   bindLabel="name"
+                                   bindValue="name"
+                                   formControlName="TeamLead"
+                                   placeholder="Select Team Lead">
+                        </ng-select>
+                        <div *ngIf="submit && f['TeamLead'].errors" class="text-danger">
+                            Team Lead is required.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Team Members<span class="text-danger">*</span></label>
+                        <ng-select [items]="teamMemberDropdownList"
+                                   bindLabel="name"
+                                   bindValue="name"
+                                   formControlName="TeamMember"
+                                   placeholder="Select Team Member">
+                        </ng-select>
+                        <div *ngIf="submit && f['TeamMember'].errors" class="text-danger">
+                            Team Members is required.
+                        </div>
+                    </div>
+                </div>
+
+                
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-update" (click)="updatereportingMapping()">Update</button>
+        <button type="button" class="btn btn-cancel" (click)="modal.dismiss('Close click')">Close</button>
+    </div>
+</ng-template>

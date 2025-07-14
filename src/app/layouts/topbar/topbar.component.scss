@@ -1,0 +1,71 @@
+.cancelBtn {
+  background-color: rgb(201, 9, 54);
+  color: white;
+}
+
+.navbar-header {
+  // background-image: linear-gradient(to right, #6ba3cd, #031c2e) !important;
+  background-image: linear-gradient(to right, #82c4fa, #0072CF) !important;
+  // background: rgb(78,95,95);
+  // background: radial-gradient(circle, rgba(78,95,95,1) 0%, rgba(47,45,24,0.7933298319327731) 92%, rgba(184,170,65,1) 100%);
+}
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+}
+.text-success{
+  color: green;
+}
+.text-danger{
+  color:red
+}
+
+
+::ng-deep {@media (min-width: 1200px) {
+  .modal-xl {
+      --bs-modal-width: 1315px !important;
+  }
+}
+
+}
+.top-navbar {
+  height: 50px;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  color: white;
+  overflow: hidden;
+}
+ 
+.marquee-wrapper {
+  width: 60%;
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+}
+ 
+.marquee-content {
+  display: inline-block;
+  padding-left: 100%;
+  animation: scrollText 25s linear infinite;
+  font-size: 14px;
+  white-space: nowrap;
+}
+ 
+@keyframes scrollText {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+.user-profile-img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 50%;
+  color: white !important;
+  margin-right: 10px !important;
+}
+.user-profile-img:hover {
+  transform: scale(5) translateY(20px); /* Enlarges and moves image 20px down */
+  z-index: 1000;
+  position: relative;
+}
