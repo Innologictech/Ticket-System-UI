@@ -58,21 +58,15 @@ export class TicketCreationComponent {
   constructor(private fb: FormBuilder,private modalService: NgbModal,) {}
 
   ngOnInit(): void {
-    this.bugTicketForm = this.fb.group({
-      ticketNumber: ['', Validators.required],
-      customerName: ['', Validators.required],
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      phone: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
-      reportedDate: ['', Validators.required],
+     this.bugTicketForm = this.fb.group({
+      title: ['', Validators.required],
+      reportedBy: ['', Validators.required],
       priority: ['', Validators.required],
-      issueType: ['', Validators.required],
-      shortDescription: ['', Validators.required],
-      detailedDescription: ['', Validators.required],
-      expectedResult: [''],
-      actualResult: [''],
-      attachment: [null]
+      environment: ['', Validators.required],
+      ticketstatus: ['Open'], // default status
+      date: ['', Validators.required],
+      description: ['', Validators.required],
+      attachments: [null]
     });
   }
 
