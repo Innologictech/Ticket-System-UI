@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { GeneralserviceService } from 'src/app/generalservice.service';
 
 @Component({
   selector: 'app-ticket-creation',
@@ -9,56 +10,24 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class TicketCreationComponent {
 
+
   bugTicketForm!: FormGroup;
-  submit:boolean=false;
+  submit: boolean = false;
   submitted = false;
-  // bugTicketList: any[] = [];
+  isEditMode = false;
   selectedFile: File | null = null;
- 
-  bugTicketList  = [
-  {
-    ticketNumber: 'TCKT001',
-    customerName: 'ABC Corp',
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'john.doe@abc.com',
-    phone: '9876543210',
-    priority: 'High',
-    issueType: 'Functional Bug',
-    shortDescription: 'Login page error',
-    reportedDate: new Date('2025-07-01')
-  },
-  {
-    ticketNumber: 'TCKT002',
-    customerName: 'XYZ Ltd',
-    firstName: 'Jane',
-    lastName: 'Smith',
-    email: 'jane.smith@xyz.com',
-    phone: '9123456780',
-    priority: 'Medium',
-    issueType: 'Technical Bug',
-    shortDescription: 'System crash on submit',
-    reportedDate: new Date('2025-07-10')
-  },
-  {
-    ticketNumber: 'TCKT003',
-    customerName: 'PQR Enterprises',
-    firstName: 'Alan',
-    lastName: 'Walker',
-    email: 'alan@pqr.com',
-    phone: '9012345678',
-    priority: 'Critical',
-    issueType: 'Enhancement Request',
-    shortDescription: 'Need export to Excel',
-    reportedDate: new Date('2025-07-14')
-  }
-];
+  selectedTicket: any = null;
 
 
-  constructor(private fb: FormBuilder,private modalService: NgbModal,) {}
+  ticketData: any[] = [];
+
+  EditmodalRef: any;
+  CreatemodalRef: any;
+
+  constructor(private fb: FormBuilder, private modalService: NgbModal, private service: GeneralserviceService) { }
 
   ngOnInit(): void {
-     this.bugTicketForm = this.fb.group({
+    this.bugTicketForm = this.fb.group({
       title: ['', Validators.required],
       reportedBy: ['', Validators.required],
       priority: ['', Validators.required],
@@ -68,7 +37,22 @@ export class TicketCreationComponent {
       description: ['', Validators.required],
       attachments: [null]
     });
+    this.getTickets();
   }
+
+  getTickets(): void {
+    this.service.GetTicketDetails().subscribe(
+      (response: any) => {
+        console.log('Ticket data:', response);
+        this.ticketData = response.data;
+      },
+      (error) => {
+        console.error('Error fetching tickets', error);
+      }
+    );
+  }
+
+
 
   // Easy access to form controls
   get f() {
@@ -84,31 +68,133 @@ export class TicketCreationComponent {
     }
   }
 
-  submitBugTicket() {
-  
+
+
+  CreateTicket(): void {
+    if (this.bugTicketForm.invalid) {
+      this.bugTicketForm.markAllAsTouched();
+      return;
+    }
+
+    const rawForm = this.bugTicketForm.value;
+
+    const payload = {
+      title: rawForm.title,
+      reportedBy: rawForm.reportedBy,
+      priority: rawForm.priority,
+      environment: rawForm.environment,
+      status: rawForm.ticketstatus || "open",
+      date: rawForm.date,
+      description: rawForm.description,
+      attachment: rawForm.attachments || ''
+    };
+
+    this.service.CreateTicket(payload).subscribe(
+      (response: any) => {
+        console.log('Ticket created:', response);
+        alert('Ticket successfully created.');
+        this.bugTicketForm.reset();
+        this.getTickets(); // refresh
+        // Close modal
+        if (this.CreatemodalRef) {
+          this.CreatemodalRef.close();
+        }
+      },
+      (error) => {
+        console.error('Ticket creation failed:', error);
+        alert('Failed to create ticket.');
+      }
+    );
   }
 
-  editTicket(ticket: any, templateRef: any) {
 
+  updateTicket(): void {
+    if (this.bugTicketForm.invalid || !this.selectedTicket) {
+      this.bugTicketForm.markAllAsTouched();
+      return;
+    }
+
+    const rawForm = this.bugTicketForm.value;
+
+    const payload = {
+      customerticketId: this.selectedTicket.customerticketId, // Required for update
+      title: rawForm.title,
+      reportedBy: rawForm.reportedBy,
+      priority: rawForm.priority,
+      environment: rawForm.environment,
+      status: rawForm.ticketstatus || "Open",
+      date: rawForm.date,
+      description: rawForm.description,
+      attachment: rawForm.attachments || ''
+    };
+
+    this.service.UpdateTicket(payload).subscribe(
+      (response: any) => {
+        console.log('Ticket updated:', response);
+        alert('Ticket updated successfully.');
+        this.bugTicketForm.reset();
+        this.selectedTicket = null;
+        this.getTickets(); // refresh list
+        this.getTickets(); // refresh list
+
+        // Close modal
+        if (this.EditmodalRef) {
+          this.EditmodalRef.close();
+        }
+
+      },
+      (error) => {
+        console.error('Update failed:', error);
+        alert('Failed to update ticket.');
+      }
+    );
   }
+
+
+  editTicketModel(ticket: any, templateRef: any): void {
+    this.selectedTicket = ticket; // Store ticket for updating
+    this.submit = false;
+    this.isEditMode = true;
+    // Patch form with selected ticket data
+    this.bugTicketForm.patchValue({
+      title: ticket.title,
+      reportedBy: ticket.reportedBy,
+      priority: ticket.priority,
+      environment: ticket.environment,
+      ticketstatus: ticket.status,
+      date: ticket.date,
+      description: ticket.description,
+      attachments: null // Clear file input
+    });
+
+    // Open modal
+    this.EditmodalRef = this.modalService.open(templateRef, {
+      backdrop: 'static',
+      keyboard: false,
+      size: 'lg'
+    });
+  }
+
 
   deleteTicket(ticket: any) {
-   
+
   }
 
   viewTicket(ticket: any) {
-   
+
   }
 
-newTicketCreation(createBugTicketTemplate: any): void {
-    this.submit =false
+  TicketCreationModel(createBugTicketTemplate: any): void {
+    this.submit = false
     this.bugTicketForm.reset()
     this.bugTicketForm.patchValue({
       "status": true
     })
-    this.modalService.open(createBugTicketTemplate,{  backdrop: 'static', 
-      keyboard: false,size:'lg' });
-  
+    this.CreatemodalRef = this.modalService.open(createBugTicketTemplate, {
+      backdrop: 'static',
+      keyboard: false, size: 'lg'
+    });
+
   }
 
 }

@@ -875,9 +875,10 @@ input:focus {
 .card {
   border-radius: 8px;
   margin-bottom: 20px;
-  background-color: #ffffff;
+  // background-color: #ffffff;
+  background: linear-gradient(to right, #6bb5f2,#157fd6);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  background: url("/assets/images/bg3.jpg") no-repeat center center / cover !important;
+  // background: url("/assets/images/bg3.jpg") no-repeat center center / cover !important;
 
   
 }
