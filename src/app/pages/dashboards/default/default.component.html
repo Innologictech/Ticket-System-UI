@@ -2,33 +2,30 @@
   <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
       <div class="flex-grow-1 text-center fw-bold">Ticket Dashboard</div>
-     <!-- Summary Cards -->
-   
     </div>
-    <!-- <div class="d-flex justify-content-end mb-3">
-       <button class="btn btnAdd btn-md btn-raised" (click)="toggleSlide()">
-        {{ isSlide ? 'No Slide' : 'Slide' }}
-      </button>
-    </div>  -->
-    <div class="summary-cards" *ngIf="isSlide == false">
+
+    <!-- Summary Cards -->
+    <div class="summary-cards" *ngIf="!isSlide">
       <div class="card emp">
-        <h3>Total Employees</h3>
-        <div class="value">{{ summaryStats.totalEmployees || 0 }}</div>
+        <h3>Total Tickets</h3>
+        <div class="value">{{ summaryStats.totalTickets }}</div>
       </div>
       <div class="card prj">
-        <h3>Total Projects</h3>
-        <div class="value">{{ summaryStats.totalProjects || 0 }}</div>
+        <h3>Open Tickets</h3>
+        <div class="value">{{ summaryStats.openTickets }}</div>
       </div>
       <div class="card sheet">
-        <h3>Time Sheet</h3>
-        <div class="value">{{ summaryStats.totalHours || 0 }}</div>
+        <h3>In Progress</h3>
+        <div class="value">{{ summaryStats.inProgressTickets }}</div>
       </div>
       <div class="card avgPrj">
-        <h3>Avg Hours/Employee</h3>
-        <div class="value">{{ summaryStats.avgHoursPerEmployee || '0.00' }}</div>
+        <h3>Closed Tickets</h3>
+        <div class="value">{{ summaryStats.closedTickets }}</div>
       </div>
     </div>
-    <div class="carousel-container" *ngIf="isSlide == true">
+
+    <!-- Carousel View (Optional Slide) -->
+    <div class="carousel-container" *ngIf="isSlide">
       <div class="card1" *ngFor="let item of displayedItems"
            [@slideAnimation]
            [style.background-image]="'url(' + item.bgImage + ')'">
@@ -39,106 +36,72 @@
       </div>
     </div>
   </div>
-  
-  
- 
-  
-  
+
   <!-- Charts Section -->
- 
   <div class="card">
-   <div class="card-body">
-    <div class="d-flex justify-content-end mb-3">
-      <button class="btn btn-warning" (click)="resetView()">Reset</button>
-    </div>
-    
-    <div class="row" id="barChart" style="border: 2px solid darkviolet !important; margin-right: 0px !important; margin-left: 0px !important;">
-      <div class="col-md-6 col-lg-6" id="leftBar">
-        <h2 style="text-align: center;">Project-wise Employee Count</h2>
-        <apx-chart 
-        [series]="barChartOptions.series" 
-        [chart]="barChartOptions.chart"
-        [xaxis]="barChartOptions.xaxis"
-        [yaxis]="barChartOptions.yaxis"
-        [plotOptions]="barChartOptions.plotOptions"
-        [colors]="barChartOptions.colors">
-      </apx-chart>
-
-
+    <div class="card-body">
+      <div class="d-flex justify-content-end mb-3">
+        <button class="btn btn-warning" (click)="resetView()">Reset</button>
       </div>
-      
-      <div class="col-md-6 col-lg-6" id="rightBar" *ngIf="pieChartOptions.series?.length > 0">
-        <h2 style="text-align: center;">Employee Hours (Pie Chart)</h2>
-        <apx-chart 
-          [series]="pieChartOptions.series" 
-          [chart]="pieChartOptions.chart"
-          [labels]="pieChartOptions.labels"
-          [colors]="pieChartOptions.colors">
-        </apx-chart>
+
+      <div class="row" id="barChart" style="border: 2px solid darkviolet !important; margin-right: 0px !important; margin-left: 0px !important;">
+        <!-- Bar Chart -->
+        <div class="col-md-6 col-lg-6" id="leftBar">
+          <h2 style="text-align: center;">Yearly Ticket Status (Bar Chart)</h2>
+          <apx-chart 
+            [series]="barChartOptions.series" 
+            [chart]="barChartOptions.chart"
+            [xaxis]="barChartOptions.xaxis"
+            [yaxis]="barChartOptions.yaxis"
+            [plotOptions]="barChartOptions.plotOptions"
+            [colors]="barChartOptions.colors">
+          </apx-chart>
+        </div>
+
+        <!-- Pie Chart -->
+        <div class="col-md-6 col-lg-6" id="rightBar" *ngIf="pieChartOptions.series?.length > 0">
+          <h2 style="text-align: center;">Ticket Distribution - Current Year (Pie Chart)</h2>
+          <apx-chart 
+            [series]="pieChartOptions.series" 
+            [chart]="pieChartOptions.chart"
+            [labels]="pieChartOptions.labels"
+            [colors]="pieChartOptions.colors">
+          </apx-chart>
+        </div>
       </div>
     </div>
-   </div>
   </div>
-  
-  
-  
+
+  <!-- Ticket Table Section -->
   <div class="card">
-   <div class="card-body">
-    <table class="table table-bordered">
-      <thead class="thead-dark">
-        <tr>
-          <th>Assignment ID</th>
-          <th>Project Name</th>
-          <th>Employee Name</th>
-          <th>Employee ID</th>
-          <th>Project Start Date</th>
-          <th>Project End Date</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let item of filteredAssignments">
-          <td>{{ item.assignmentUniqueId }}</td>
-          
-          <td>
-            <ng-container *ngFor="let project of item.projectName; let last = last">
+    <div class="card-body">
+      <h2 class="text-center">Ticket Assignments</h2>
+      <table class="table table-bordered">
+        <thead class="thead-dark">
+          <tr>
+            <th>Assignment ID</th>
+            <th>Project Name</th>
+            <th>Employee Name</th>
+            <th>Employee ID</th>
+            <th>Project Start Date</th>
+            <th>Project End Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of filteredAssignments">
+            <td>{{ item.assignmentUniqueId }}</td>
+            <td>
+              <ng-container *ngFor="let project of item.projectName; let last = last">
                 {{ project.projectName }}<span *ngIf="!last">, </span>
-            </ng-container>
-        </td>
-          <td>{{ item.employeeName }}</td>
-          <td>{{ item.employeeID }}</td>
-          <td>{{ item.projectStartDate }}</td>
-          <td>{{ item.projectEndDate }}</td> 
-        </tr>
-      </tbody>
-    </table>
-   </div>
+              </ng-container>
+            </td>
+            <td>{{ item.employeeName }}</td>
+            <td>{{ item.employeeID }}</td>
+            <td>{{ item.projectStartDate }}</td>
+            <td>{{ item.projectEndDate }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
-  
-  <!-- Time Entries Table -->
-  <!-- <div class="table-section" *ngIf="!isLoading && tableData.length > 0">
-    <table class="table table-bordered table-stripped">
-      <thead>
-        <tr>
-          <th class="text-nowrap">Date</th>
-          <th class="text-nowrap">Employee</th>
-          <th class="text-nowrap">Project</th>
-          <th class="text-nowrap">Hours</th>
-          <th class="text-nowrap">Description</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let entry of tableData">
-          <td>{{ entry.date }}</td>
-          <td>{{ entry.employeeName }}</td>
-          <td>{{ entry.projectName }}</td>
-          <td>{{ entry.hours }}</td>
-          <td>{{ entry.description }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div> -->
-  
-
 </div>
-
-
