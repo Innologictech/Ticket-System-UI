@@ -1225,34 +1225,36 @@ i.bx {
 .vertical-menu {
   // background-image: linear-gradient(to bottom, #6ba3cd, #031c2e) !important;
 
-background: url("/assets/images/pic1.jpg") no-repeat center center / cover !important;
+// background: url("/assets/images/pic1.jpg") no-repeat center center / cover !important;
+background: linear-gradient(to bottom, #0f4c5c, #0f8a7b);
 background-size: cover;
 background-position: center;
 background-repeat: no-repeat;
 }
 
-.vertical-menu .menu-title {
-  color: #303773 !important;  /* Replace with the color that fits your theme */
-  font-weight: bold;
-  font-size: 14px;
-  text-transform: uppercase;
-  padding: 0.75rem 1rem;
-}
+// .vertical-menu .menu-title {
+//   color: #303773 !important;  /* Replace with the color that fits your theme */
+//   font-weight: bold;
+//   font-size: 14px;
+//   text-transform: uppercase;
+//   padding: 0.75rem 1rem;
+// }
 
-.vertical-menu #sidebar-menu > ul > li > a {
-  color: #303773 !important;  /* Replace with your desired theme color */
-  font-weight: bold;
-}
+// .vertical-menu #sidebar-menu > ul > li > a {
+//   color: #303773 !important;  /* Replace with your desired theme color */
+//   font-weight: bold;
+// }
 
-.vertical-menu #sidebar-menu .sub-menu > li > a,
-.vertical-menu #sidebar-menu .sub-menu .sub-menu > li > a {
-  color: #303773 !important;
-  font-weight: 500;
-}
+// .vertical-menu #sidebar-menu .sub-menu > li > a,
+// .vertical-menu #sidebar-menu .sub-menu .sub-menu > li > a {
+//   color: #303773 !important;
+//   font-weight: 500;
+// }
 
 .navbar-header {
   // background-image: linear-gradient(to right, #6ba3cd, #031c2e) !important;
-  background-image: linear-gradient(to right,#8799be, #5c6e91) !important;
+  // background-image: linear-gradient(to right,#8799be, #5c6e91) !important;
+  background-image: linear-gradient(to right, #0e1851, #0e6463) !important;
   // background: rgb(78,95,95);
   // background: radial-gradient(circle, rgba(78,95,95,1) 0%, rgba(47,45,24,0.7933298319327731) 92%, rgba(184,170,65,1) 100%);
 }
