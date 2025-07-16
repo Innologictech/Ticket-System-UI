@@ -1,25 +1,27 @@
-.vertical-menu {
-  // background-image: linear-gradient(to bottom, #6ba3cd, #031c2e) !important;
+// .vertical-menu {
+//   // background-image: linear-gradient(to bottom, #6ba3cd, #031c2e) !important;
 
-  // background: url("/assets/images/innologicslogo_sm.jpg") no-repeat center center / cover !important;
-  background-size: cover;
-background-position: center;
-background-repeat: no-repeat;
-}
+// background: url("/assets/images/pic1.jpg") no-repeat center center / cover !important;
+// background-size: cover;
+// background-position: center;
+// background-repeat: no-repeat;
+// }
+
+
  
 .navbar-brand-box {
   background-color: #6ba3cd !important;
   background-image: linear-gradient(to bottom, #103554, #031c2e) !important;
 }
  
-.vertical-menu li:hover i,
-.vertical-menu li.mm-active i {
-  color: white !important;
-}
+// .vertical-menu li:hover i,
+// .vertical-menu li.mm-active i {
+//   color: white !important;
+// }
  
 .vertical-menu i {
   // color: brown !important;
-  color: white !important;
+  color: #7e56b6  !important;
 }
  
 .sub-menu .active {
@@ -65,6 +67,7 @@ background-repeat: no-repeat;
 #sidebar-menu > ul > li.menu-title {
   padding-left: 0.75rem !important;  /* or try 0.5rem */
 }
+
 
 /* First-level subitems */
 #sidebar-menu .sub-menu > li > a {
