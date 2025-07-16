@@ -46,10 +46,10 @@ import { CustomerTicketModule } from './customer-ticket/customer-ticket.module';
 @NgModule(
         {
                 declarations: [
-//     TicketCreationComponent
-  
-    TicketCreationComponent
-  ],
+                        //     TicketCreationComponent
+
+                        TicketCreationComponent
+                ],
                 imports: [CommonModule,
                         FormsModule,
                         BsDropdownModule.forRoot(),

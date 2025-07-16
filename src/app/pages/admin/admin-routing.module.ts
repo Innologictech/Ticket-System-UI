@@ -4,6 +4,7 @@ import { TaskManagementComponent } from './task-management/task-management.compo
 import { DesignationComponent } from './designation/designation.component';
 import { AdminemployeecreationComponent } from './adminemployeecreation/adminemployeecreation.component';
 import { AdminEmployeeCalendarComponent } from './admin-employee-calendar/admin-employee-calendar.component';
+import { TicketListComponent } from './ticket-list/ticket-list.component';
 
 const routes: Routes = [
   {
@@ -21,6 +22,11 @@ const routes: Routes = [
 {
     path:'AdminEmployeeCalendar',
     component:AdminEmployeeCalendarComponent
+},
+{
+  path:'TicketList',
+  component:TicketListComponent
+
 }
 
 ];

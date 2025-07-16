@@ -7510,6 +7510,13 @@ ngx-masonry@^14.0.1:
   dependencies:
     tslib "^2.0.0"
 
+ngx-pagination@^6.0.3:
+  version "6.0.3"
+  resolved "https://registry.npmjs.org/ngx-pagination/-/ngx-pagination-6.0.3.tgz"
+  integrity sha512-lONjTQ7hFPh1SyhwDrRd5ZwM4NMGQ7bNR6vLrs6mrU0Z8Q1zCcWbf/pvyp4DOlGyd9uyZxRy2wUsSZLeIPjbAw==
+  dependencies:
+    tslib "^2.3.0"
+
 ngx-print@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npmjs.org/ngx-print/-/ngx-print-2.0.0.tgz"

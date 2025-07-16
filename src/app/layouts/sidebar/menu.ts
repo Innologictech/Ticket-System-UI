@@ -409,13 +409,28 @@ export const MENU: MenuItem[] = [
     }
     , {
         id: 6,
-        label: 'Employee-ticket',
+        label: 'Customer-ticket',
         icon: 'bx bx-task',
       subItems: [
             {
                 id: 52,
                 label: 'Ticket-Creation',
                 link: '/ticket-creation',
+                parentId: 6,
+                icon: 'bx bx-stopwatch',
+                isTitle: false
+            }
+        ]
+    },
+    , {
+        id: 6,
+        label: 'Admin',
+        icon: 'bx bx-task',
+      subItems: [
+            {
+                id: 52,
+                label: 'Ticket-Mnagement',
+                link: '/TicketList',
                 parentId: 6,
                 icon: 'bx bx-stopwatch',
                 isTitle: false
