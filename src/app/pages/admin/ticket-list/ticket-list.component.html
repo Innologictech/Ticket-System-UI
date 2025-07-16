@@ -1,7 +1,7 @@
 <div class="mb-3 d-flex justify-content-between">
   <input
     type="text"
-    class="form-control w-25"
+    class=" w-15"
     placeholder="Search..."
     [(ngModel)]="searchText"
   />
@@ -17,7 +17,7 @@
         <th (click)="setSort('title')" style="cursor:pointer">Title</th>
         <th (click)="setSort('priority')" style="cursor:pointer">Priority</th>
         <th (click)="setSort('status')" style="cursor:pointer">Status</th>
-        <th (click)="setSort('date')" style="cursor:pointer">Created Date</th> <br>
+        <th (click)="setSort('date')" style="cursor:pointer">Created Date</th>
         <th>Actions</th>
       </tr>
     </thead>
