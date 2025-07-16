@@ -37,7 +37,7 @@ export class Login2Component implements OnInit {
      
     'assets/images/innologicslogo.webp',
      'assets/images/pic4.jpg',
-    'assets/images/pic3.jpg',
+    // 'assets/images/pic3.jpg',
     'assets/images/pic2.jpg',
     
     // 'assets/images/flightparking.jpg',
