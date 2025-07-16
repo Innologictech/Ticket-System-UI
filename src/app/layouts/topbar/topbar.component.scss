@@ -3,12 +3,12 @@
   color: white;
 }
 
-.navbar-header {
-  // background-image: linear-gradient(to right, #6ba3cd, #031c2e) !important;
-  background-image: linear-gradient(to right, #82c4fa, #0072CF) !important;
-  // background: rgb(78,95,95);
-  // background: radial-gradient(circle, rgba(78,95,95,1) 0%, rgba(47,45,24,0.7933298319327731) 92%, rgba(184,170,65,1) 100%);
-}
+// .navbar-header {
+//   // background-image: linear-gradient(to right, #6ba3cd, #031c2e) !important;
+//   background-image: linear-gradient(to right, #a0accf, #5c6e91) !important;
+//   // background: rgb(78,95,95);
+//   // background: radial-gradient(circle, rgba(78,95,95,1) 0%, rgba(47,45,24,0.7933298319327731) 92%, rgba(184,170,65,1) 100%);
+// }
 .modal-header {
   display: flex;
   justify-content: space-between;
@@ -50,6 +50,7 @@
   animation: scrollText 25s linear infinite;
   font-size: 14px;
   white-space: nowrap;
+  color: #1c2e4a; 
 }
  
 @keyframes scrollText {
