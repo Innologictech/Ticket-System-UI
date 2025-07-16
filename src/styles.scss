@@ -805,7 +805,7 @@ input:focus {
 
 .btnClose{
   padding: 10px 20px;
-  background:rgb(201, 9, 54);
+  background:brown;
   border: 3px solid #f2eaea;
   border-radius: 4px;
   cursor: pointer;
@@ -846,7 +846,7 @@ input:focus {
   color: white !important;
 }
 .card-header{
-  color: red !important;
+  color: brown !important;
     border-radius: 0px !important;
     /* background: radial-gradient(circle, rgba(63, 94, 251, 1) 0%, rgba(225, 70, 252, 1) 100%); */
     font-size: 20px !important;
@@ -861,27 +861,27 @@ input:focus {
     box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
     // background: url(/assets/images/bg4.jpg) no-repeat center center / cover !important;
     border-bottom: 2px solid blue;
-    text-align: center;
+    text-align: left;
 }
-.card-body{
-  padding: 10px !important;
-   // background-color: #f9f9f9;
-   border-radius: 8px;
-   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  // background: url("/assets/images/bg3.jpg") no-repeat center center / cover !important;
+// .card-body{
+//   padding: 10px !important;
+//    // background-color: #f9f9f9;
+//    border-radius: 8px;
+//    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+//   // background: url("/assets/images/bg3.jpg") no-repeat center center / cover !important;
 
-}
+// }
 /* General Styles for Card and Modal */
-.card {
-  border-radius: 8px;
-  margin-bottom: 20px;
-  // background-color: #ffffff;
-  background: linear-gradient(to right, #6bb5f2,#157fd6);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  // background: url("/assets/images/bg3.jpg") no-repeat center center / cover !important;
+// .card {
+//   border-radius: 8px;
+//   margin-bottom: 20px;
+//   // background-color: #ffffff;
+//   background: linear-gradient(to right, #6bb5f2,#157fd6);
+//   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+//   // background: url("/assets/images/bg3.jpg") no-repeat center center / cover !important;
 
   
-}
+// }
 
 
 .modal-header {
@@ -975,6 +975,7 @@ input:focus {
   // padding: 10px 20px;
   font-size: 15px;
   cursor: pointer;
+  margin-top: 5px;
 
 }
 
@@ -1211,6 +1212,15 @@ i.bx {
   margin-right: 8px;
   vertical-align: middle;
 }
+
+.tableFixHead thead th {
+  position: sticky;
+  top: 0;
+  background-color: #343a40; /* Dark header */
+  color: white;
+  z-index: 10;
+}
+
 
 
 

@@ -135,7 +135,7 @@ export class TicketCreationComponent {
         this.bugTicketForm.reset();
         this.selectedTicket = null;
         this.getTickets(); // refresh list
-        this.getTickets(); // refresh list
+        
 
         // Close modal
         if (this.EditmodalRef) {
@@ -176,15 +176,13 @@ export class TicketCreationComponent {
   }
 
 
-  deleteTicket(ticket: any) {
-
-  }
-
+  
   viewTicket(ticket: any) {
 
   }
 
   TicketCreationModel(createBugTicketTemplate: any): void {
+    this.isEditMode=false;
     this.submit = false
     this.bugTicketForm.reset()
     this.bugTicketForm.patchValue({

@@ -429,8 +429,8 @@ export const MENU: MenuItem[] = [
       subItems: [
             {
                 id: 52,
-                label: 'Ticket-list',
-                link: '/ticket-list',
+                label: 'Ticket-Mnagement',
+                link: '/TicketList',
                 parentId: 6,
                 icon: 'bx bx-stopwatch',
                 isTitle: false
