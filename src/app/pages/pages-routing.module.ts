@@ -18,6 +18,7 @@ const routes: Routes = [
   { path: 'chat', component: ChatComponent },
   { path: 'filemanager', component: FilemanagerComponent },
   { path: 'Employee-ticket', loadChildren: () => import('./customer-ticket/customer-ticket.module').then(m =>m.CustomerTicketModule) },
+  {path:'admin', loadChildren: () => import('./admin/admin.module').then(m =>m.AdminModule)},
   { path: 'dashboards', loadChildren: () => import('./dashboards/dashboards.module').then(m => m.DashboardsModule) },
   { path: 'Administration', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule) },
   { path: 'Managenent', loadChildren: () => import('./management/management.module').then(m => m.ManagementModule) },

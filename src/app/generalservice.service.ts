@@ -263,6 +263,19 @@ getLoginResponse(){
 
   }
 
+  /*ticketing tool methods start here*/
+  GetTicketDetails(){
+    return this.http.get(environment.baseUrl+'/ticket/getticket');
+  }
+
+  CreateTicket(data){
+    return this.http.post(environment.baseUrl+'/ticket/saveticket',data)
+  }
+
+  UpdateTicket(data){
+    return this.http.post(environment.baseUrl+'/ticket/Updateticket',data)
+  }
+
   
 
 }
