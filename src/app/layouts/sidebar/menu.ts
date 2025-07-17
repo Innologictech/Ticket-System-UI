@@ -35,7 +35,7 @@ export const MENU: MenuItem[] = [
        
                 id: 3,
                 label: 'user-creation',
-                link: '/EmployeeCreation',
+                link: '/InvoiceUserCreation',
                 parentId: 2,
                 icon: 'bx bx-note',
                 isTitle: false
