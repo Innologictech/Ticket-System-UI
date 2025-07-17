@@ -70,12 +70,19 @@
   border: 2px solid blue !important;
 }
 
-// .aircraft-logo {
-//   width: 100%; /* Increase width */
-//   height: 160px; /* Increase height */
-//   display: block;
-//   margin: 0 auto; /* Center the image */
-// }
+.aircraft-logo {
+  max-width: 120px;
+  width: auto;
+  height: auto;
+  display: block;
+  margin: 0 auto 20px auto; /* Center and add bottom space */
+  object-fit: contain;
+}
+
+/* ✅ Right Side Container must be inside a relative container */
+.container-fluid {
+  position: relative; /* Ensures absolute children like .rightSide position properly */
+}
 
 // .pointer_Underline{
 //   cursor: pointer !important;
