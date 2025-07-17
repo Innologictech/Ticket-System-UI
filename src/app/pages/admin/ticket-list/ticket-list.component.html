@@ -32,22 +32,14 @@
         <td>{{ ticket.customerticketId }}</td>
         <td>{{ ticket.title }}</td>
         <td>
-          <span [ngClass]="{
-              'badge bg-danger': ticket.priority === 'High',
-              'badge bg-warning text-dark': ticket.priority === 'Medium',
-              'badge bg-success': ticket.priority === 'Low'
-            }">
+          
             {{ ticket.priority }}
-          </span>
+         
         </td>
         <td>
-          <span [ngClass]="{
-              'badge bg-success': ticket.status === 'Closed',
-              'badge bg-info text-dark': ticket.status === 'Open',
-              'badge bg-secondary': ticket.status !== 'Open' && ticket.status !== 'Closed'
-            }">
+          
             {{ ticket.status }}
-          </span>
+         
         </td>
         <td>{{ ticket.date | date: 'dd-MM-yyyy' }}</td>
         <td class="text-center">
