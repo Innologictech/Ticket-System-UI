@@ -1,0 +1,30 @@
+name: Deploy Angular to GitHub Pages
+
+on:
+  push:
+    branches:
+      - Development
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Angular App
+        run: npm run build -- --configuration production --base-href=/Ticket-System-UI/
+
+      - name: Deploy to GitHub Pages
+        run: |
+          npm install -g angular-cli-ghpages
+          npx angular-cli-ghpages --dir=dist/Ticket-System-UI --no-silent --repo=https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/Innologictech/Ticket-System-UI.git --name="Innologictech" --email="info@innologictechnologies.com"

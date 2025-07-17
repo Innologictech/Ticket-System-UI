@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators,ReactiveFormsModule,FormsModule } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
+import { LoaderService } from 'src/app/core/services/loader.service';
 
 
 @Component({
@@ -38,7 +39,7 @@ export class TicketListComponent implements OnInit {
       this.getTickets()
     }
   
-  constructor(private service: GeneralserviceService, private modalService: NgbModal,private fb: FormBuilder) {
+  constructor(private service: GeneralserviceService, private modalService: NgbModal,private fb: FormBuilder,private loaderservice:LoaderService) {
 
   }
 
@@ -86,13 +87,17 @@ export class TicketListComponent implements OnInit {
 
 
   getTickets(): void {
+    this.loaderservice.showLoader();
     this.service.GetTicketDetails().subscribe(
+      
       (response: any) => {
         console.log('Ticket data:', response);
         this.ticketData = response.data;
+        this.loaderservice.hideLoader();
       },
       (error) => {
         console.error('Error fetching tickets', error);
+        this.loaderservice.hideLoader();
       }
     );
   }
@@ -287,7 +292,9 @@ onRejectTicket(ticket: any): void {
         environment: ticket.environment,
         date: ticket.date,
         description: ticket.description,
-        attachments: null
+        attachments: ticket.attachments,
+        assignedTo:ticket.consultant
+
       });
 
       // ✅ Call update method with status = 'Rejected' and reason

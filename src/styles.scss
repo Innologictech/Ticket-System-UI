@@ -1265,8 +1265,72 @@ background-repeat: no-repeat;
 
 
 
+/*styles for loader  start..........................*/
+
+.loading-overlay {
+  position: fixed;
+  inset: 0;                 /* shorthand top/left/right/bottom:0 */
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;            /* keep above app chrome */
+}
+
+/* Accessible "screen-reader only" helper if not using Bootstrap */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  clip: rect(0 0 0 0);
+  overflow: hidden;
+  white-space: nowrap;
+  border: 0;
+}
+
+/* --- CSS Spinner --- */
+.loader {
+  --loader-size: 58px;              /* tweak size here */
+  --loader-border: 4px;             /* weight */
+  --loader-primary: #fff;           /* top border */
+  --loader-accent: #4c14ce;         /* bottom border */
+
+  position: relative;               /* REQUIRED for ::after */
+  display: inline-block;
+  width: var(--loader-size);
+  height: var(--loader-size);
+  border-radius: 50%;
+  box-sizing: border-box;
+  border-top: var(--loader-border) solid var(--loader-primary);
+  border-right: var(--loader-border) solid transparent;
+  animation: loader-rotation 1s linear infinite;
+}
+
+.loader::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border-bottom: var(--loader-border) solid var(--loader-accent);
+  border-left: var(--loader-border) solid transparent;
+}
+
+@keyframes loader-rotation {
+  to {
+    transform: rotate(360deg);
+  }
+}
 
 
+
+/*styles for loader  end.................................*/
 
 
 

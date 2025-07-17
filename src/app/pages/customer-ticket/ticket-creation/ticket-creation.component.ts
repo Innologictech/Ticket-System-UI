@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GeneralserviceService } from 'src/app/generalservice.service';
 import Swal from 'sweetalert2';
+import { LoaderService } from 'src/app/core/services/loader.service';
 
 
 @Component({
@@ -26,7 +27,7 @@ export class TicketCreationComponent {
   EditmodalRef: any;
   CreatemodalRef: any;
 
-  constructor(private fb: FormBuilder, private modalService: NgbModal, private service: GeneralserviceService) { }
+  constructor(private fb: FormBuilder, private modalService: NgbModal, private service: GeneralserviceService,private loaderservice:LoaderService) { }
 
   ngOnInit(): void {
     this.bugTicketForm = this.fb.group({
@@ -43,10 +44,12 @@ export class TicketCreationComponent {
   }
 
   getTickets(): void {
+    this.loaderservice.showLoader();
     this.service.GetTicketDetails().subscribe(
       (response: any) => {
         console.log('Ticket data:', response);
         this.ticketData = response.data;
+        this.loaderservice.hideLoader();
       },
       (error) => {
         console.error('Error fetching tickets', error);

@@ -211,16 +211,41 @@ mustMatch(controlName: string, matchingControlName: string) {
   /**
    * Logout the user
    */
-  logout() {
-    if (environment.defaultauth === 'firebase') {
-      this.authService.logout();
-    } else {
-      this.authFackservice.logout();
-    }
-    // this.router.navigate(['/auth/login']);
-    this.router.navigate(['/auth/login-2'],);
+  // logout() {
+  //   if (environment.defaultauth === 'firebase') {
+  //     this.authService.logout();
+  //   } else {
+  //     this.authFackservice.logout();
+  //   }
+  //   // this.router.navigate(['/auth/login']);
+  //   this.router.navigate(['/auth/login-2'],);
 
-  }
+  // }
+
+  logout() {
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'You will be logged out of your session.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Logout',
+    cancelButtonText: 'Cancel',
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      
+      if (environment.defaultauth === 'firebase') {
+        this.authService.logout();
+      } else {
+        this.authFackservice.logout();
+      }
+      setTimeout(() => {
+        this.router.navigate(['/auth/login-2']);
+      });
+    }
+  });
+}
 
   /**
    * Fullscreen method
