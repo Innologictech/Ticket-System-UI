@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
@@ -15,6 +16,8 @@ export class GeneralserviceService {
   getMonthYearList: any;
   getWeeksForMonthYear: any;
   getDaysForWeek: any;
+  UpdateInvoice: any;
+  baseUrl: any;
  
   // deteleGlobal: any;
  
@@ -48,9 +51,9 @@ getLoginResponse(){
     return this.http.post(environment.baseUrl+'invoice/createNewInvoice',obj);
   }
   
-  UpdateInvoice(obj,invoiceRefNo){
-    return this.http.put(environment.baseUrl+'updateInvoiceByReferenceNo/'+invoiceRefNo,obj);
-  }
+  // UpdateInvoice(obj,invoiceRefNo){
+  //   return this.http.put(environment.baseUrl+'updateInvoiceByReferenceNo/'+invoiceRefNo,obj);
+  // }
   getstateList(){
     return this.http.get(environment.baseUrl+'invoice/stateList');
   }
@@ -67,9 +70,9 @@ getLoginResponse(){
     return this.http.get(environment.baseUrl+'invoice/getAllUserList');
   }
 
-  submitLogin(obj){
-    return this.http.post(environment.baseUrl+'/timesheet/authenticationLogin',obj);
-  }
+  // submitLogin(obj){
+  //   return this.http.post(environment.baseUrl+'/timesheet/authenticationLogin',obj);
+  // }
   updateExitUser(obj,userUniqueId){
     return this.http.put(environment.baseUrl+'invoice/updateExitUser/'+userUniqueId,obj);
   }
@@ -276,6 +279,22 @@ getLoginResponse(){
     return this.http.post(environment.baseUrl+'/ticket/Updateticket',data)
   }
 
-  
+createUser(userData: any) {
+    return this.http.post(environment.baseUrl+'/ticket/UserCreation',userData);
+  }
+
+  getAllUsers() {
+  return this.http.get(environment.baseUrl+'/ticket/getAllUserList');
+}
+
+updateUser(payload: any) {
+  return this.http.post(environment.baseUrl+'/ticket/UpdateExitUser',payload);
+}
+
+
+
+  submitLogin(payload: any) {
+  return this.http.post('http://localhost:3000/api/ticket/authenticationLogin', payload);
+}
 
 }

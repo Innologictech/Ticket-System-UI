@@ -15,6 +15,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
 })
 export class InvoiceUserCreationComponent implements OnInit {
   @ViewChild('editUserTemplate') editUserTemplate!: TemplateRef<any>;
+  
+  CreatemodalRef:any;
 
   // invoiceUserCreationForm!: FormGroup;
   userCreationForm!: FormGroup;
@@ -34,6 +36,7 @@ confirmFieldTextType: boolean = false;
   userUniqueId: any;
   loginData: any;
   c: any;
+  editModalRef: any;
   
  
 
@@ -60,7 +63,7 @@ confirmFieldTextType: boolean = false;
 
 
     this.userEditForm = this.fb.group({
-
+       userUniqueId: [''], 
       userName: ['', Validators.required],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -78,14 +81,15 @@ confirmFieldTextType: boolean = false;
     this.getAllUserList()
     this.loginData = this.service.getLoginResponse()
   }
-  editUser(selectedUser: any, content: any) {
-    console.log('Selected User:', selectedUser); // Debugging
+  editUser(user: any, template: TemplateRef<any>) {
+  this.userEditForm.patchValue(user);
 
-    if (!selectedUser) {
-      console.error('No user data found');
-      return;
-    }
-  }
+  this.editModalRef = this.modalService.open(template, {
+    backdrop: 'static',
+    keyboard: false,
+    size: 'lg'
+  });
+}
  
 
   openEditModal(user: any, editUserTemplate: TemplateRef<any>): void {
@@ -95,20 +99,19 @@ confirmFieldTextType: boolean = false;
     const selectedUser = user;
     this.userUniqueId = user.userUniqueId
     this.userEditForm.patchValue({
+      userUniqueId: selectedUser.userUniqueId,
       userName: selectedUser.userName,
-      firstName: selectedUser.userFirstName,
-      lastName: selectedUser.userLastName,
-      email: selectedUser.userEmail,
-      contact: selectedUser.userContact,
-      password: selectedUser.userPassword,
-      confirmPassword: selectedUser.userConfirmPassword,
-      activity: selectedUser.userActivity,
-      status: selectedUser.userStatus 
+      firstName: selectedUser.FirstName,
+      lastName: selectedUser.LastName,
+      email: selectedUser.Email,
+      contact: selectedUser.Contact,
+      password: selectedUser.Password,
+      confirmPassword: selectedUser.ConfirmPassword,
+      activity: selectedUser.Activity,
+      status: selectedUser.Status 
     });
-    this.modalService.open(this.editUserTemplate, {
-      backdrop: 'static', 
-      keyboard: false ,size:'lg'
-    });  }
+    this.modalRef = this.modalService.open(this.editUserTemplate, { size: 'lg' });
+    }
 
 
   mustMatch(password: string, confirmPassword: string) {
@@ -198,7 +201,7 @@ confirmFieldTextType: boolean = false;
     this.userCreationForm.patchValue({
       "status": true
     })
-    this.modalService.open(newUserTemplate,{  backdrop: 'static', 
+   this.CreatemodalRef= this.modalService.open(newUserTemplate,{  backdrop: 'static', 
       keyboard: false,size:'lg' });
   
   }
@@ -208,66 +211,66 @@ confirmFieldTextType: boolean = false;
      
 
   // Update User Information
-  updateUserCreation(modal: any): void {
-    if (this.userEditForm.valid) {
-      console.log('Updated Data:', this.userEditForm.value);
-      // Here, you would typically send the updated data to the backend
+  // updateUserCreation(modal: any): void {
+  //   if (this.userEditForm.valid) {
+  //     console.log('Updated Data:', this.userEditForm.value);
+  //     // Here, you would typically send the updated data to the backend
     
   
       
-      let updateObj = {
-        "userUniqueId": this.userUniqueId, // Assuming the unique ID is part of the form
-        "userName": this.userEditForm.value.userName,
-        "userFirstName": this.userEditForm.value.firstName,
-        "userLastName": this.userEditForm.value.lastName,
-        "userEmail": this.userEditForm.value.email,
-        "userContact": this.userEditForm.value.contact,
-        "userPassword": this.userEditForm.value.password,
-        "userConfirmPassword": this.userEditForm.value.confirmPassword,
-        "userStatus": this.userEditForm.value.status,
-        "userActivity": this.userEditForm.value.activity,
+  //     let updateObj = {
+  //       "userUniqueId": this.userUniqueId, // Assuming the unique ID is part of the form
+  //       "userName": this.userEditForm.value.userName,
+  //       "userFirstName": this.userEditForm.value.firstName,
+  //       "userLastName": this.userEditForm.value.lastName,
+  //       "userEmail": this.userEditForm.value.email,
+  //       "userContact": this.userEditForm.value.contact,
+  //       "userPassword": this.userEditForm.value.password,
+  //       "userConfirmPassword": this.userEditForm.value.confirmPassword,
+  //       "userStatus": this.userEditForm.value.status,
+  //       "userActivity": this.userEditForm.value.activity,
 
-      };
+  //     };
       
-      console.log("updateObj", updateObj);
-      this.spinner.show()
-      this.service. updateExitUser(updateObj,this.userUniqueId).subscribe((res: any) => {
-        console.log("updateUserCreation", res);
-        this.spinner.hide()
-        if (res.status == 400) {
-          this.toastr.success(res.message);
-        } else {
-          this.submit =false
-          // Display success toast
-          this.modalService.dismissAll(modal);
-          Swal.fire({
-            title: '',
-            text: res.message,
-            icon: 'success',
-            cancelButtonText: 'Ok',
-            timer:5000
-          }).then((result) => {
-            if (result) {
-              // Handle confirmation if needed
-            } else {
-              // Handle cancel if needed
-            }
-          });
-        }
-        this.userEditForm.reset()
-        this.getAllUserList();
+  //     console.log("updateObj", updateObj);
+  //     this.spinner.show()
+  //     this.service. updateExitUser(updateObj,this.userUniqueId).subscribe((res: any) => {
+  //       console.log("updateUserCreation", res);
+  //       this.spinner.hide()
+  //       if (res.status == 400) {
+  //         this.toastr.success(res.message);
+  //       } else {
+  //         this.submit =false
+  //         // Display success toast
+  //         this.modalService.dismissAll(modal);
+  //         Swal.fire({
+  //           title: '',
+  //           text: res.message,
+  //           icon: 'success',
+  //           cancelButtonText: 'Ok',
+  //           timer:5000
+  //         }).then((result) => {
+  //           if (result) {
+  //             // Handle confirmation if needed
+  //           } else {
+  //             // Handle cancel if needed
+  //           }
+  //         });
+  //       }
+  //       this.userEditForm.reset()
+  //       this.getAllUserList();
         
-        this.submitted = false;
-      }, error => {
-        this.spinner.hide()
-        this.toastr.error(error);
-        console.log("error", error);
-      });
-    } else {
-      console.log('Form is invalid');// Ensure all fields are marked as touched
-      this.submit =true
-    }
-  }
+  //       this.submitted = false;
+  //     }, error => {
+  //       this.spinner.hide()
+  //       this.toastr.error(error);
+  //       console.log("error", error);
+  //     });
+  //   } else {
+  //     console.log('Form is invalid');// Ensure all fields are marked as touched
+  //     this.submit =true
+  //   }
+  // }
   
   // submitNewUser() {
   //   this.submitted = true;
@@ -277,76 +280,76 @@ confirmFieldTextType: boolean = false;
   //   // Handle form submission logic
   // }
 
-  submitUserForm(modal: any) {
-    console.log('Create User:', this.userCreationForm.value);
+  // submitUserForm(modal: any) {
+  //   console.log('Create User:', this.userCreationForm.value);
   
-    if (this.userCreationForm.invalid == true) {
-      this.submit = true;
-      return;
-    } else {
-      this.submit = false;
+  //   if (this.userCreationForm.invalid == true) {
+  //     this.submit = true;
+  //     return;
+  //   } else {
+  //     this.submit = false;
 
   
-    let creatObj = {
-      "userName": this.userCreationForm.value.userName,
-      "userFirstName": this.userCreationForm.value.firstName,
-      "userLastName": this.userCreationForm.value.lastName,
-      "userEmail": this.userCreationForm.value.email,
-      "userContact": this.userCreationForm.value.contact,
-      "userPassword": this.userCreationForm.value.password,
-      "userConfirmPassword": this.userCreationForm.value.confirmPassword,
-      "userStatus": this.userCreationForm.value.status,
-      "userActivity": this.userCreationForm.value.activity
-    };
+  //   let creatObj = {
+  //     "userName": this.userCreationForm.value.userName,
+  //     "userFirstName": this.userCreationForm.value.firstName,
+  //     "userLastName": this.userCreationForm.value.lastName,
+  //     "userEmail": this.userCreationForm.value.email,
+  //     "userContact": this.userCreationForm.value.contact,
+  //     "userPassword": this.userCreationForm.value.password,
+  //     "userConfirmPassword": this.userCreationForm.value.confirmPassword,
+  //     "userStatus": this.userCreationForm.value.status,
+  //     "userActivity": this.userCreationForm.value.activity
+  //   };
   
-    console.log("creatObj", creatObj);
-  this.spinner.show()
-    this.service.userNewCreation(creatObj).subscribe((res: any) => {
-      console.log("submitUserForm", res);
-      console.log('apiErr', res, res.responseData);
-      this.spinner.hide()
+  //   console.log("creatObj", creatObj);
+  // this.spinner.show()
+  //   this.service.userNewCreation(creatObj).subscribe((res: any) => {
+  //     console.log("submitUserForm", res);
+  //     console.log('apiErr', res, res.responseData);
+  //     this.spinner.hide()
 
-      if(res.status == 400){
-        this.toastr.success(res.message);
+  //     if(res.status == 400){
+  //       this.toastr.success(res.message);
 
-      }else{
-         // Display success toast
-         this.userCreationForm.reset()
+  //     }else{
+  //        // Display success toast
+  //        this.userCreationForm.reset()
          
-      this.modalService.dismissAll(modal);
-      this.c('Close click');
-      this.getAllUserList()
-      Swal.fire({
-        title: '',
-        text: res.message,
-        icon: 'success',
-        cancelButtonText: 'Ok',
-        timer:5000
-      }).then((result) => {
-        if (result) {
+  //     this.modalService.dismissAll(modal);
+  //     this.c('Close click');
+  //     this.getAllUserList()
+  //     Swal.fire({
+  //       title: '',
+  //       text: res.message,
+  //       icon: 'success',
+  //       cancelButtonText: 'Ok',
+  //       timer:5000
+  //     }).then((result) => {
+  //       if (result) {
   
-        } else {
+  //       } else {
   
-        }
-      });
-      }
+  //       }
+  //     });
+  //     }
       
   
      
   
-      this.getAllUserList();
-      // this.modalService.dismissAll(modal);
-      this.submitted = true;
-      this.submit=false
-    }, error => {
-        this.toastr.error(error)
-      // this.modalService.dismissAll(modal);
-      console.log("error", error);
-      this.spinner.hide()
+  //     this.getAllUserList();
+  //     // this.modalService.dismissAll(modal);
+  //     this.submitted = true;
+  //     this.submit=false
+  //   }, error => {
+  //       this.toastr.error(error)
+  //     // this.modalService.dismissAll(modal);
+  //     console.log("error", error);
+  //     this.spinner.hide()
 
-    });
-  }
-  }
+  //   });
+  // }
+  // }
   //  delete(data): void {
   //     console.log('Deleting Customer with ID:',data, this.userUniqueId);
   //   this.userUniqueId = data.userUniqueId
@@ -469,7 +472,7 @@ confirmFieldTextType: boolean = false;
   getAllUserList(){
     this.userList = [];
     this.spinner.show()
-    this.service.getAllUserList().subscribe((res:any)=>{
+    this.service.getAllUsers().subscribe((res:any)=>{
       this.userList = res.data
       this.spinner.hide()
       console.log("this.userList",this.userList)
@@ -478,4 +481,141 @@ confirmFieldTextType: boolean = false;
     console.log("error",error)
     })
   }
+
+// submitUserForm(modal?: any) {
+//   this.submit = true;
+//   if (this.userCreationForm.invalid) {
+//     return;
+//   }
+
+//   const formValues = this.userCreationForm.value;
+
+//   const payload = {
+//     userName: formValues.userName,
+//     FirstName: formValues.firstName,
+//     LastName: formValues.lastName,
+//     Email: formValues.email,
+//     Contact: formValues.contact,
+//     Password: formValues.password,
+//     ConfirmPassword: formValues.confirmPassword,
+//     Role: formValues.activity === 'ADMIN' ? 'Admin' : 'User',
+//     Status: formValues.status ? 'Active' : 'Inactive',
+//     Activity: formValues.activity
+//   };
+
+//   // ✅ Log the payload here
+//   console.log('Payload being sent:', payload);
+
+//   // Call the service
+//   this.service.createUser(payload).subscribe({
+//     next: (res) => {
+//       console.log('User created response:', res);
+//     },
+//     error: (err) => {
+//       console.error('Error creating user:', err);
+//     }
+//   });
+// }
+
+
+submitUserForm() {
+  
+  this.submit = true;
+
+  if (this.userCreationForm.invalid) {
+    return;
+  }
+
+  const formValues = this.userCreationForm.value;
+
+  const payload = {
+    userName: formValues.userName,
+    FirstName: formValues.firstName,
+    LastName: formValues.lastName,
+    Email: formValues.email,
+    Contact: formValues.contact,
+    Password: formValues.password,
+    ConfirmPassword: formValues.confirmPassword,
+    Role: formValues.activity === 'ADMIN' ? 'Admin' : 'User',
+    Status: formValues.status ? 'Active' : 'Inactive',
+    Activity: formValues.activity
+  };
+
+  this.service.createUser(payload).subscribe({
+    next: (res) => {
+      Swal.fire({
+        icon: 'success',
+        title: 'User Submitted Successfully!',
+        showConfirmButton: false,
+        timer: 1500
+      }).then(() => {
+        // ✅ Close the modal AFTER Swal closes
+        if (this.CreatemodalRef) {
+          this.CreatemodalRef.close();  // For ngx-bootstrap
+        }
+
+        // ✅ Reset form
+        this.userCreationForm.reset();
+        this.submit = false;
+      });
+    },
+    error: (err) => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Submission Failed',
+        text: 'Something went wrong. Please try again.'
+      });
+    }
+  });
+}
+
+updateUserForm() {
+  this.submit = true;
+
+  if (this.userEditForm.invalid) {
+    return;
+  }
+
+  const formValues = this.userEditForm.value;
+
+  const payload = {
+    userUniqueId: formValues.userUniqueId, // This must be part of your form
+    userName: formValues.userName,
+    FirstName: formValues.firstName,
+    LastName: formValues.lastName,
+    Email: formValues.email,
+    Contact: formValues.contact,
+    Password: formValues.password,
+    ConfirmPassword: formValues.confirmPassword,
+    Role: formValues.activity === 'ADMIN' ? 'Admin' : 'User',
+    Status: formValues.status ? 'Active' : 'Inactive',
+    Activity: formValues.activity
+  };
+
+  this.service.updateUser(payload).subscribe({
+    next: (res) => {
+      Swal.fire({
+        icon: 'success',
+        title: 'User Updated Successfully!',
+        showConfirmButton: false,
+        timer: 1500
+      }).then(() => {
+        this.getAllUserList(); // Refresh data if needed
+    this.modalRef.close(); // ✅ This closes the modal
+      });
+    },
+    error: (err) => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Update Failed',
+        text: 'Something went wrong. Please try again.'
+      });
+    }
+  });
+}
+
+
+
+
+
 }

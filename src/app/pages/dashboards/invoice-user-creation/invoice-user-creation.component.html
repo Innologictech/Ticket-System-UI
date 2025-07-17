@@ -31,20 +31,18 @@
                         <tr *ngFor="let data of userList">
                             
                             <td>{{data.userName}}</td>
-                            <td>{{data.userFirstName}}</td>
-                            <td>{{data.userLastName}}</td>
-                            <td>{{data.userEmail}}</td>
-                            <td>{{data.userContact}}</td>
+                            <td>{{data.FirstName}}</td>
+                            <td>{{data.LastName}}</td>
+                            <td>{{data.Email}}</td>
+                            <td>{{data.Contact}}</td>
                             <td>
-                              {{ data.userStatus ? 'Active' : 'Inactive' }}
+                              {{ data.Status ? 'Active' : 'Inactive' }}
                             </td>
 
-                           <td class="text-center" *ngIf="loginData?.data.userActivity == 'ADMIN'">
-                           
-                            <i class="edit-btn fa fa-edit"  (click)="openEditModal(data, editUserTemplate)"></i>
-                            <i class="delete-btn bx bx-trash"  (click)="delete(data)"></i>
-                          
-                           </td>
+                           <td class="text-center">
+                    <i class="edit-btn fa fa-edit" (click)="openEditModal(data, editUserTemplate)"></i>
+                   <i class="delete-btn bx bx-trash" (click)="delete(data)"></i>
+</td>
                             
                         </tr>
                        
@@ -185,9 +183,9 @@
                   <div class="col-md-4">
                       <label>Activity<span class="text-danger">*</span></label>
                       <select class="form-control" formControlName="activity">
-                          <option value="MD">MD</option>
+                          <option value="CUSTOMER">CUSTOMER</option>
                           <option value="ADMIN">ADMIN</option>
-                          <option value="ACCOUNTS">ACCOUNTS</option>
+                          <option value="USER">USER</option>
                       </select>
                       <div class="text-danger" *ngIf="submit && f['activity'].errors">
                         Activity is required.
@@ -205,7 +203,7 @@
           </form>
       </div>
       <div class="modal-footer">
-          <button type="button" class="btn btnSave btn-raised" (click)="submitUserForm()">Submit</button> <!-- FIXED: Removed modal param -->
+          <button type="button" class="btn btnSave btn-raised" (click)="submitUserForm(modal)">Submit</button> <!-- FIXED: Removed modal param -->
           <button type="button" class="btn btnClose btn-raised" (click)="c('Close click')">Close</button>
       </div>
   
@@ -345,9 +343,9 @@
                 <div class="col-md-4">
                     <label>Activity<span class="text-danger">*</span></label>
                     <select class="form-control" formControlName="activity">
-                        <option value="MD">MD</option>
+                        <option value="CUSTOMER">CUSTOMER</option>
                         <option value="ADMIN">ADMIN</option>
-                        <option value="ACCOUNTS">ACCOUNTS</option>
+                        <option value="USER">USER</option>
                     </select>
                     <div class="text-danger" *ngIf="submit && f['activity'].errors">
                         Activity is required.
@@ -366,7 +364,7 @@
         </form>
     </div>
       <div class="card-footer" style="text-align: right;">
-        <button type="button" class="btn btn-primary" (click)="updateUserCreation(c)">Update</button>
+        <button type="button" class="btn btn-primary" (click)="updateUserForm(c)">Update</button>
         <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
       </div>
     

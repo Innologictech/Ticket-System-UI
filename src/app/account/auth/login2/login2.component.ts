@@ -177,41 +177,41 @@ export class Login2Component implements OnInit {
  
 
   // local login without API
-  onSubmit() {
+  // onSubmit() {
  
-    if(this.loginForm.invalid == true){
-      this.submitted = true;
-    }else{
-      const userName = this.f['userName'].value; // Get the username from the form
-      const password = this.f['password'].value; // Get the password from the form
+  //   if(this.loginForm.invalid == true){
+  //     this.submitted = true;
+  //   }else{
+  //     const userName = this.f['userName'].value; // Get the username from the form
+  //     const password = this.f['password'].value; // Get the password from the form
  
-      // Login Api
-      // this.store.dispatch(login({ userName: userName, password: password }));
+  //     // Login Api
+  //     // this.store.dispatch(login({ userName: userName, password: password }));
      
-        const  response   ={
-            "message": "Login Successful",
-            "status": 200,
-            "data": {
-                "userName": "1919",
-                "userEmail": "sunil@gmail.com",
-                "userUniqueId": 50,
-                "userStatus": true,
-                "isValid": true,
-                "userActivity": "admin"
-            },
-            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YTA3NzJiMDg1ZjM5ODNkYWQ3N2Y1MyIsInVzZXJOYW1lIjoiMTkxOSIsImlhdCI6MTczODY1MzQyMiwiZXhwIjoxNzM4NjU3MDIyfQ.eljCCW-80W4gWJt0GhJPayd76Xmi7EZOFoOh3SRCP2I"
-        }
-          this.service.setLoginResponse(response);
-          localStorage.setItem('currentUser', JSON.stringify(response || { token: response.token }));
-          const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-          this.router.navigate([returnUrl], { skipLocationChange: true });
+  //       const  response   ={
+  //           "message": "Login Successful",
+  //           "status": 200,
+  //           "data": {
+  //               "userName": "1919",
+  //               "userEmail": "sunil@gmail.com",
+  //               "userUniqueId": 50,
+  //               "userStatus": true,
+  //               "isValid": true,
+  //               "userActivity": "admin"
+  //           },
+  //           "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YTA3NzJiMDg1ZjM5ODNkYWQ3N2Y1MyIsInVzZXJOYW1lIjoiMTkxOSIsImlhdCI6MTczODY1MzQyMiwiZXhwIjoxNzM4NjU3MDIyfQ.eljCCW-80W4gWJt0GhJPayd76Xmi7EZOFoOh3SRCP2I"
+  //       }
+  //         this.service.setLoginResponse(response);
+  //         localStorage.setItem('currentUser', JSON.stringify(response || { token: response.token }));
+  //         const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+  //         this.router.navigate([returnUrl], { skipLocationChange: true });
  
-      // this.login(userName, password)
-    }
+  //     // this.login(userName, password)
+  //   }
    
  
    
-  }
+  // }
   // goBackToLogin() {
   //   this.showForgotPassword = false;
   //   this.successMessage = '';
@@ -336,6 +336,49 @@ export class Login2Component implements OnInit {
   //   );
   // }
   
+
+  onSubmit() {
+  this.submitted = true;
+
+  if (this.loginForm.invalid) {
+    return;
+  }
+
+  const payload = {
+    userName: this.loginForm.value.userName,
+    Password: this.loginForm.value.password // Make sure it's "Password" (capital P)
+  };
+
+  this.spinner.show();
+
+  this.service.submitLogin(payload).subscribe({
+    next: (res: any) => {
+      this.spinner.hide();
+
+      if (res.status === 200 && res.data?.isValid) {
+        localStorage.setItem('currentUser', JSON.stringify(res));
+        this.service.setLoginResponse(res);
+
+        Swal.fire({
+          title: res.message,
+          icon: 'success',
+          timer: 2000,
+          timerProgressBar: true
+        }).then(() => {
+          const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+          this.router.navigate([returnUrl]);
+        });
+      } else {
+        Swal.fire('Login Failed', res.message || 'Invalid credentials.', 'error');
+      }
+    },
+    error: (err) => {
+      this.spinner.hide();
+      Swal.fire('Error', err?.error?.message || 'Login failed. Please try again.', 'error');
+    }
+  });
+}
+
   
   
 
