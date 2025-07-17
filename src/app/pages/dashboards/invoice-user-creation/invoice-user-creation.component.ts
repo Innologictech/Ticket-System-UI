@@ -435,7 +435,7 @@ confirmFieldTextType: boolean = false;
           };
          
           console.log("Delete payload:", deletePayload);
-          this.service.deteleGlobal(deletePayload).subscribe((res: any) => {
+          this.service.DeteleGlobal(deletePayload).subscribe((res: any) => {
             console.log("deleteGlobal response:", res);
             this.spinner.hide();
             if (res.status === 200) {
@@ -547,7 +547,10 @@ submitUserForm() {
         icon: 'success',
         title: 'User Submitted Successfully!',
         showConfirmButton: false,
-        timer: 1500
+        timer: 1500,
+         customClass: {
+    popup: 'square-swal'
+  }
       }).then(() => {
         // ✅ Close the modal AFTER Swal closes
         if (this.CreatemodalRef) {
@@ -599,7 +602,10 @@ updateUserForm() {
         icon: 'success',
         title: 'User Updated Successfully!',
         showConfirmButton: false,
-        timer: 1500
+        timer: 1500,
+       customClass: {
+    popup: 'square-swal'
+  }
       }).then(() => {
         this.getAllUserList(); // Refresh data if needed
     this.modalRef.close(); // ✅ This closes the modal

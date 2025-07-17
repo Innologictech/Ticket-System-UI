@@ -296,5 +296,9 @@ updateUser(payload: any) {
   submitLogin(payload: any) {
   return this.http.post('http://localhost:3000/api/ticket/authenticationLogin', payload);
 }
+  DeteleGlobal(obj){
+    return this.http.post(environment.baseUrl+'/ticket/deteleGlobal',obj);
+ 
+  }
 
 }
