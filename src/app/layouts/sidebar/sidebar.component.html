@@ -14,7 +14,7 @@
               <li>
                 <ng-container *ngIf="hasItems(item); else noChildren">
                   <a href="javascript:void(0);" class="is-parent" [ngClass]="{'has-arrow': !item.badge, 'has-dropdown': item.badge}">
-                    <i *ngIf="item.icon" class="bx {{item.icon}}"></i>
+                    <i *ngIf="item.icon" class="bx {{item.icon}}" [style.color]="item.color"></i>
                     <span>{{ item.label | translate }}</span>
                     <span *ngIf="item.badge" class="badge rounded-pill float-end bg-{{item.badge.variant}}">
                       {{ item.badge.text | translate }}
@@ -25,14 +25,14 @@
                       <li>
                         <ng-container *ngIf="hasItems(subitem); else subNoChildren">
                           <a class="side-nav-link-a-ref has-arrow" href="javascript:void(0);" [attr.data-parent]="subitem.parentId">
-                            <i *ngIf="subitem.icon" class="bx {{subitem.icon}}"></i>
+                            <i *ngIf="subitem.icon" class="bx {{subitem.icon}} " [style.color]="item.color"></i>
                             <span>{{ subitem.label | translate }}</span>
                           </a>
                           <ul class="sub-menu mm-collapse" aria-expanded="false">
                             @for (subSubitem of subitem.subItems; track $index) {
                               <li>
                                 <a [attr.data-parent]="subSubitem.parentId" [routerLink]="[subSubitem.link]" routerLinkActive="active" class="side-nav-link-ref">
-                                  <i *ngIf="subSubitem.icon" class="bx {{subSubitem.icon}}"></i>
+                                  <i *ngIf="subSubitem.icon" class="bx {{subSubitem.icon}}" [style.color]="item.color"></i>
                                   <span>{{ subSubitem.label | translate }}</span>
                                 </a>
                               </li>
@@ -41,7 +41,7 @@
                         </ng-container>
                         <ng-template #subNoChildren>
                           <a [routerLink]="[subitem.link]" class="side-nav-link-ref" [attr.data-parent]="subitem.parentId" routerLinkActive="active">
-                            <i *ngIf="subitem.icon" class="bx {{subitem.icon}}"></i>
+                            <i *ngIf="subitem.icon" class="bx {{subitem.icon}}" [style.color]="item.color"></i>
                             <span>{{ subitem.label | translate }}</span>
                             <span *ngIf="subitem.badge" class="badge rounded-pill bg-{{subitem.badge.variant}} float-end">
                               {{ subitem.badge.text | translate }}
@@ -54,7 +54,7 @@
                 </ng-container>
                 <ng-template #noChildren>
                   <a [routerLink]="[item.link]" class="side-nav-link-ref" routerLinkActive="active">
-                    <i *ngIf="item.icon" class="bx {{item.icon}}"></i>
+                    <i *ngIf="item.icon" class="bx {{item.icon}}" [style.color]="item.color"></i>
                     <span>{{ item.label | translate }}</span>
                     <span *ngIf="item.badge" class="badge rounded-pill bg-{{item.badge.variant}} float-end">
                       {{ item.badge.text | translate }}
