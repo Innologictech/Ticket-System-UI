@@ -1,66 +1,147 @@
 <div class="mb-3 d-flex justify-content-between">
-  <input
-    type="text"
-    class=" w-15"
-    placeholder="Search..."
-    [(ngModel)]="searchText"
-  />
+    <input type="text" class=" w-15" placeholder="Search..." [(ngModel)]="searchText" />
 </div>
 
 <div class="table-responsive tableFixHead">
-  <table class="table table-bordered table-hover bg-white">
-    <thead class="table-dark text-center">
-      <tr>
-        <th (click)="setSort('customerticketId')" style="cursor:pointer">
-          Ticket Id
-        </th>
-        <th (click)="setSort('title')" style="cursor:pointer">Title</th>
-        <th (click)="setSort('priority')" style="cursor:pointer">Priority</th>
-        <th (click)="setSort('status')" style="cursor:pointer">Status</th>
-        <th (click)="setSort('date')" style="cursor:pointer">Created Date</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        *ngFor="
+    <table class="table table-bordered table-hover bg-white">
+        <thead class="table-dark text-center">
+            <tr>
+                <th (click)="setSort('customerticketId')" style="cursor:pointer">
+                    Ticket Id
+                </th>
+                <th (click)="setSort('title')" style="cursor:pointer">Title</th>
+                <th (click)="setSort('priority')" style="cursor:pointer">Priority</th>
+                <th (click)="setSort('status')" style="cursor:pointer">Status</th>
+                <th (click)="setSort('date')" style="cursor:pointer">Created Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="
           let ticket of sortedTickets
             | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }
-        "
-        class="align-middle"
-      >
-        <td>{{ ticket.customerticketId }}</td>
-        <td>{{ ticket.title }}</td>
-        <td>
-          
-            {{ ticket.priority }}
-         
-        </td>
-        <td>
-          
-            {{ ticket.status }}
-         
-        </td>
-        <td>{{ ticket.date | date: 'dd-MM-yyyy' }}</td>
-        <td class="text-center">
-          <i
-            class="fa fa-eye text-info me-2"
-            (click)="viewTicket()"
-          ></i>
-          <i
-            class="fa fa-edit text-warning me-2"
-            (click)="editTicketModel(ticket, createBugTicketTemplate)"
-          ></i>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+        " class="align-middle">
+                <td>{{ ticket.customerticketId }}</td>
+                <td>{{ ticket.title }}</td>
+                <td>{{ ticket.priority }}
+
+                </td>
+                <td>
+
+                    {{ ticket.status }}
+
+                </td>
+                <td>{{ ticket.date | date: 'dd-MM-yyyy' }}</td>
+                <td class="text-center">
+                    <!-- View Button -->
+                    <button class="btn btn-sm btn-info me-2" (click)="editTicketModel(ticket, createBugTicketTemplate)">
+                        View
+                    </button>
+
+                    <!-- Edit Button -->
+                    <button class="btn btn-sm btn-primary me-2" (click)="editTicketModel(ticket, createBugTicketTemplate)">
+                        Edit
+                    </button>
+
+                    <!-- Reject Button -->
+                    <button class="btn btn-sm btn-danger" (click)="onRejectTicket(ticket)">
+                        Reject
+                    </button>
+                </td>
+
+
+            </tr>
+        </tbody>
+    </table>
 </div>
 
 <!-- Pagination -->
 <div class="d-flex justify-content-end mt-3">
-  <pagination-controls
-    (pageChange)="currentPage = $event"
-    class="pagination justify-content-end"
-  ></pagination-controls>
+    <pagination-controls (pageChange)="currentPage = $event"
+        class="pagination justify-content-end"></pagination-controls>
 </div>
+
+<ng-template #createBugTicketTemplate let-c="close">
+    <div class="modal-body">
+        <form [formGroup]="bugTicketForm" autocomplete="off">
+            <div class="row">
+
+                <!-- Title (Read-only) -->
+                <div class="col-md-6">
+                    <label>Title</label>
+                    <input class="form-control" formControlName="title" type="text" readonly />
+                </div>
+
+                <!-- Reported By (Read-only) -->
+                <div class="col-md-6">
+                    <label>Reported By</label>
+                    <input class="form-control" formControlName="reportedBy" type="text" readonly />
+                </div>
+
+                <!-- Priority (Read-only) -->
+                <div class="col-md-6">
+                    <label>Priority</label>
+                    <select class="form-control" formControlName="priority" disabled>
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                        <option value="Critical">Critical</option>
+                    </select>
+                </div>
+
+                <!-- Environment (Read-only) -->
+                <div class="col-md-6">
+                    <label>Environment</label>
+                    <select class="form-control" formControlName="environment" disabled>
+                        <option value="Dev">Dev</option>
+                        <option value="QA">QA</option>
+                        <option value="Production">Production</option>
+                    </select>
+                </div>
+
+                <!-- Status (Read-only) -->
+                <div class="col-md-6">
+                    <label>Status</label>
+                    <input class="form-control" formControlName="ticketstatus" type="text" readonly />
+                </div>
+
+                <!-- Date (Read-only) -->
+                <div class="col-md-6">
+                    <label>Date</label>
+                    <input class="form-control" formControlName="date" type="date" readonly />
+                </div>
+
+                <!-- Description (Read-only) -->
+                <div class="col-md-12">
+                    <label>Description</label>
+                    <textarea class="form-control" formControlName="description" rows="4" readonly></textarea>
+                </div>
+
+                <!-- Assigned To (Editable) -->
+                <div class="col-md-12">
+                    <label>Assigned To<span class="text-danger">*</span></label>
+                    <select class="form-control" formControlName="assignedTo">
+                        <option value="" disabled hidden>Select Assignee</option>
+                        <option value="consultant">consultant</option>
+                        <option value="Developer">Developer</option>
+                        <option value="Tester">Tester</option>
+                        <option value="Manager">Manager</option>
+                        <option value="Support"> </option>
+                    </select>
+                </div>
+
+                <!-- Attachment -->
+                <div class="col-md-12">
+                    <label>Attachments</label>
+                    <input class="form-control" type="file" (change)="onFileSelected($event)" />
+                </div>
+
+            </div>
+        </form>
+    </div>
+
+    <div class="modal-footer">
+        <button  type="button"  class="btn btn-primary" (click)="UpdateTicket()">Submit</button>
+        <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
+    </div>
+</ng-template>

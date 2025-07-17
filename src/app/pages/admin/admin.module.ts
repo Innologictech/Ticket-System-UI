@@ -7,7 +7,7 @@ import { AdminemployeecreationComponent } from './adminemployeecreation/adminemp
 import { AdminEmployeeCalendarComponent } from './admin-employee-calendar/admin-employee-calendar.component';
 import { TicketListComponent } from './ticket-list/ticket-list.component';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -22,7 +22,7 @@ import { FormsModule } from '@angular/forms';
   ],
   imports: [
     CommonModule,
-    AdminRoutingModule,NgxPaginationModule,FormsModule
+    AdminRoutingModule,NgxPaginationModule,FormsModule,ReactiveFormsModule
   ]
 })
 export class AdminModule { }

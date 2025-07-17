@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GeneralserviceService } from 'src/app/generalservice.service';
+import Swal from 'sweetalert2';
+
 
 @Component({
   selector: 'app-ticket-creation',
@@ -89,22 +91,34 @@ export class TicketCreationComponent {
       attachment: rawForm.attachments || ''
     };
 
-    this.service.CreateTicket(payload).subscribe(
-      (response: any) => {
-        console.log('Ticket created:', response);
-        alert('Ticket successfully created.');
+     this.service.CreateTicket(payload).subscribe(
+    (response: any) => {
+      console.log('Ticket created:', response);
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Ticket Created',
+        text: 'Your ticket was created successfully.',
+        confirmButtonText: 'OK'
+      }).then(() => {
         this.bugTicketForm.reset();
-        this.getTickets(); // refresh
-        // Close modal
+        this.getTickets(); // refresh list
         if (this.CreatemodalRef) {
           this.CreatemodalRef.close();
         }
-      },
-      (error) => {
-        console.error('Ticket creation failed:', error);
-        alert('Failed to create ticket.');
-      }
-    );
+      });
+    },
+    (error) => {
+      console.error('Ticket creation failed:', error);
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Creation Failed',
+        text: 'Sorry, we could not create the ticket. Please try again.',
+        confirmButtonText: 'OK'
+      });
+    }
+  );
   }
 
 
@@ -129,25 +143,35 @@ export class TicketCreationComponent {
     };
 
     this.service.UpdateTicket(payload).subscribe(
-      (response: any) => {
-        console.log('Ticket updated:', response);
-        alert('Ticket updated successfully.');
+    (response: any) => {
+      console.log('Ticket updated:', response);
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Ticket Updated',
+        text: 'The ticket was updated successfully.',
+        confirmButtonText: 'OK'
+      }).then(() => {
         this.bugTicketForm.reset();
         this.selectedTicket = null;
-        this.getTickets(); // refresh list
-        
+        this.getTickets(); // refresh
 
-        // Close modal
         if (this.EditmodalRef) {
           this.EditmodalRef.close();
         }
+      });
+    },
+    (error) => {
+      console.error('Update failed:', error);
 
-      },
-      (error) => {
-        console.error('Update failed:', error);
-        alert('Failed to update ticket.');
-      }
-    );
+      Swal.fire({
+        icon: 'error',
+        title: 'Update Failed',
+        text: 'Sorry, we could not update the ticket. Please try again.',
+        confirmButtonText: 'OK'
+      });
+    }
+  );
   }
 
 
