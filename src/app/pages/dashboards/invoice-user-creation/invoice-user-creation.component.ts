@@ -551,6 +551,7 @@ submitUserForm() {
       }).then(() => {
         // ✅ Close the modal AFTER Swal closes
         if (this.CreatemodalRef) {
+           this.getAllUserList();
           this.CreatemodalRef.close();  // For ngx-bootstrap
         }
 
