@@ -287,7 +287,9 @@ onRejectTicket(ticket: any): void {
         environment: ticket.environment,
         date: ticket.date,
         description: ticket.description,
-        attachments: null
+        attachments: ticket.attachments,
+        assignedTo:ticket.consultant
+
       });
 
       // ✅ Call update method with status = 'Rejected' and reason

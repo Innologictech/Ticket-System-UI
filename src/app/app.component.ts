@@ -6,6 +6,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { SessionServiceService } from './pages/ui/session-service.service';
 import { NotificationService } from './notification.service';
 import { GeneralserviceService } from './generalservice.service';
+import { LoaderService } from './core/services/loader.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -15,7 +16,7 @@ import { GeneralserviceService } from './generalservice.service';
 })
 export class AppComponent implements OnInit {
   data: any[] = []
-  constructor(private spinner: NgxSpinnerService,private sessionService:SessionServiceService,private notificationService: NotificationService,private service:GeneralserviceService) {}
+  constructor(private spinner: NgxSpinnerService,private sessionService:SessionServiceService,private notificationService: NotificationService,private service:GeneralserviceService,public loaderservice:LoaderService) {}
   ngOnInit() {
     // this.spinner.show(undefined, {
     //   type: 'square-jelly-box',
@@ -32,10 +33,7 @@ export class AppComponent implements OnInit {
   //     this.fetchData(), 5000
   // ); // Check API every 5 seconds
 
-  const spinnerTimeout = setTimeout(() => {
-    this.spinner.hide();
-    return
-  }, 5000); 
+  
   
   }
   // fetchData() {

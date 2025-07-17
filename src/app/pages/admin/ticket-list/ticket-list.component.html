@@ -1,5 +1,10 @@
+<div class="card-header">
+    Tickets List
+</div>
+
+
 <div class="mb-3 d-flex justify-content-between">
-    <input type="text" class=" w-15" placeholder="Search..." [(ngModel)]="searchText" />
+    <input type="text" class=" w-15" style="margin-top: 1rem;" placeholder="Search..." [(ngModel)]="searchText" />
 </div>
 
 <div class="table-responsive tableFixHead">
@@ -39,12 +44,14 @@
                     </button>
 
                     <!-- Edit Button -->
-                    <button class="btn btn-sm btn-primary me-2" (click)="editTicketModel(ticket, createBugTicketTemplate)">
+                    <button class="btn btn-sm btn-primary me-2"
+                        (click)="editTicketModel(ticket, createBugTicketTemplate)">
                         Edit
                     </button>
 
                     <!-- Reject Button -->
-                    <button class="btn btn-sm btn-danger" (click)="onRejectTicket(ticket)">
+                    <button class="btn btn-sm btn-danger" (click)="onRejectTicket(ticket) "
+                        *ngIf="ticket.status !== 'Rejected'">
                         Reject
                     </button>
                 </td>
@@ -141,7 +148,7 @@
     </div>
 
     <div class="modal-footer">
-        <button  type="button"  class="btn btn-primary" (click)="UpdateTicket()">Submit</button>
+        <button type="button" class="btn btn-primary" (click)="UpdateTicket()">Submit</button>
         <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
     </div>
 </ng-template>
