@@ -75,11 +75,12 @@ export class TicketCreationComponent {
 
 
 
-  CreateTicket(): void {
-    if (this.bugTicketForm.invalid) {
-      this.bugTicketForm.markAllAsTouched();
-      return;
-    }
+ CreateTicket(): void {
+  this.submit = true; // ✅ Add this line
+  if (this.bugTicketForm.invalid) {
+    this.bugTicketForm.markAllAsTouched();
+    return;
+  }
 
     const rawForm = this.bugTicketForm.value;
 
