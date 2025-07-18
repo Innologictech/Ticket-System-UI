@@ -4,7 +4,9 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GeneralserviceService } from 'src/app/generalservice.service';
 import Swal from 'sweetalert2';
 import { LoaderService } from 'src/app/core/services/loader.service';
-
+import { AuthenticationService } from 'src/app/core/services/auth.service';
+import { ChangeDetectorRef } from '@angular/core';
+import { catchError, finalize, map, Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-ticket-creation',
@@ -23,38 +25,82 @@ export class TicketCreationComponent {
 
 
   ticketData: any[] = [];
-
+ currentUser: any;
   EditmodalRef: any;
   CreatemodalRef: any;
 
-  constructor(private fb: FormBuilder, private modalService: NgbModal, private service: GeneralserviceService,private loaderservice:LoaderService) { }
+  constructor(private fb: FormBuilder,private cdr: ChangeDetectorRef, private modalService: NgbModal, private service: GeneralserviceService, private loaderService: LoaderService,private authService: AuthenticationService) { }
+tickets$: Observable<any[]>;
+ ngOnInit(): void {
+  this.currentUser = this.authService.currentUser();
+  
+  // Initialize form first
+  this.bugTicketForm = this.fb.group({
+    title: ['', Validators.required],
+    reportedBy: [this.currentUser?.userName || '', Validators.required],
+    priority: ['', Validators.required],
+    environment: ['', Validators.required],
+    ticketstatus: ['Open'],
+    date: ['', Validators.required],
+    description: ['', Validators.required],
+    attachments: [null]
+  });
 
-  ngOnInit(): void {
-    this.bugTicketForm = this.fb.group({
-      title: ['', Validators.required],
-      reportedBy: ['', Validators.required],
-      priority: ['', Validators.required],
-      environment: ['', Validators.required],
-      ticketstatus: ['Open'], // default status
-      date: ['', Validators.required],
-      description: ['', Validators.required],
-      attachments: [null]
-    });
-    this.getTickets();
+  // Initialize tickets$ observable
+  this.tickets$ = this.service.GetTicketDetails().pipe(
+    map((response: any) => {
+      // Handle different response structures
+      const tickets = response?.data ? response.data : 
+                     Array.isArray(response) ? response : [];
+      
+      return this.currentUser?.Role === 'Admin' 
+        ? tickets 
+        : tickets.filter((ticket: any) => 
+            ticket.reportedBy === this.currentUser?.userName
+          );
+    }),
+    catchError(error => {
+      console.error('Error fetching tickets', error);
+      return of([]);
+    })
+  );
+}
+
+  // getTickets(): void {
+  //   this.loaderservice.showLoader();
+  //   this.service.GetTicketDetails().subscribe(
+  //     (response: any) => {
+  //       console.log('Ticket data:', response);
+  //       this.ticketData = response.data;
+  //       this.loaderservice.hideLoader();
+  //     },
+  //     (error) => {
+  //       console.error('Error fetching tickets', error);
+  //     }
+  //   );
+  // }
+ getTickets(): void {
+    this.loaderService.showLoader();
+    this.tickets$ = this.service.GetTicketDetails().pipe(
+      map((response: any) => {
+        const tickets = response?.data ?? (Array.isArray(response) ? response : []);
+        return this.filterTickets(tickets);
+      }),
+      catchError(error => {
+        console.error('Error fetching tickets', error);
+        return of([]);
+      }),
+      finalize(() => {
+        this.loaderService.hideLoader();
+        this.cdr.detectChanges();
+      })
+    );
   }
 
-  getTickets(): void {
-    this.loaderservice.showLoader();
-    this.service.GetTicketDetails().subscribe(
-      (response: any) => {
-        console.log('Ticket data:', response);
-        this.ticketData = response.data;
-        this.loaderservice.hideLoader();
-      },
-      (error) => {
-        console.error('Error fetching tickets', error);
-      }
-    );
+  filterTickets(tickets: any[]): any[] {
+    return this.currentUser?.Role === 'Admin' 
+      ? tickets 
+      : tickets.filter(ticket => ticket.reportedBy === this.currentUser?.userName);
   }
 
 

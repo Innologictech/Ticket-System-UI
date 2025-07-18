@@ -27,7 +27,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let ticket of ticketData" class="align-middle">
+                            <tr *ngFor="let ticket of tickets$ | async" class="align-middle">
                                 <td>{{ ticket.customerticketId }}</td>
                                 <td>{{ ticket.title }}</td>
                                 <td>
