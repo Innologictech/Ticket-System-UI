@@ -7,6 +7,7 @@ import { SessionServiceService } from './pages/ui/session-service.service';
 import { NotificationService } from './notification.service';
 import { GeneralserviceService } from './generalservice.service';
 import { LoaderService } from './core/services/loader.service';
+import { Observable } from 'rxjs';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -15,14 +16,22 @@ import { LoaderService } from './core/services/loader.service';
   imports: [RouterOutlet,CommonModule,NgxSpinnerModule],
 })
 export class AppComponent implements OnInit {
+   isLoading$: Observable<boolean>;
+
+ 
   data: any[] = []
-  constructor(private sessionService:SessionServiceService,private notificationService: NotificationService,private service:GeneralserviceService,public loaderservice:LoaderService) {}
+  someProperty: boolean;
+  constructor(private sessionService:SessionServiceService,private loaderService: LoaderService, private notificationService: NotificationService,private service:GeneralserviceService,public loaderservice:LoaderService) {
+    this.isLoading$ = this.loaderService.isLoading$;
+  }
   ngOnInit() {
     
 
   
   
   }
-
+  ngAfterViewInit() {
+    this.someProperty = true; // This can cause the error
+  }
   
 }

@@ -53,6 +53,7 @@ confirmFieldTextType: boolean = false;
       lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       contact: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
+      role: ['',Validators.required],
       activity: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required]] ,
@@ -69,6 +70,7 @@ confirmFieldTextType: boolean = false;
       lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       contact: ['', Validators.required],
+       role: ['',Validators.required],
       password: ['', Validators.required],
       confirmPassword: ['', Validators.required],
       activity: ['', Validators.required],
@@ -107,6 +109,7 @@ confirmFieldTextType: boolean = false;
       contact: selectedUser.Contact,
       password: selectedUser.Password,
       confirmPassword: selectedUser.ConfirmPassword,
+      role: selectedUser.Role,
       activity: selectedUser.Activity,
       status: selectedUser.Status 
     });
@@ -387,14 +390,14 @@ confirmFieldTextType: boolean = false;
   //     );
   //   }
   delete(data): void {
-    console.log("data",data.userActivity)
-    const adminCount = this.userList.filter(user => user.userActivity === 'ADMIN').length;
+    console.log("data",data.userRole)
+    const adminCount = this.userList.filter(user => user.userRole === 'ADMIN').length;
     console.log("Admin Count:", adminCount);
-    const accountsCount = this.userList.filter(user => user.userActivity === 'ACCOUNTS').length;
+    const accountsCount = this.userList.filter(user => user.userRole === 'ACCOUNTS').length;
     console.log("Admin Count:", adminCount);
 
     // If there is only one admin and we are trying to delete an admin, show error message
-    if (adminCount === 1 && data.userActivity == 'ADMIN') {
+    if (adminCount === 1 && data.userRole == 'ADMIN') {
       Swal.fire({
         title: 'Cannot Delete!',
         text: "At least one Admin must remain. Please create another Admin before deleting.",
@@ -404,7 +407,7 @@ confirmFieldTextType: boolean = false;
       });
       return; // Stop further execution
     }
-   else if (accountsCount === 1 && data.userActivity == 'ACCOUNTS') {
+   else if (accountsCount === 1 && data.userRole == 'ACCOUNTS') {
       Swal.fire({
         title: 'Cannot Delete!',
         text: "At least one Accounts must remain. Please create another Accounts before deleting.",

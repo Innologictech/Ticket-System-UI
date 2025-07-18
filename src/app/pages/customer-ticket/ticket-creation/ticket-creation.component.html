@@ -27,7 +27,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let ticket of ticketData" class="align-middle">
+                            <tr *ngFor="let ticket of tickets$ | async" class="align-middle">
                                 <td>{{ ticket.customerticketId }}</td>
                                 <td>{{ ticket.title }}</td>
                                 <td>
@@ -67,73 +67,92 @@
     </div>
 
     <div class="modal-body">
-        <form [formGroup]="bugTicketForm" autocomplete="off">
-            <div class="row">
+    <form [formGroup]="bugTicketForm" autocomplete="off">
+        <div class="row">
 
-                <!-- Title -->
-                <div class="col-md-6">
-                    <label>Title<span class="text-danger">*</span></label>
-                    <input class="form-control" formControlName="title" type="text" placeholder="Enter Title" />
+            <!-- Title -->
+            <div class="col-md-6">
+                <label>Title<span class="text-danger">*</span></label>
+                <input class="form-control" formControlName="title" type="text" placeholder="Enter Title" />
+                <div class="text-danger" *ngIf="submit && f['title'].errors?.['required']">
+                    Title is required.
                 </div>
-
-                <!-- Reported By -->
-                <div class="col-md-6">
-                    <label>Reported By<span class="text-danger">*</span></label>
-                    <input class="form-control" formControlName="reportedBy" type="text"
-                        placeholder="Enter Reporter Name" />
-                </div>
-
-                <!-- Priority -->
-                <div class="col-md-6">
-                    <label>Priority<span class="text-danger">*</span></label>
-                    <select class="form-control" formControlName="priority">
-                        <option value="" disabled hidden>Select Priority</option>
-                        <option value="Low">Low</option>
-                        <option value="Medium">Medium</option>
-                        <option value="High">High</option>
-                        <option value="Critical">Critical</option>
-                    </select>
-                </div>
-
-                <!-- Environment -->
-                <div class="col-md-6">
-                    <label>Environment<span class="text-danger">*</span></label>
-                    <select class="form-control" formControlName="environment">
-                        <option value="" disabled hidden>Select</option>
-                        <option value="Dev">Dev</option>
-                        <option value="QA">QA</option>
-                        <option value="Production">Production</option>
-                    </select>
-                </div>
-
-                <!-- Status (default: Open) -->
-                <div class="col-md-6">
-                    <label>Status</label>
-                    <input class="form-control" formControlName="ticketstatus" value="open" type="text" readonly />
-                </div>
-
-                <!-- Date -->
-                <div class="col-md-6">
-                    <label>Date<span class="text-danger">*</span></label>
-                    <input class="form-control" formControlName="date" type="date" />
-                </div>
-
-                <!-- Description -->
-                <div class="col-md-12">
-                    <label>Description<span class="text-danger">*</span></label>
-                    <textarea class="form-control" formControlName="description" rows="4"
-                        placeholder="Describe the issue..."></textarea>
-                </div>
-
-                <!-- Attachment -->
-                <div class="col-md-12">
-                    <label>Attachments</label>
-                    <input class="form-control" type="file" (change)="onFileSelected($event)" />
-                </div>
-
             </div>
-        </form>
-    </div>
+
+            <!-- Reported By -->
+            <div class="col-md-6">
+                <label>Reported By<span class="text-danger">*</span></label>
+                <input class="form-control" formControlName="reportedBy" type="text"
+                    placeholder="Enter Reporter Name" />
+                <div class="text-danger" *ngIf="submit && f['reportedBy'].errors?.['required']">
+                    Reported By is required.
+                </div>
+            </div>
+
+            <!-- Priority -->
+            <div class="col-md-6">
+                <label>Priority<span class="text-danger">*</span></label>
+                <select class="form-control" formControlName="priority">
+                    <option value="" disabled hidden>Select Priority</option>
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                    <option value="Critical">Critical</option>
+                </select>
+                <div class="text-danger" *ngIf="submit && f['priority'].errors?.['required']">
+                    Priority is required.
+                </div>
+            </div>
+
+            <!-- Environment -->
+            <div class="col-md-6">
+                <label>Environment<span class="text-danger">*</span></label>
+                <select class="form-control" formControlName="environment">
+                    <option value="" disabled hidden>Select</option>
+                    <option value="Dev">Dev</option>
+                    <option value="QA">QA</option>
+                    <option value="Production">Production</option>
+                </select>
+                <div class="text-danger" *ngIf="submit && f['environment'].errors?.['required']">
+                    Environment is required.
+                </div>
+            </div>
+
+            <!-- Status (readonly) -->
+            <div class="col-md-6">
+                <label>Status</label>
+                <input class="form-control" formControlName="ticketstatus" value="open" type="text" readonly />
+            </div>
+
+            <!-- Date -->
+            <div class="col-md-6">
+                <label>Date<span class="text-danger">*</span></label>
+                <input class="form-control" formControlName="date" type="date" />
+                <div class="text-danger" *ngIf="submit && f['date'].errors?.['required']">
+                    Date is required.
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div class="col-md-12">
+                <label>Description<span class="text-danger">*</span></label>
+                <textarea class="form-control" formControlName="description" rows="4"
+                    placeholder="Describe the issue..."></textarea>
+                <div class="text-danger" *ngIf="submit && f['description'].errors?.['required']">
+                    Description is required.
+                </div>
+            </div>
+
+            <!-- Attachment -->
+            <div class="col-md-12">
+                <label>Attachments</label>
+                <input class="form-control" type="file" (change)="onFileSelected($event)" />
+            </div>
+
+        </div>
+    </form>
+</div>
+
 
     <div class="modal-footer">
         <button *ngIf="!isEditMode" class="btn btn-primary" (click)="CreateTicket()">Submit</button>

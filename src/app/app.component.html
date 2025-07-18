@@ -5,7 +5,7 @@
 
 
 <div
-  *ngIf="(loaderservice.isLoading$ | async)"
+ *ngIf="isLoading$ | async"
   class="loading-overlay"
   role="status"
   aria-live="polite"

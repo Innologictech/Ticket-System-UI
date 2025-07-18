@@ -17,11 +17,15 @@ export class AuthenticationService {
     /**
      * Returns the current user
      */
-    public currentUser(): User {
-        return getFirebaseBackend().getAuthenticatedUser();
-    }
+    // public currentUser(): User {
+    //     return getFirebaseBackend().getAuthenticatedUser();
+    // }
 
-
+public currentUser(): any {
+    // Implementation might get user from localStorage or behavior subject
+    const user = localStorage.getItem('currentUser');
+    return user ? JSON.parse(user) : null;
+  }
     /**
      * Performs the auth
      * @param email email of user

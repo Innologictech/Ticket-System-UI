@@ -8,7 +8,7 @@
         </div>
         <div class="textRight">
 
-            <button type="button" class="btn btn-raised btn-md btnSubmitApproval" style="background-color: green;justify-content: left;display: flex;" (click)="newUserCreation(newUserTemplate)">
+            <button type="button" class="btn btn-raised btn-md btnSubmitApproval" style="background-color: green;" (click)="newUserCreation(newUserTemplate)">
                 Create New User
               </button>
               
@@ -22,6 +22,7 @@
                             <th>Last Name</th>
                             <th>Email</th>
                             <th>Contact</th>
+                             <th>Role</th>
                             <th>Status</th>
                             <th *ngIf='loginData?.data.userActivity != "user"'>Action</th>
                             
@@ -35,6 +36,7 @@
                             <td>{{data.LastName}}</td>
                             <td>{{data.Email}}</td>
                             <td>{{data.Contact}}</td>
+                            <td>{{data.Role}}</td>
                             <td>
                               {{ data.Status ? 'Active' : 'Inactive' }}
                             </td>
@@ -178,15 +180,27 @@
                         Password and Confirm Password do not match.
                     </div>
                 </div>
-
-                  <!-- Activity -->
-                  <div class="col-md-4">
-                      <label>Activity<span class="text-danger">*</span></label>
-                      <select class="form-control" formControlName="activity">
+                <div class="col-md-4">
+                      <label>Role<span class="text-danger">*</span></label>
+                      <select class="form-control" formControlName="role">
                           <option value="CUSTOMER">CUSTOMER</option>
                           <option value="ADMIN">ADMIN</option>
                           <option value="USER">USER</option>
                       </select>
+                      <div class="text-danger" *ngIf="submit && f['role'].errors">
+                        Role is required.
+                   </div>
+                  </div>
+
+                  <!-- Activity -->
+                  <div class="col-md-4">
+                      <label>Activity<span class="text-danger">*</span></label>
+                      <input type="activity"  class="form-control form-control-sm" formControlName="activity" placeholder="" required/>
+                      <!-- <select class="form-control" formControlName="activity">
+                          <option value="CUSTOMER">CUSTOMER</option>
+                          <option value="ADMIN">ADMIN</option>
+                          <option value="USER">USER</option>
+                      </select> -->
                       <div class="text-danger" *ngIf="submit && f['activity'].errors">
                         Activity is required.
                    </div>
@@ -338,15 +352,27 @@
                       Password and Confirm Password do not match.
                   </div>
               </div>
+              <div class="col-md-4">
+                      <label>Role<span class="text-danger">*</span></label>
+                      <select class="form-control" formControlName="role">
+                          <option value="CUSTOMER">CUSTOMER</option>
+                          <option value="ADMIN">ADMIN</option>
+                          <option value="USER">USER</option>
+                      </select>
+                      <div class="text-danger" *ngIf="submit && f['role'].errors">
+                        Role is required.
+                   </div>
+                  </div>
 
                 <!-- Activity -->
                 <div class="col-md-4">
                     <label>Activity<span class="text-danger">*</span></label>
-                    <select class="form-control" formControlName="activity">
+                     <input type="activity"  class="form-control form-control-sm" formControlName="activity" placeholder="" required/>
+                    <!-- <select class="form-control" formControlName="activity">
                         <option value="CUSTOMER">CUSTOMER</option>
                         <option value="ADMIN">ADMIN</option>
                         <option value="USER">USER</option>
-                    </select>
+                    </select> -->
                     <div class="text-danger" *ngIf="submit && f['activity'].errors">
                         Activity is required.
                    </div>
