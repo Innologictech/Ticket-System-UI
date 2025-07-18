@@ -208,19 +208,7 @@ mustMatch(controlName: string, matchingControlName: string) {
     this.mobileMenuButtonClicked.emit();
   }
 
-  /**
-   * Logout the user
-   */
-  // logout() {
-  //   if (environment.defaultauth === 'firebase') {
-  //     this.authService.logout();
-  //   } else {
-  //     this.authFackservice.logout();
-  //   }
-  //   // this.router.navigate(['/auth/login']);
-  //   this.router.navigate(['/auth/login-2'],);
-
-  // }
+  
 
   logout() {
   Swal.fire({

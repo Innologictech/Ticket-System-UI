@@ -70,3 +70,136 @@
   z-index: 1000;
   position: relative;
 }
+
+
+
+//styles//
+
+/* Main Container */
+.header-container {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  
+  padding: 12px 20px;
+  color: #ffffff;
+  font-family: 'Roboto', sans-serif;
+  position: relative;
+}
+
+/* Welcome Text */
+.welcome-text {
+  font-size: 16px;
+  font-weight: 500;
+}
+.user-info {
+  margin-left: 8px;
+  color: #d1d5db; /* Light Gray */
+}
+
+/* Profile Image */
+.profile-section .profile-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ffffff;
+}
+
+/* Search Dropdown */
+.search-dropdown {
+  position: relative;
+}
+.search-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+}
+.search-menu {
+  display: none; /* Show on button click if needed */
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  padding: 12px;
+}
+.search-input-group {
+  display: flex;
+}
+.search-input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px 0 0 6px;
+}
+.search-submit {
+  padding: 8px 12px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 0 6px 6px 0;
+  cursor: pointer;
+}
+
+/* Notification Icon */
+.notification-section {
+  position: relative;
+}
+.notification-icon {
+  position: relative;
+  font-size: 22px;
+  cursor: pointer;
+}
+.notification-badge {
+  background: #ea0000;
+  color: white;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 50%;
+  position: absolute;
+  top: -8px;
+  right: -8px;
+}
+
+/* Logout Button */
+.logout-section {
+  position: relative;
+}
+.logout-btn {
+  background: #ef4444;
+  border: none;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+.logout-menu {
+  position: absolute;
+  right: 0;
+  background: white;
+  color: #333;
+  min-width: 160px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  margin-top: 10px;
+  z-index: 999;
+}
+.logout-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  font-size: 14px;
+  cursor: pointer;
+}
+.logout-item:hover {
+  background: #f3f4f6;
+}
+.logout-icon {
+  margin-right: 8px;
+  transform: scaleX(-1);
+}
