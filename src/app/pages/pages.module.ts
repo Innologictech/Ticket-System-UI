@@ -41,6 +41,7 @@ import { MapsModule } from './maps/maps.module';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { TicketCreationComponent } from './customer-ticket/ticket-creation/ticket-creation.component';
 import { CustomerTicketModule } from './customer-ticket/customer-ticket.module';
+import { UserModule } from './user/user.module';
 // import { TicketCreationComponent } from './ticket-creation/ticket-creation.component';
 
 @NgModule(
@@ -59,6 +60,7 @@ import { CustomerTicketModule } from './customer-ticket/customer-ticket.module';
                         ReactiveFormsModule,
                         DashboardsModule,
                         AdminModule,
+                        UserModule,
                         CustomerTicketModule,
                         ManagementModule,
                         OperationModule,

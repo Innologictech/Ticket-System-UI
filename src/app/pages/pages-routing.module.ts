@@ -17,6 +17,7 @@ const routes: Routes = [
   { path: 'calendar', component: CalendarComponent },
   { path: 'chat', component: ChatComponent },
   { path: 'filemanager', component: FilemanagerComponent },
+  { path: 'user', loadChildren: () => import('./user/user.module').then(m =>m.UserModule) },
   { path: 'Employee-ticket', loadChildren: () => import('./customer-ticket/customer-ticket.module').then(m =>m.CustomerTicketModule) },
   {path:'admin', loadChildren: () => import('./admin/admin.module').then(m =>m.AdminModule)},
   { path: 'dashboards', loadChildren: () => import('./dashboards/dashboards.module').then(m => m.DashboardsModule) },

@@ -224,11 +224,21 @@ initialize(): void {
         isTitle: false
       }
     ],
-    'USER': [
-      {
-        id: 3,
-        label: 'Ticket-Management',
-        link: '/TicketList',
+    'User': [
+      // {
+      //   id: 3,
+      //   label: 'Ticket-Management',
+      //   link: '/TicketList',
+      //  parentId: null,
+      //   icon: 'bx bx-task',
+      //   color: '#b09a78ff',
+      //   isTitle: false
+      // }
+
+       {
+        id: 5,
+        label: 'user',
+        link: '/user',
        parentId: null,
         icon: 'bx bx-task',
         color: '#b09a78ff',

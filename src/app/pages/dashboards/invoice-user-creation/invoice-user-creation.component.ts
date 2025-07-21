@@ -15,6 +15,7 @@ import { MENU } from 'src/app/layouts/sidebar/menu';
     standalone: true
 })
 export class InvoiceUserCreationComponent implements OnInit {
+  
   @ViewChild('editUserTemplate') editUserTemplate!: TemplateRef<any>;
   
   CreatemodalRef:any;

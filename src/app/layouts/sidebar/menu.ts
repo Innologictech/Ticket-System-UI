@@ -45,6 +45,17 @@ export const MENU: MenuItem[] = [
         color: '#97729eff',        // Purple
         isTitle: false
 
+    },
+    , {
+
+        id: 5,
+        label: 'user',
+        link: '/user',
+        parentId: 3,
+        icon: 'bx bx-user-plus', // User creation icon
+        color: '#97729eff',        // Purple
+        isTitle: false
+
     }
 
 
