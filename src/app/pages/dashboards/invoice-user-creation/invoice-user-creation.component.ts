@@ -7,11 +7,12 @@ import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { MENU } from 'src/app/layouts/sidebar/menu';
+import { NgSelectModule } from '@ng-select/ng-select';
 @Component({
   selector: 'app-invoice-user-creation',
   templateUrl: './invoice-user-creation.component.html',
   styleUrls: ['./invoice-user-creation.component.css'], 
-  imports: [CommonModule, ReactiveFormsModule, FormsModule,],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule,  NgSelectModule,],
     standalone: true
 })
 export class InvoiceUserCreationComponent implements OnInit {
@@ -39,6 +40,8 @@ confirmFieldTextType: boolean = false;
   loginData: any;
   c: any;
   editModalRef: any;
+  
+  activities: string[] = ['Dashboard', 'Ticket-Creation', 'Ticket-Management', 'User-Creation'];
   
  
 
@@ -74,10 +77,11 @@ confirmFieldTextType: boolean = false;
       email: ['', [Validators.required, Validators.email]],
       contact: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
       role: ['',Validators.required],
-      activity: ['', Validators.required],
+      activity: [[]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required]] ,
-      status: [true]
+      status: [true],
+      
     });
   
     
@@ -658,7 +662,22 @@ updateUserForm() {
 }
 
 
+onCheckboxChange(event: any, formType: 'create' | 'edit') {
+  const control = formType === 'create' ? this.userCreationForm.get('activity') : this.userEditForm.get('activity');
+  const selectedActivities = control!.value as string[];
 
+  if (event.target.checked) {
+    selectedActivities.push(event.target.value);
+  } else {
+    const index = selectedActivities.indexOf(event.target.value);
+    if (index >= 0) {
+      selectedActivities.splice(index, 1);
+    }
+  }
+
+  control!.setValue(selectedActivities);
+  control!.markAsTouched();
+}
 
 
 }
