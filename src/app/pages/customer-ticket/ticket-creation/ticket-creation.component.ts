@@ -32,12 +32,12 @@ export class TicketCreationComponent {
   constructor(private fb: FormBuilder,private cdr: ChangeDetectorRef, private modalService: NgbModal, private service: GeneralserviceService, private loaderService: LoaderService,private authService: AuthenticationService) { }
 tickets$: Observable<any[]>;
  ngOnInit(): void {
-  this.currentUser = this.authService.currentUser();
-  
+ this.currentUser = this.authService.currentUser();
+  console.log('Current User:', this.currentUser);   
   // Initialize form first
   this.bugTicketForm = this.fb.group({
     title: ['', Validators.required],
-    reportedBy: [this.currentUser?.userName || '', Validators.required],
+    reportedBy: [this.currentUser?.data?.userName || '', Validators.required],
     priority: ['', Validators.required],
     environment: ['', Validators.required],
     ticketstatus: ['Open'],
@@ -256,12 +256,17 @@ tickets$: Observable<any[]>;
   }
 
   TicketCreationModel(createBugTicketTemplate: any): void {
+     
     this.isEditMode=false;
     this.submit = false
-    this.bugTicketForm.reset()
-    this.bugTicketForm.patchValue({
-      "status": true
-    })
+   this.bugTicketForm.reset({
+   
+  });
+     this.bugTicketForm.patchValue({
+    reportedBy: this.currentUser?.data?.userName || '', // Correct path
+    ticketstatus: 'Open',
+    status: true
+  });
     this.CreatemodalRef = this.modalService.open(createBugTicketTemplate, {
       backdrop: 'static',
       keyboard: false, size: 'lg'
