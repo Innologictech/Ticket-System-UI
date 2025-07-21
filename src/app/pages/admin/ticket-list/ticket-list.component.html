@@ -100,8 +100,8 @@
                 <div class="col-md-6">
                     <label>Environment</label>
                     <select class="form-control" formControlName="environment" disabled>
-                        <option value="Dev">Dev</option>
-                        <option value="QA">QA</option>
+                        <option value="Development">Development</option>
+                        <option value="Quality">Quality</option>
                         <option value="Production">Production</option>
                     </select>
                 </div>
@@ -125,7 +125,7 @@
                 </div>
 
                 <!-- Assigned To (Editable) -->
-                <div class="col-md-12">
+                <!-- <div class="col-md-12">
                     <label>Assigned To<span class="text-danger">*</span></label>
                     <select class="form-control" formControlName="assignedTo">
                         <option value="" disabled hidden>Select Assignee</option>
@@ -135,7 +135,17 @@
                         <option value="Manager">Manager</option>
                         <option value="Support"> </option>
                     </select>
-                </div>
+                </div> -->
+                <div class="col-md-12">
+  <label>Assigned To<span class="text-danger">*</span></label>
+  <select class="form-control" formControlName="assignedTo">
+    <option value="" disabled selected hidden>Select Assignee</option>
+    <option *ngFor="let user of userList" [value]="user.userName">
+      {{ user.userName }} - {{ user.Role }}
+    </option>
+  </select>
+</div>
+
 
                 <!-- Attachment -->
                 <div class="col-md-12">

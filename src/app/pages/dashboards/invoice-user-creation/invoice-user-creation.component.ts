@@ -134,7 +134,7 @@ confirmFieldTextType: boolean = false;
       password: selectedUser.Password,
       confirmPassword: selectedUser.ConfirmPassword,
       role: selectedUser.Role,
-      activity: selectedUser.Activity,
+      activity: selectedUser.Activity?.[0]?.split(',') || [],
       status: selectedUser.Status 
     });
     this.modalRef = this.modalService.open(this.editUserTemplate, { size: 'lg' });
@@ -585,12 +585,10 @@ submitUserForm() {
     next: (res) => {
       Swal.fire({
         icon: 'success',
-        title: 'User Submitted Successfully!',
+        title: 'User Created Successfully!',
         showConfirmButton: false,
-        timer: 1500,
-         customClass: {
-    popup: 'square-swal'
-  }
+        timer: 2000,
+     timerProgressBar: true,
       }).then(() => {
         // ✅ Close the modal AFTER Swal closes
         if (this.CreatemodalRef) {

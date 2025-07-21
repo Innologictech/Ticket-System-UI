@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, Validators,ReactiveFormsModule,FormsModule } fr
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import { LoaderService } from 'src/app/core/services/loader.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 
 @Component({
@@ -16,7 +17,7 @@ import { LoaderService } from 'src/app/core/services/loader.service';
 
 })
 export class TicketListComponent implements OnInit {
-
+userList: any[] = [];
   selectedTicket: any = null;
   bugTicketForm!: FormGroup;
 
@@ -36,10 +37,11 @@ export class TicketListComponent implements OnInit {
         status:[''],
         assignedTo:['']
       });
-      this.getTickets()
+      this.getTickets();
+        this.getAllUserList();
     }
   
-  constructor(private service: GeneralserviceService, private modalService: NgbModal,private fb: FormBuilder,private loaderservice:LoaderService) {
+  constructor(private service: GeneralserviceService,private spinner:NgxSpinnerService, private modalService: NgbModal,private fb: FormBuilder,private loaderservice:LoaderService) {
 
   }
 
@@ -49,7 +51,7 @@ export class TicketListComponent implements OnInit {
   reverse: boolean = false;
 
   currentPage: number = 1;
-  itemsPerPage: number = 5;
+  itemsPerPage: number = 10;
 
   get sortedTickets() {
     let filtered = this.ticketData;
@@ -101,17 +103,31 @@ export class TicketListComponent implements OnInit {
       }
     );
   }
+ getAllUserList() {
+  this.spinner.show();
+  this.service.getAllUsers().subscribe({
+    next: (res: any) => {
+      // ✅ Filter only users with Role === 'User'
+      this.userList = (res?.data || []).filter(user => user.Role === 'User');
+      this.spinner.hide();
+    },
+    error: (err) => {
+      this.spinner.hide();
+      console.error("Error fetching users:", err);
+    }
+  });
+}
 
     editTicketModel(ticket: any, templateRef: any): void {
     this.selectedTicket = ticket; 
-    
+    const formattedDate = ticket.date ? ticket.date.split('T')[0] : '';
     this.bugTicketForm.patchValue({
       title: ticket.title,
       reportedBy: ticket.reportedBy,
       priority: ticket.priority,
       environment: ticket.environment,
       ticketstatus: ticket.status,
-      date: ticket.date,
+      date: formattedDate,
       description: ticket.description,
       
       attachments: null // Clear file input
@@ -214,8 +230,54 @@ export class TicketListComponent implements OnInit {
 // }
 
 
+// UpdateTicket(status: string = 'InProcess', reason?: string): void {
+//   // debugger;
+//   if (this.bugTicketForm.invalid || !this.selectedTicket) {
+//     this.bugTicketForm.markAllAsTouched();
+//     return;
+//   }
+
+//   const rawForm = this.bugTicketForm.value;
+
+//   const payload: any = {
+//     customerticketId: this.selectedTicket.customerticketId, // Required for update
+//     title: rawForm.title,
+//     reportedBy: rawForm.reportedBy,
+//     priority: rawForm.priority,
+//     environment: rawForm.environment,
+//     status: status,  // Dynamically set status
+    
+//     consultant: rawForm.assignedTo,
+//     date: rawForm.date,
+//     description: rawForm.description,
+//     attachment: rawForm.attachments || ''
+//   };
+
+//   // Add rejection reason only if status is Rejected
+//   if (status === 'Rejected' && reason) {
+//     payload.rejectionReason = reason; // adjust key to match backend
+//   }
+
+//   this.service.UpdateTicket(payload).subscribe(
+//     (response: any) => {
+//       console.log(`Ticket ${status.toLowerCase()}:`, response);
+//       alert(`Ticket ${status} successfully.`);
+//       this.bugTicketForm.reset();
+//       this.selectedTicket = null;
+//       this.getTickets(); // refresh list
+
+//       if (this.EditmodalRef) {
+//         this.EditmodalRef.close();
+//       }
+//     },
+//     (error) => {
+//       console.error('Update failed:', error);
+//       alert(`Failed to ${status.toLowerCase()} ticket.`);
+//     }
+//   );
+// }
+
 UpdateTicket(status: string = 'InProcess', reason?: string): void {
-  // debugger;
   if (this.bugTicketForm.invalid || !this.selectedTicket) {
     this.bugTicketForm.markAllAsTouched();
     return;
@@ -224,31 +286,37 @@ UpdateTicket(status: string = 'InProcess', reason?: string): void {
   const rawForm = this.bugTicketForm.value;
 
   const payload: any = {
-    customerticketId: this.selectedTicket.customerticketId, // Required for update
+    customerticketId: this.selectedTicket.customerticketId,
     title: rawForm.title,
     reportedBy: rawForm.reportedBy,
     priority: rawForm.priority,
     environment: rawForm.environment,
-    status: status,  // Dynamically set status
-    
+    status: status,
     consultant: rawForm.assignedTo,
     date: rawForm.date,
     description: rawForm.description,
     attachment: rawForm.attachments || ''
   };
 
-  // Add rejection reason only if status is Rejected
   if (status === 'Rejected' && reason) {
-    payload.rejectionReason = reason; // adjust key to match backend
+    payload.rejectionReason = reason;
   }
 
   this.service.UpdateTicket(payload).subscribe(
     (response: any) => {
-      console.log(`Ticket ${status.toLowerCase()}:`, response);
-      alert(`Ticket ${status} successfully.`);
+      const assignedToName = rawForm.assignedTo || 'consultant';
+
+      Swal.fire({
+        icon: 'success',
+        title: `Ticket ${status} Successfully`,
+        text: `Ticket has been assigned to ${assignedToName}`,
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'OK'
+      });
+
       this.bugTicketForm.reset();
       this.selectedTicket = null;
-      this.getTickets(); // refresh list
+      this.getTickets();
 
       if (this.EditmodalRef) {
         this.EditmodalRef.close();
@@ -256,10 +324,17 @@ UpdateTicket(status: string = 'InProcess', reason?: string): void {
     },
     (error) => {
       console.error('Update failed:', error);
-      alert(`Failed to ${status.toLowerCase()} ticket.`);
+      Swal.fire({
+        icon: 'error',
+        title: 'Failed',
+        text: `Failed to ${status.toLowerCase()} ticket.`,
+        confirmButtonColor: '#d33',
+        confirmButtonText: 'OK'
+      });
     }
   );
 }
+
 
 
 onRejectTicket(ticket: any): void {

@@ -162,98 +162,162 @@ export class SidebarComponent implements OnInit, AfterViewInit, OnChanges {
 //     this.menuItems = MENU;
 //     console.log("Filtered menuItems:", this.menuItems);
 // }
-initialize(): void {
-  console.log("Original MENU:", MENU, this.loginData);
+// initialize(): void {
+//   console.log("Original MENU:", MENU, this.loginData);
 
-  if (!this.loginData?.data?.Role) {
-    console.log("No user role found!");
-    return;
-  }
+//   if (!this.loginData?.data?.Role) {
+//     console.log("No user role found!");
+//     return;
+//   }
 
-  const userRole  = this.loginData.data.Role; // Ensure uppercase
-  console.log("userRole ", userRole );
+//   const userRole  = this.loginData.data.Role; // Ensure uppercase
+//   console.log("userRole ", userRole );
 
-  // Define access rules
-  const accessMap = {
-    'ADMIN': [
-      {
-        id: 1,
-        label: 'Dashboard',
-        link: '/dashboard',
-        parentId: null,
-        icon: 'bx-grid-alt',
-        color: '#99df9cff',
-        isTitle: false
-      },
-      {
-        id: 3,
-        label: 'Ticket-Management',
-        link: '/TicketList',
-        parentId: null,
-        icon: 'bx bx-task',
-        color: '#b09a78ff',
-        isTitle: false
-      },
-      {
-        id: 4,
-        label: 'user-creation',
-        link: '/InvoiceUserCreation',
-       parentId: null,
-        icon: 'bx bx-user-plus',
-        color: '#97729eff',
-        isTitle: false
-      }
-    ],
-    'CUSTOMER': [
-      {
-        id: 1,
-        label: 'Dashboard',
-        link: '/dashboard',
-        parentId: null,
-        icon: 'bx-grid-alt',
-        color: '#99df9cff',
-        isTitle: false
-      },
-      {
-        id: 2,
-        label: 'Ticket-Creation',
-        link: '/ticket-creation',
-       parentId: null,
-        icon: 'bx bx-note',
-        color: '#88a3b9ff',
-        isTitle: false
-      }
-    ],
-    'User': [
-      // {
-      //   id: 3,
-      //   label: 'Ticket-Management',
-      //   link: '/TicketList',
-      //  parentId: null,
-      //   icon: 'bx bx-task',
-      //   color: '#b09a78ff',
-      //   isTitle: false
-      // }
+//   // Define access rules
+//   const accessMap = {
+//     'ADMIN': [
+//       {
+//         id: 1,
+//         label: 'Dashboard',
+//         link: '/dashboard',
+//         parentId: null,
+//         icon: 'bx-grid-alt',
+//         color: '#99df9cff',
+//         isTitle: false
+//       },
+//       {
+//         id: 3,
+//         label: 'Ticket-Management',
+//         link: '/TicketList',
+//         parentId: null,
+//         icon: 'bx bx-task',
+//         color: '#b09a78ff',
+//         isTitle: false
+//       },
+//       {
+//         id: 4,
+//         label: 'user-creation',
+//         link: '/InvoiceUserCreation',
+//        parentId: null,
+//         icon: 'bx bx-user-plus',
+//         color: '#97729eff',
+//         isTitle: false
+//       }
+//     ],
+//     'CUSTOMER': [
+//       {
+//         id: 1,
+//         label: 'Dashboard',
+//         link: '/dashboard',
+//         parentId: null,
+//         icon: 'bx-grid-alt',
+//         color: '#99df9cff',
+//         isTitle: false
+//       },
+//       {
+//         id: 2,
+//         label: 'Ticket-Creation',
+//         link: '/ticket-creation',
+//        parentId: null,
+//         icon: 'bx bx-note',
+//         color: '#88a3b9ff',
+//         isTitle: false
+//       }
+//     ],
+//     'User': [
+//       // {
+//       //   id: 3,
+//       //   label: 'Ticket-Management',
+//       //   link: '/TicketList',
+//       //  parentId: null,
+//       //   icon: 'bx bx-task',
+//       //   color: '#b09a78ff',
+//       //   isTitle: false
+//       // }
 
-       {
-        id: 5,
-        label: 'user',
-        link: '/user',
-       parentId: null,
-        icon: 'bx bx-task',
-        color: '#b09a78ff',
-        isTitle: false
-      }
-    ],
-  };
+//        {
+//         id: 5,
+//         label: 'user',
+//         link: '/user',
+//        parentId: null,
+//         icon: 'bx bx-task',
+//         color: '#b09a78ff',
+//         isTitle: false
+//       }
+//     ],
+//   };
 
-  // Assign the allowed menu items
-  this.menuItems = accessMap[userRole] || [];
-  console.log("Filtered menuItems:", this.menuItems);
+//   // Assign the allowed menu items
+//   this.menuItems = accessMap[userRole] || [];
+//   console.log("Filtered menuItems:", this.menuItems);
   
-  // If using Angular
-  this.cdr.detectChanges();
+//   // If using Angular
+//   this.cdr.detectChanges();
+// }
+// initialize(): void {
+//     const loginResponse = JSON.parse(localStorage.getItem('currentUser') || '{}');
+//     // console.log("loginResponse1122",loginResponse)
+    
+//     if (loginResponse && loginResponse[0].Activity) {
+//       const authorizedIds: string[] = Object.values(loginResponse[0].Activity).filter((id): id is string => typeof id === 'string' && id.trim() !== "");
+//       console.log("authorizedIds",authorizedIds)
+//       this.menuItems = this.filterMenuItems(MENU, authorizedIds);
+//     } else {
+//       this.menuItems = []; // Fallback if no loginResponse or ZGRNACT
+//     }
+//   }
+ initialize(): void {  
+    console.log('loginResponse from localStorage:', this.loginData);
+
+    // ✅ UPDATED CONDITION
+    // if (this.loginData.data.Activity) {
+    //   const authorizedIds: string[] = Object.values(this.loginData.data.Activity).filter(
+    //     (id): id is string => typeof id === 'string' && id.trim() !== ''
+    //   );
+    //   console.log('authorizedIds', authorizedIds);
+    //   this.menuItems = this.filterMenuItems(MENU, authorizedIds);
+    // } else {
+    //   this.menuItems = [];
+    // }
+    if (this.loginData.data.Activity && this.loginData.data.Activity.length > 0) {
+  const activityString = this.loginData.data.Activity[0]; // taking first string
+  const authorizedLabels: string[] = activityString.split(',').map(item => item.trim());
+
+  console.log('authorizedLabels:', authorizedLabels);
+  this.menuItems = this.filterMenuItems(MENU, authorizedLabels);
+} else {
+  this.menuItems = [];
 }
+
+    console.log("menuitems",this.menuItems)
+
+    this.cdr.detectChanges();
+  }
+  
+ 
+  // private filterMenuItems(menuItems: MenuItem[], authorizedIds: string[]): MenuItem[] {
+  //   console.log('menuItems',menuItems,'authorizedIds',authorizedIds)
+  //   return menuItems.filter((item) => {
+  //     if (item.subItems) {
+  //       item.subItems = this.filterMenuItems(item.subItems, authorizedIds);
+  //     }
+  //     return authorizedIds.includes(String(item.id)) || (item.subItems && item.subItems.length > 0);
+  //   });
+  // }
+  private filterMenuItems(menuItems: MenuItem[], authorizedLabels: string[]): MenuItem[] {
+  return menuItems.filter((item) => {
+    if (item.subItems) {
+      item.subItems = this.filterMenuItems(item.subItems, authorizedLabels);
+    }
+
+    return (
+      authorizedLabels.includes(item.label) ||
+      (item.subItems && item.subItems.length > 0)
+    );
+  });
+}
+
+
 
 
 // 30-04-2025

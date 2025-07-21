@@ -83,7 +83,7 @@
             <div class="col-md-6">
                 <label>Reported By<span class="text-danger">*</span></label>
                 <input class="form-control" formControlName="reportedBy" type="text"
-                    placeholder="Enter Reporter Name" />
+                    placeholder="Enter Reporter Name" readonly />
                 <div class="text-danger" *ngIf="submit && f['reportedBy'].errors?.['required']">
                     Reported By is required.
                 </div>
@@ -109,8 +109,8 @@
                 <label>Environment<span class="text-danger">*</span></label>
                 <select class="form-control" formControlName="environment">
                     <option value="" disabled hidden>Select</option>
-                    <option value="Dev">Dev</option>
-                    <option value="QA">QA</option>
+                    <option value="Development">Development</option>
+                    <option value="Quality">Quality</option>
                     <option value="Production">Production</option>
                 </select>
                 <div class="text-danger" *ngIf="submit && f['environment'].errors?.['required']">

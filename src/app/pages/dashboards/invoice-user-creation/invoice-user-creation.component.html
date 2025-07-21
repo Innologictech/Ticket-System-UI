@@ -194,7 +194,8 @@
 
                   <!-- Activity -->
             
-            
+  <div class="col-md-4">
+  <label>Activity<span class="text-danger">*</span></label>          
   <ng-select
   [items]="activities"
   [multiple]="true"
@@ -214,6 +215,7 @@
     </div>
   </ng-template>
 </ng-select>
+  </div>
 
 
 
@@ -370,12 +372,12 @@
               </div>
               <div class="col-md-4">
                       <label>Role<span class="text-danger">*</span></label>
-                      <!-- <select class="form-control" formControlName="role">
+                      <select class="form-control" formControlName="role">
                           <option value="CUSTOMER">CUSTOMER</option>
                           <option value="ADMIN">ADMIN</option>
                           <option value="USER">USER</option>
-                      </select> -->
-                       <input class="form-control form-control-sm" formControlName="role" type="text" placeholder="" >  
+                      </select>
+                       <!-- <input class="form-control form-control-sm" formControlName="role" type="text" placeholder="" >   -->
 
                       <div class="text-danger" *ngIf="submit && f['role'].errors">
                         Role is required.
@@ -383,20 +385,28 @@
                   </div>
 
                 <!-- Activity -->
-               <div class="col-md-4">
-  <label>Activity<span class="text-danger">*</span></label>
-  <!-- <select class="form-control" formControlName="activity" required>
-    <option value="">-- Select Activity --</option>
-    <option value="Dashboard">Dashboard</option>
-    <option value="Ticket-Creation">Ticket-Creation</option>
-    <option value="Ticket-Management">Ticket-Management</option>
-    <option value="user-creation">User-Creation</option>
-  </select> -->
- <input class="form-control form-control-sm" formControlName="activity" type="text" placeholder="" >  
- <div class="text-danger" *ngIf="submit && f['activity'].errors">
-    Activity is required.
+     <div class="col-md-4">
+  <label>Activity<span class="text-danger">*</span></label>          
+  <ng-select
+  [items]="activities"
+  [multiple]="true"
+  [closeOnSelect]="false"
+  bindLabel=""
+  formControlName="activity"
+  placeholder="Select Activities"
+>
+  <ng-template ng-option-tmp let-item="item" let-index="index">
+    <div style="display: flex; align-items: center; padding: 4px 8px;">
+      <input
+        type="checkbox"
+        [checked]="userCreationForm.get('activity')?.value?.includes(item)"
+        style="margin-right: 10px; width: 16px; height: 16px;"
+      />
+      <span style="font-weight: normal;">{{ item }}</span>
+    </div>
+  </ng-template>
+</ng-select>
   </div>
-</div>
 
 
                 <div class="col-md-4 d-flex align-items-center">
