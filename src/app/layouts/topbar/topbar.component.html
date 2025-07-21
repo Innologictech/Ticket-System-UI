@@ -116,10 +116,11 @@
       <!-- Welcome Text -->
       <div class="welcome-section">
         <span class="welcome-text">
-          Welcome: {{ loginData?.data.employeeFirstName }}
-          <span class="user-info">
-            {{ loginData?.data.employeeLastName }} ({{ loginData?.data.employeeID }})
-          </span>
+          <!-- Welcome: {{ loginData?.data.FirstName }} -->
+           Welcome: <span class="user-name">{{ loginData?.data.FirstName }}</span>
+          <!-- <span class="user-info">
+            {{ loginData?.data.LastName }} ({{ loginData?.data.userName }})
+          </span> -->
         </span>
       </div>
 
