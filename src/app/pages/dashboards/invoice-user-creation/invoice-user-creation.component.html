@@ -369,14 +369,15 @@
                 <!-- Activity -->
                <div class="col-md-4">
   <label>Activity<span class="text-danger">*</span></label>
-  <select class="form-control" formControlName="activity" required>
+  <!-- <select class="form-control" formControlName="activity" required>
     <option value="">-- Select Activity --</option>
     <option value="Dashboard">Dashboard</option>
     <option value="Ticket-Creation">Ticket-Creation</option>
     <option value="Ticket-Management">Ticket-Management</option>
     <option value="user-creation">User-Creation</option>
-  </select>
-  <div class="text-danger" *ngIf="submit && f['activity'].errors">
+  </select> -->
+ <input class="form-control form-control-sm" formControlName="activity" type="text" placeholder="" >  
+ <div class="text-danger" *ngIf="submit && f['activity'].errors">
     Activity is required.
   </div>
 </div>

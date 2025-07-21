@@ -24,12 +24,15 @@ import { GeneralserviceService } from 'src/app/generalservice.service';
  * Sidebar component
  */
 export class SidebarComponent implements OnInit, AfterViewInit, OnChanges {
+   @Input() menuItems: any[] = [];
+  
+
   @ViewChild('componentRef') scrollRef;
   @Input() isCondensed = false;
   menu: any;
   data: any;
 
-  menuItems: MenuItem[] = [];
+  // menuItems: MenuItem[] = [];
 
   @ViewChild('sideMenu') sideMenu: ElementRef;
   loginData: any;
@@ -162,13 +165,13 @@ export class SidebarComponent implements OnInit, AfterViewInit, OnChanges {
 initialize(): void {
   console.log("Original MENU:", MENU, this.loginData);
 
-  if (!this.loginData?.data?.Activity) {
-    console.log("No user activity found!");
+  if (!this.loginData?.data?.Role) {
+    console.log("No user role found!");
     return;
   }
 
-  const userActivity = this.loginData.data.Activity; // Ensure uppercase
-  console.log("userActivity", userActivity);
+  const userRole  = this.loginData.data.Role; // Ensure uppercase
+  console.log("userRole ", userRole );
 
   // Define access rules
   const accessMap = {
@@ -177,7 +180,7 @@ initialize(): void {
         id: 1,
         label: 'Dashboard',
         link: '/dashboard',
-        parentId: 1,
+        parentId: null,
         icon: 'bx-grid-alt',
         color: '#99df9cff',
         isTitle: false
@@ -186,7 +189,7 @@ initialize(): void {
         id: 3,
         label: 'Ticket-Management',
         link: '/TicketList',
-        parentId: 2,
+        parentId: null,
         icon: 'bx bx-task',
         color: '#b09a78ff',
         isTitle: false
@@ -195,7 +198,7 @@ initialize(): void {
         id: 4,
         label: 'user-creation',
         link: '/InvoiceUserCreation',
-        parentId: 2,
+       parentId: null,
         icon: 'bx bx-user-plus',
         color: '#97729eff',
         isTitle: false
@@ -206,7 +209,7 @@ initialize(): void {
         id: 1,
         label: 'Dashboard',
         link: '/dashboard',
-        parentId: 1,
+        parentId: null,
         icon: 'bx-grid-alt',
         color: '#99df9cff',
         isTitle: false
@@ -215,7 +218,7 @@ initialize(): void {
         id: 2,
         label: 'Ticket-Creation',
         link: '/ticket-creation',
-        parentId: 2,
+       parentId: null,
         icon: 'bx bx-note',
         color: '#88a3b9ff',
         isTitle: false
@@ -226,7 +229,7 @@ initialize(): void {
         id: 3,
         label: 'Ticket-Management',
         link: '/TicketList',
-        parentId: 2,
+       parentId: null,
         icon: 'bx bx-task',
         color: '#b09a78ff',
         isTitle: false
@@ -235,7 +238,7 @@ initialize(): void {
   };
 
   // Assign the allowed menu items
-  this.menuItems = accessMap[userActivity] || [];
+  this.menuItems = accessMap[userRole] || [];
   console.log("Filtered menuItems:", this.menuItems);
   
   // If using Angular
