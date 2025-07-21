@@ -182,3 +182,23 @@ footer {
   font-size: 1.5rem;
   color: #666;
 }
+
+
+/* Hover Effects for Summary Cards */
+.summary-cards .card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.summary-cards .card:hover {
+  transform: scale(1.05);  /* Slight zoom */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); /* Lifted shadow */
+}
+
+/* Make the numbers pop slightly */
+.summary-cards .card .value {
+  transition: transform 0.3s ease;
+}
+
+.summary-cards .card:hover .value {
+  transform: scale(1.15);
+}
