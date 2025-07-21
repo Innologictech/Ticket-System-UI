@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { MENU } from 'src/app/layouts/sidebar/menu';
 @Component({
   selector: 'app-invoice-user-creation',
   templateUrl: './invoice-user-creation.component.html',
@@ -17,7 +18,7 @@ export class InvoiceUserCreationComponent implements OnInit {
   @ViewChild('editUserTemplate') editUserTemplate!: TemplateRef<any>;
   
   CreatemodalRef:any;
-
+ menuItems = [];
   // invoiceUserCreationForm!: FormGroup;
   userCreationForm!: FormGroup;
   userEditForm!: FormGroup;
@@ -33,7 +34,7 @@ confirmFieldTextType: boolean = false;
   userNewCreation: any[];
   userList: any[];
   submit: boolean=false;
-  userUniqueId: any;
+  userId: any;
   loginData: any;
   c: any;
   editModalRef: any;
@@ -47,6 +48,24 @@ confirmFieldTextType: boolean = false;
   ) {}
 
   ngOnInit(): void {
+     const user = JSON.parse(localStorage.getItem('loggedInUser') || '{}');
+    const userActivity = user.Activity;
+
+    this.menuItems = MENU.filter(item => {
+      switch (userActivity) {
+        case 'DASHBOARD':
+          return item.label === 'Dashboard';
+        case 'TICKET_CREATION':
+          return item.label === 'Ticket-Creation';
+        case 'TICKET_MANAGEMENT':
+          return item.label === 'Ticket-Management';
+        case 'USER_CREATION':
+          return item.label === 'user-creation';
+        default:
+          return false;
+      }
+    });
+  
     this.userCreationForm = this.fb.group({
       userName: ['', Validators.required],
       firstName: ['', Validators.required],
@@ -64,7 +83,7 @@ confirmFieldTextType: boolean = false;
 
 
     this.userEditForm = this.fb.group({
-       userUniqueId: [''], 
+       userId: [''], 
       userName: ['', Validators.required],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -97,11 +116,11 @@ confirmFieldTextType: boolean = false;
   openEditModal(user: any, editUserTemplate: TemplateRef<any>): void {
     this.submit = false
     console.log('user',user);
-    this.userUniqueId =null
+    this.userId =null
     const selectedUser = user;
-    this.userUniqueId = user.userUniqueId
+    this.userId = user.userId
     this.userEditForm.patchValue({
-      userUniqueId: selectedUser.userUniqueId,
+      userId: selectedUser.userId,
       userName: selectedUser.userName,
       firstName: selectedUser.FirstName,
       lastName: selectedUser.LastName,
@@ -204,6 +223,19 @@ confirmFieldTextType: boolean = false;
     this.userCreationForm.patchValue({
       "status": true
     })
+    
+ this.userCreationForm.setValue({
+    userName: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    contact: '',
+    role: '',
+    activity: '',
+    password: '',
+    confirmPassword: '',
+    status: true
+  });
    this.CreatemodalRef= this.modalService.open(newUserTemplate,{  backdrop: 'static', 
       keyboard: false,size:'lg' });
   
@@ -222,7 +254,7 @@ confirmFieldTextType: boolean = false;
   
       
   //     let updateObj = {
-  //       "userUniqueId": this.userUniqueId, // Assuming the unique ID is part of the form
+  //       "userId": this.userId, // Assuming the unique ID is part of the form
   //       "userName": this.userEditForm.value.userName,
   //       "userFirstName": this.userEditForm.value.firstName,
   //       "userLastName": this.userEditForm.value.lastName,
@@ -237,7 +269,7 @@ confirmFieldTextType: boolean = false;
       
   //     console.log("updateObj", updateObj);
   //     this.spinner.show()
-  //     this.service. updateExitUser(updateObj,this.userUniqueId).subscribe((res: any) => {
+  //     this.service. updateExitUser(updateObj,this.userId).subscribe((res: any) => {
   //       console.log("updateUserCreation", res);
   //       this.spinner.hide()
   //       if (res.status == 400) {
@@ -354,10 +386,10 @@ confirmFieldTextType: boolean = false;
   // }
   // }
   //  delete(data): void {
-  //     console.log('Deleting Customer with ID:',data, this.userUniqueId);
-  //   this.userUniqueId = data.userUniqueId
+  //     console.log('Deleting Customer with ID:',data, this.userId);
+  //   this.userId = data.userId
   //     let deletePayload = {
-  //       globalId: this.userUniqueId,
+  //       globalId: this.userId,
   //       screenName: "user"
   //     };
     
@@ -430,10 +462,10 @@ confirmFieldTextType: boolean = false;
       }).then((result) => {
         if (result.isConfirmed) {
           this.spinner.show();
-          console.log('Deleting Customer with ID:', data, this.userUniqueId);
-          this.userUniqueId = data.userUniqueId;
+          console.log('Deleting Customer with ID:', data, this.userId);
+          this.userId = data.userId;
           let deletePayload = {
-            globalId: this.userUniqueId,
+            globalId: this.userId,
             screenName: "user"
           };
          
@@ -586,7 +618,7 @@ updateUserForm() {
   const formValues = this.userEditForm.value;
 
   const payload = {
-    userUniqueId: formValues.userUniqueId, // This must be part of your form
+    userId: formValues.userId, // This must be part of your form
     userName: formValues.userName,
     FirstName: formValues.firstName,
     LastName: formValues.lastName,

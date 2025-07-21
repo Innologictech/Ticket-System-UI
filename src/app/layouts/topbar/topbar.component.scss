@@ -78,6 +78,7 @@
 /* Main Container */
 .header-container {
   display: flex;
+  justify-content: space-between;
   align-items: center;
   gap: 20px;
   
@@ -86,11 +87,16 @@
   font-family: 'Roboto', sans-serif;
   position: relative;
 }
-
+.welcome-section {
+  display: flex;
+  align-items: center;
+}
 /* Welcome Text */
 .welcome-text {
   font-size: 16px;
+  white-space: nowrap;
   font-weight: 500;
+  color: white;
 }
 .user-info {
   margin-left: 8px;
@@ -126,6 +132,10 @@
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   padding: 12px;
+}
+.user-name {
+  margin-left: 5px;
+  font-weight: bold;
 }
 .search-input-group {
   display: flex;

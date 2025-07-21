@@ -194,17 +194,19 @@
 
                   <!-- Activity -->
                   <div class="col-md-4">
-                      <label>Activity<span class="text-danger">*</span></label>
-                      <input type="activity"  class="form-control form-control-sm" formControlName="activity" placeholder="" required/>
-                      <!-- <select class="form-control" formControlName="activity">
-                          <option value="CUSTOMER">CUSTOMER</option>
-                          <option value="ADMIN">ADMIN</option>
-                          <option value="USER">USER</option>
-                      </select> -->
-                      <div class="text-danger" *ngIf="submit && f['activity'].errors">
-                        Activity is required.
-                   </div>
-                  </div>
+  <label>Activity<span class="text-danger">*</span></label>
+  <select class="form-control" formControlName="activity" required>
+    <option value="">-- Select Activity --</option>
+    <option value="DASHBOARD">Dashboard</option>
+    <option value="TICKET_CREATION">Ticket-Creation</option>
+    <option value="TICKET_MANAGEMENT">Ticket-Management</option>
+    <option value="USER_CREATION">User-Creation</option>
+  </select>
+  <div class="text-danger" *ngIf="submit && f['activity'].errors">
+    Activity is required.
+  </div>
+</div>
+
                   <div class="col-md-4 d-flex align-items-center">
                       <label class="me-2">Active</label>
                       <div class="form-check form-switch">
@@ -365,19 +367,21 @@
                   </div>
 
                 <!-- Activity -->
-                <div class="col-md-4">
-                    <label>Activity<span class="text-danger">*</span></label>
-                     <input type="activity"  class="form-control form-control-sm" formControlName="activity" placeholder="" required/>
-                    <!-- <select class="form-control" formControlName="activity">
-                        <option value="CUSTOMER">CUSTOMER</option>
-                        <option value="ADMIN">ADMIN</option>
-                        <option value="USER">USER</option>
-                    </select> -->
-                    <div class="text-danger" *ngIf="submit && f['activity'].errors">
-                        Activity is required.
-                   </div>
-                    
-                </div>
+               <div class="col-md-4">
+  <label>Activity<span class="text-danger">*</span></label>
+  <select class="form-control" formControlName="activity" required>
+    <option value="">-- Select Activity --</option>
+    <option value="DASHBOARD">Dashboard</option>
+    <option value="TICKET_CREATION">Ticket-Creation</option>
+    <option value="TICKET_MANAGEMENT">Ticket-Management</option>
+    <option value="USER_CREATION">User-Creation</option>
+  </select>
+  <div class="text-danger" *ngIf="submit && f['activity'].errors">
+    Activity is required.
+  </div>
+</div>
+
+
                 <div class="col-md-4 d-flex align-items-center">
                     <label class="me-2">Active</label>
                     <div class="form-check form-switch">

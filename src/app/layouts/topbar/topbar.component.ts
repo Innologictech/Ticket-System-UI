@@ -143,7 +143,7 @@ this.userProfileImage = (image && image.startsWith('data:image/'))
     this.fetchData(); // Initial call
     setInterval(() => this.fetchData(), 30000); // Poll every 30 seconds
   }
-  console.log("this.loginData?.data.employeeActivity",this.loginData?.data.employeeActivity)
+  console.log("this.loginData?.data.Activity",this.loginData?.data.Activity)
 //  if(this.loginData){
 //   setInterval(() => 
    
@@ -420,17 +420,17 @@ closeResetPasswordModal() {
   // }
   fetchData() {
 
-    if(this.loginData?.data.employeeActivity == 'TEAM LEAD'){
-      console.log("enter into 367", this.loginData?.data.employeeActivity);
+    if(this.loginData?.data.Activity == 'TEAM LEAD'){
+      console.log("enter into 367", this.loginData?.data.Activity);
       const obj = {
-        employeeActivity: this.loginData?.data.employeeActivity,
-        employeeID: this.loginData?.data.employeeID
+        Activity: this.loginData?.data.Activity,
+        userName: this.loginData?.data.userName
       };
       this.notificationService.getTeamLeadList(obj).subscribe(
         (response: any) => {
           if (!response) return;
     console.log("response isTL",response)
-          const isTL = this.loginData?.data.employeeActivity === 'TEAM LEAD'; // Check if user is MD
+          const isTL = this.loginData?.data.Activity === 'TEAM LEAD'; // Check if user is MD
           const newCount = isTL
             ? response.mdNotificationCount || 0
             : response.adminNotificationCount || 0;
@@ -464,18 +464,18 @@ closeResetPasswordModal() {
           console.error('Error fetching notifications:', error);
         }
       );
-    }else if(this.loginData?.data.employeeActivity == 'MANAGER'){
-      console.log("enter into 367", this.loginData?.data.employeeActivity);
+    }else if(this.loginData?.data.Activity == 'MANAGER'){
+      console.log("enter into 367", this.loginData?.data.Activity);
       const obj = {
-        employeeActivity: this.loginData?.data.employeeActivity,
-        employeeID: this.loginData?.data.employeeID
+        Activity: this.loginData?.data.Activity,
+        userName: this.loginData?.data.userName
       };
       this.notificationService.getListOf_A_R_Notifications(obj).subscribe(
         (response: any) => {
           if (!response) return;
           console.log("response isManager",response)
 
-          const isManager = this.loginData?.data.employeeActivity === 'MANAGER'; // Check if user is MD
+          const isManager = this.loginData?.data.Activity === 'MANAGER'; // Check if user is MD
           const newCount = isManager
             ? response.notificationCount || 0
             : response.adminNotificationCount || 0;
@@ -520,7 +520,7 @@ closeResetPasswordModal() {
 
     // if(this.reviewedNotificationList.length>0){
     console.log("this.loginData",this.loginData)
-      if(this.loginData?.data.employeeActivity == 'MD'){
+      if(this.loginData?.data.Activity == 'MD'){
         // if(this.reviewedNotificationList.length>0){
         //   this.modalService.open(this.notificationPopAdmin, { 
         //     size: 'xl', 
