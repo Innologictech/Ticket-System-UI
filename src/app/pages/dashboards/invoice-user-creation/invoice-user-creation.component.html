@@ -356,11 +356,13 @@
               </div>
               <div class="col-md-4">
                       <label>Role<span class="text-danger">*</span></label>
-                      <select class="form-control" formControlName="role">
+                      <!-- <select class="form-control" formControlName="role">
                           <option value="CUSTOMER">CUSTOMER</option>
                           <option value="ADMIN">ADMIN</option>
                           <option value="USER">USER</option>
-                      </select>
+                      </select> -->
+                       <input class="form-control form-control-sm" formControlName="role" type="text" placeholder="" >  
+
                       <div class="text-danger" *ngIf="submit && f['role'].errors">
                         Role is required.
                    </div>
