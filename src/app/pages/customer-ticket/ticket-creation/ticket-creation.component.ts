@@ -141,34 +141,35 @@ tickets$: Observable<any[]>;
       attachment: rawForm.attachments || ''
     };
 
-     this.service.CreateTicket(payload).subscribe(
-    (response: any) => {
-      console.log('Ticket created:', response);
+ this.service.CreateTicket(payload).subscribe(
+  (response: any) => {
+    console.log('Ticket created:', response);
 
-      Swal.fire({
-        icon: 'success',
-        title: 'Ticket Created',
-        text: 'Your ticket was created successfully.',
-        confirmButtonText: 'OK'
-      }).then(() => {
-        this.bugTicketForm.reset();
-        this.getTickets(); // refresh list
-        if (this.CreatemodalRef) {
-          this.CreatemodalRef.close();
-        }
-      });
-    },
-    (error) => {
-      console.error('Ticket creation failed:', error);
+    Swal.fire({
+      icon: 'success',
+      title: 'Ticket Created',
+      text: `${response.customerticketId} was created successfully.`,
+      confirmButtonText: 'OK'
+    }).then(() => {
+      this.bugTicketForm.reset();
+      this.getTickets(); // refresh list
+      if (this.CreatemodalRef) {
+        this.CreatemodalRef.close();
+      }
+    });
+  },
+  (error) => {
+    console.error('Ticket creation failed:', error);
 
-      Swal.fire({
-        icon: 'error',
-        title: 'Creation Failed',
-        text: 'Sorry, we could not create the ticket. Please try again.',
-        confirmButtonText: 'OK'
-      });
-    }
-  );
+    Swal.fire({
+      icon: 'error',
+      title: 'Creation Failed',
+      text: 'Sorry, we could not create the ticket. Please try again.',
+      confirmButtonText: 'OK'
+    });
+  }
+);
+
   }
 
 
