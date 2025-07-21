@@ -5,6 +5,8 @@ import { CalendarComponent } from './calendar/calendar.component';
 import { ChatComponent } from './chat/chat.component';
 import { DefaultComponent } from './dashboards/default/default.component';
 import { FilemanagerComponent } from './filemanager/filemanager.component';
+import { UserComponent } from './user/user.component';
+
 
 const routes: Routes = [
   // { path: '', redirectTo: 'dashboard' },
@@ -17,7 +19,7 @@ const routes: Routes = [
   { path: 'calendar', component: CalendarComponent },
   { path: 'chat', component: ChatComponent },
   { path: 'filemanager', component: FilemanagerComponent },
-  { path: 'user', loadChildren: () => import('./user/user.module').then(m =>m.UserModule) },
+  { path: 'user', component:UserComponent},
   { path: 'Employee-ticket', loadChildren: () => import('./customer-ticket/customer-ticket.module').then(m =>m.CustomerTicketModule) },
   {path:'admin', loadChildren: () => import('./admin/admin.module').then(m =>m.AdminModule)},
   { path: 'dashboards', loadChildren: () => import('./dashboards/dashboards.module').then(m => m.DashboardsModule) },

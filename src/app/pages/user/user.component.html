@@ -1,0 +1,116 @@
+<!-- <div class="card-header">
+    Tickets List
+</div>
+
+
+<div class="mb-3 d-flex justify-content-between">
+    <input type="text" class=" w-15" style="margin-top: 1rem;" placeholder="Search..." [(ngModel)]="searchText" />
+</div>
+
+<div class="table-responsive tableFixHead">
+    <table class="table table-bordered table-hover bg-white">
+        <thead class="table-dark text-center">
+            <tr>
+                <th (click)="setSort('customerticketId')" style="cursor:pointer">
+                    Ticket Id
+                </th>
+                <th (click)="setSort('title')" style="cursor:pointer">Title</th>
+                <th (click)="setSort('priority')" style="cursor:pointer">Priority</th>
+                <th (click)="setSort('status')" style="cursor:pointer">Status</th>
+                <th (click)="setSort('date')" style="cursor:pointer">Created Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="
+          let ticket of sortedTickets
+            | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }
+        " class="align-middle">
+                <td>{{ ticket.customerticketId }}</td>
+                <td>{{ ticket.title }}</td>
+                <td>{{ ticket.priority }}
+
+                </td>
+                <td>
+
+                    {{ ticket.status }}
+
+                </td>
+                <td>{{ ticket.date | date: 'dd-MM-yyyy' }}</td>
+                <td class="text-center">
+                    
+                    <button class="btn btn-sm btn-info me-2" (click)="editTicketModel(ticket, createBugTicketTemplate)">
+                        View
+                    </button>
+
+                   
+                </td>
+
+
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<div class="d-flex justify-content-end mt-3">
+    <pagination-controls (pageChange)="currentPage = $event"
+        class="pagination justify-content-end"></pagination-controls>
+</div> -->
+
+<div class="container my-4">
+  <h2 class="text-center mb-5">My Assigned Tickets</h2>
+
+  <div class="row">
+    <!-- Open Tickets -->
+    <div class="col-md-4 mb-4">
+      <h4 class="mb-2">Open</h4>
+      <hr>
+      <div class="card shadow-sm border-0 mb-3">
+        <div class="card-body">
+          <h5 class="card-title text-primary mb-2">Bug in Login Screen</h5>
+          <p class="card-text text-muted small">User unable to login with correct credentials.</p>
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <span class="badge bg-warning text-dark">Open</span>
+            <a href="#" class="text-decoration-none">View</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- In Progress Tickets -->
+    <div class="col-md-4 mb-4">
+      <h4 class="mb-2">In Progress</h4>
+      <hr>
+      <div class="card shadow-sm border-0 mb-3">
+        <div class="card-body">
+          <h5 class="card-title text-primary mb-2">UI Issue in Dashboard</h5>
+          <p class="card-text text-muted small">Graphs not aligned in mobile view.</p>
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <span class="badge bg-info text-dark">In Progress</span>
+            <a href="#" class="text-decoration-none">View</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resolved Tickets -->
+    <div class="col-md-4 mb-4">
+      <h4 class="mb-2">Resolved</h4>
+      <hr>
+      <div class="card shadow-sm border-0 mb-3">
+        <div class="card-body">
+          <h5 class="card-title text-primary mb-2">Email Notification Failure</h5>
+          <p class="card-text text-muted small">Customer not receiving password reset emails.</p>
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <span class="badge bg-success">Resolved</span>
+            <a href="#" class="text-decoration-none">View</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    
