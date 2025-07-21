@@ -37,7 +37,7 @@ export const MENU: MenuItem[] = [
 
     , {
 
-        id: 3,
+        id: 4,
         label: 'user-creation',
         link: '/InvoiceUserCreation',
         parentId: 2,

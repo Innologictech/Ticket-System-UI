@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ElementRef, ViewChild, Input, OnChanges } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, ViewChild, Input, OnChanges, ChangeDetectorRef } from '@angular/core';
 import MetisMenu from 'metismenujs';
 import { EventService } from '../../core/services/event.service';
 import { Router, NavigationEnd, RouterModule } from '@angular/router';
@@ -34,7 +34,7 @@ export class SidebarComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild('sideMenu') sideMenu: ElementRef;
   loginData: any;
 
-  constructor(private eventService: EventService, private router: Router, public translate: TranslateService, private http: HttpClient,private service:GeneralserviceService) {
+  constructor(private eventService: EventService, private router: Router,private cdr: ChangeDetectorRef, public translate: TranslateService, private http: HttpClient,private service:GeneralserviceService) {
     router.events.forEach((event) => {
       if (event instanceof NavigationEnd) {
         this._activateMenuDropdown();
@@ -147,107 +147,109 @@ export class SidebarComponent implements OnInit, AfterViewInit, OnChanges {
   /**
    * Initialize
    */
-  initialize(): void {
-    console.log("this.menuItems",MENU)
-    this.menuItems = MENU;
-    console.log("this.menuItems",this.menuItems)
-  }
+  // initialize(): void {
+  //   console.log("this.menuItems",MENU)
+  //   this.menuItems = MENU;
+  //   console.log("this.menuItems",this.menuItems)
+  // }
+
 
 //   initialize(): void {
 //     console.log("Original MENU:", MENU);
 //     this.menuItems = MENU;
 //     console.log("Filtered menuItems:", this.menuItems);
 // }
-// initialize(): void {
-//   console.log("Original MENU:", MENU,this.loginData);
+initialize(): void {
+  console.log("Original MENU:", MENU, this.loginData);
 
-//   if (!this.loginData?.data?.employeeActivity) {
-//       console.log("No user activity found!");
-//       return;
-//   }
+  if (!this.loginData?.data?.Activity) {
+    console.log("No user activity found!");
+    return;
+  }
 
-//   const userActivity = this.loginData.data.employeeActivity;
-// console.log("userActivity",userActivity)
-//   // Define access rules
-//   const accessMap = {
-//     //   'ADMIN': [
-//     //     {
-//     //       id: 2,
-//     //       label: 'Dashboard',
-//     //       link: '/dashboard',
-//     //       parentId: 2,
-//     //       icon: 'bx-home-circle',
-//     //   },
-//     //   {
-//     //     id: 3,
-//     //     label: 'Employee Creation',
-//     //     link: '/EmployeeCreation',
-//     //     parentId: 1,
-//     //     icon: 'bx bx-receipt',
-//     // },
-//     //   ], 
-//     'ADMIN': MENU, 
-//       'MD':[
-//         {
-//           id: 2,
-//           label: 'Dashboard',
-//           link: '/dashboard',
-//           parentId: 2,
-//           icon: 'bx-home-circle',
-//       },
-//       ,
-//       ],
-//       'MANAGERS':[
-//         {
-//           id: 4,
-//           label: 'Project Creation',
-//           link: '/ProjectCreation',
-//           parentId: 1,
-//           icon: 'bx bx-folder-plus',
-//       },
-//       {
-//           id: 5,
-//           label: 'Project Assignment',
-//           link: '/ProjectAssignment',
-//           parentId: 1,
-//           icon: 'bx bx-task',
-//       },
-     
-//         ],
-//       'CONSULTANT':[
-//         {
-//           id: 6,
-//           label: 'Time Entry',
-//           link: '/OperationTimeEntry',
-//           parentId: 1,
-//           icon: 'bx bx-stopwatch',
-//       },
-//       ],
-//       'ACCOUNTS': [
-//         {
-//           id: 2,
-//           label: 'Dashboard',
-//           link: '/dashboard',
-//           parentId: 2,
-//           icon: 'bx-home-circle',
-//       },
-//       ]
-//   };
+  const userActivity = this.loginData.data.Activity; // Ensure uppercase
+  console.log("userActivity", userActivity);
 
-//   // Assign the allowed menu items based on user role
-//   this.menuItems = accessMap[userActivity] || [];
+  // Define access rules
+  const accessMap = {
+    'ADMIN': [
+      {
+        id: 1,
+        label: 'Dashboard',
+        link: '/dashboard',
+        parentId: 1,
+        icon: 'bx-grid-alt',
+        color: '#99df9cff',
+        isTitle: false
+      },
+      {
+        id: 3,
+        label: 'Ticket-Management',
+        link: '/TicketList',
+        parentId: 2,
+        icon: 'bx bx-task',
+        color: '#b09a78ff',
+        isTitle: false
+      },
+      {
+        id: 4,
+        label: 'user-creation',
+        link: '/InvoiceUserCreation',
+        parentId: 2,
+        icon: 'bx bx-user-plus',
+        color: '#97729eff',
+        isTitle: false
+      }
+    ],
+    'CUSTOMER': [
+      {
+        id: 1,
+        label: 'Dashboard',
+        link: '/dashboard',
+        parentId: 1,
+        icon: 'bx-grid-alt',
+        color: '#99df9cff',
+        isTitle: false
+      },
+      {
+        id: 2,
+        label: 'Ticket-Creation',
+        link: '/ticket-creation',
+        parentId: 2,
+        icon: 'bx bx-note',
+        color: '#88a3b9ff',
+        isTitle: false
+      }
+    ],
+    'USER': [
+      {
+        id: 3,
+        label: 'Ticket-Management',
+        link: '/TicketList',
+        parentId: 2,
+        icon: 'bx bx-task',
+        color: '#b09a78ff',
+        isTitle: false
+      }
+    ],
+  };
 
-//   console.log("Filtered menuItems:", this.menuItems);
-// }
+  // Assign the allowed menu items
+  this.menuItems = accessMap[userActivity] || [];
+  console.log("Filtered menuItems:", this.menuItems);
+  
+  // If using Angular
+  this.cdr.detectChanges();
+}
 
 
 // 30-04-2025
 
-// initialize(): void {
+//  initialize(): void {
 //    console.log("this.menuItems",MENU)
 
 //   const fullMenu = MENU; // Your full menu array with Dashboard, Admin, etc.
-//   const userActivity = this.loginData?.data?.employeeActivity;
+//   const userActivity = this.loginData?.data?.Activity;
 //   console.log("User Activity:", userActivity);
 
 //   if (!userActivity) {
@@ -257,13 +259,9 @@ export class SidebarComponent implements OnInit, AfterViewInit, OnChanges {
 
 //   // Define allowed top-level menu IDs per role
 //   const roleAccess = {
-//    // 'ADMIN': [2, 3,], // Dashboard + Administration
-//    "HUMAN RESOURCE":[2,3,4,5],
-//      'ADMIN': [2, 3,4,5], 
-//     'MANAGER': [2, 4], // Dashboard + Management
-//     'TEAM LEAD': [2, 4], // Optional: same as MANAGERS
-//     'CONSULTANT': [2, 5], // Dashboard + Operation
-//     'ACCOUNTS': [2], // Dashboard only
+//      'ADMIN': [1, 3,4], //Dashboard + ticket-management+user-creation
+//     'CUSTOMER': [1,2], // Dashboard + ticket-creation
+//     'User': [1]
 //   };
 
 //   const allowedIds = roleAccess[userActivity.toUpperCase()] || [];

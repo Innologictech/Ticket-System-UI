@@ -49,22 +49,22 @@ confirmFieldTextType: boolean = false;
 
   ngOnInit(): void {
      const user = JSON.parse(localStorage.getItem('loggedInUser') || '{}');
-    const userActivity = user.Activity;
+    // const userActivity = user.Activity;
 
-    this.menuItems = MENU.filter(item => {
-      switch (userActivity) {
-        case 'DASHBOARD':
-          return item.label === 'Dashboard';
-        case 'TICKET_CREATION':
-          return item.label === 'Ticket-Creation';
-        case 'TICKET_MANAGEMENT':
-          return item.label === 'Ticket-Management';
-        case 'USER_CREATION':
-          return item.label === 'user-creation';
-        default:
-          return false;
-      }
-    });
+    // this.menuItems = MENU.filter(item => {
+    //   switch (userActivity) {
+    //     case 'DASHBOARD':
+    //       return item.label === 'Dashboard';
+    //     case 'TICKET_CREATION':
+    //       return item.label === 'Ticket-Creation';
+    //     case 'TICKET_MANAGEMENT':
+    //       return item.label === 'Ticket-Management';
+    //     case 'USER_CREATION':
+    //       return item.label === 'user-creation';
+    //     default:
+    //       return false;
+    //   }
+    // });
   
     this.userCreationForm = this.fb.group({
       userName: ['', Validators.required],
