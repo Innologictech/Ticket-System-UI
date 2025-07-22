@@ -63,13 +63,13 @@
 
   <div class="row">
     <!-- Open Tickets -->
-    <div class="col-md-4 mb-4">
-      <h4 class="mb-2">Open</h4>
+    <div class="col-md-3 mb-4">
+      <h4 class="mb-2">InProgress</h4>
       <hr>
-      <div class="card shadow-sm border-0 mb-3">
+      <div *ngFor="let ticket of inProgressTickets" class="card shadow-sm border-0 mb-3">
         <div class="card-body">
-          <h5 class="card-title text-primary mb-2">Bug in Login Screen</h5>
-          <p class="card-text text-muted small">User unable to login with correct credentials.</p>
+          <h5 class="card-title text-primary mb-2">{{ ticket.title }}</h5>
+          <p class="card-text text-muted small">{{ ticket.description }}</p>
           <div class="d-flex justify-content-between align-items-center mt-3">
             <span class="badge bg-warning text-dark">Open</span>
             <a href="#" class="text-decoration-none">View</a>
@@ -78,16 +78,32 @@
       </div>
     </div>
 
-    <!-- In Progress Tickets -->
-    <div class="col-md-4 mb-4">
-      <h4 class="mb-2">In Progress</h4>
+    <!-- Hold Tickets -->
+    <div class="col-md-3 mb-4">
+      <h4 class="mb-2">Hold Tickets</h4>
       <hr>
-      <div class="card shadow-sm border-0 mb-3">
+      <div *ngFor="let ticket of holdTickets" class="card shadow-sm border-0 mb-3">
         <div class="card-body">
-          <h5 class="card-title text-primary mb-2">UI Issue in Dashboard</h5>
-          <p class="card-text text-muted small">Graphs not aligned in mobile view.</p>
+          <h5 class="card-title text-primary mb-2">{{ ticket.title }}</h5>
+          <p class="card-text text-muted small">{{ ticket.description }}</p>
           <div class="d-flex justify-content-between align-items-center mt-3">
-            <span class="badge bg-info text-dark">In Progress</span>
+            <span class="badge bg-info text-dark">Hold</span>
+            <a href="#" class="text-decoration-none">View</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- UAT Tickets -->
+    <div class="col-md-3 mb-4">
+      <h4 class="mb-2">UAT Tickets</h4>
+      <hr>
+      <div *ngFor="let ticket of uatTickets" class="card shadow-sm border-0 mb-3">
+        <div class="card-body">
+          <h5 class="card-title text-primary mb-2">{{ ticket.title }}</h5>
+          <p class="card-text text-muted small">{{ ticket.description }}</p>
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <span class="badge bg-info text-dark">UAT</span>
             <a href="#" class="text-decoration-none">View</a>
           </div>
         </div>
@@ -95,13 +111,13 @@
     </div>
 
     <!-- Resolved Tickets -->
-    <div class="col-md-4 mb-4">
+    <div class="col-md-3 mb-4">
       <h4 class="mb-2">Resolved</h4>
       <hr>
-      <div class="card shadow-sm border-0 mb-3">
+      <div *ngFor="let ticket of resolvedTickets" class="card shadow-sm border-0 mb-3">
         <div class="card-body">
-          <h5 class="card-title text-primary mb-2">Email Notification Failure</h5>
-          <p class="card-text text-muted small">Customer not receiving password reset emails.</p>
+          <h5 class="card-title text-primary mb-2">{{ ticket.title }}</h5>
+          <p class="card-text text-muted small">{{ ticket.description }}</p>
           <div class="d-flex justify-content-between align-items-center mt-3">
             <span class="badge bg-success">Resolved</span>
             <a href="#" class="text-decoration-none">View</a>
@@ -111,6 +127,7 @@
     </div>
   </div>
 </div>
+
 
 
     
