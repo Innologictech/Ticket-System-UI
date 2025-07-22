@@ -97,7 +97,7 @@ confirmFieldTextType: boolean = false;
        role: ['',Validators.required],
       password: ['', Validators.required],
       confirmPassword: ['', Validators.required],
-      activity: ['', Validators.required],
+      activity: [[], Validators.required],
       status: [false]
     }, {
       validator: this.mustMatch('password', 'confirmPassword')

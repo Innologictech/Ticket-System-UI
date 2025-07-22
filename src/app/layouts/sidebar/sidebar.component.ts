@@ -266,33 +266,55 @@ export class SidebarComponent implements OnInit, AfterViewInit, OnChanges {
 //       this.menuItems = []; // Fallback if no loginResponse or ZGRNACT
 //     }
 //   }
- initialize(): void {  
-    console.log('loginResponse from localStorage:', this.loginData);
+initialize(): void {
+  console.log('loginResponse from localStorage:', this.loginData);
 
-    // ✅ UPDATED CONDITION
-    // if (this.loginData.data.Activity) {
-    //   const authorizedIds: string[] = Object.values(this.loginData.data.Activity).filter(
-    //     (id): id is string => typeof id === 'string' && id.trim() !== ''
-    //   );
-    //   console.log('authorizedIds', authorizedIds);
-    //   this.menuItems = this.filterMenuItems(MENU, authorizedIds);
-    // } else {
-    //   this.menuItems = [];
-    // }
-    if (this.loginData.data.Activity && this.loginData.data.Activity.length > 0) {
-  const activityString = this.loginData.data.Activity[0]; // taking first string
-  const authorizedLabels: string[] = activityString.split(',').map(item => item.trim());
+  if (this.loginData.data.Activity && this.loginData.data.Activity.length > 0) {
+    // Combine all activity entries into one array of trimmed strings
+    const authorizedLabels: string[] = this.loginData.data.Activity
+      .map((item: string) => item.split(','))
+      .flat()
+      .map((item: string) => item.trim())
+      .filter((item: string) => item !== '');
 
-  console.log('authorizedLabels:', authorizedLabels);
-  this.menuItems = this.filterMenuItems(MENU, authorizedLabels);
-} else {
-  this.menuItems = [];
+    console.log('authorizedLabels:', authorizedLabels);
+
+    this.menuItems = this.filterMenuItems(MENU, authorizedLabels);
+  } else {
+    this.menuItems = [];
+  }
+
+  console.log("menuItems", this.menuItems);
+  this.cdr.detectChanges();
 }
 
-    console.log("menuitems",this.menuItems)
+//  initialize(): void {  
+//     console.log('loginResponse from localStorage:', this.loginData);
 
-    this.cdr.detectChanges();
-  }
+//     // ✅ UPDATED CONDITION
+//     // if (this.loginData.data.Activity) {
+//     //   const authorizedIds: string[] = Object.values(this.loginData.data.Activity).filter(
+//     //     (id): id is string => typeof id === 'string' && id.trim() !== ''
+//     //   );
+//     //   console.log('authorizedIds', authorizedIds);
+//     //   this.menuItems = this.filterMenuItems(MENU, authorizedIds);
+//     // } else {
+//     //   this.menuItems = [];
+//     // }
+//     if (this.loginData.data.Activity && this.loginData.data.Activity.length > 0) {
+//   const activityString = this.loginData.data.Activity[0]; // taking first string
+//   const authorizedLabels: string[] = activityString.split(',').map(item => item.trim());
+
+//   console.log('authorizedLabels:', authorizedLabels);
+//   this.menuItems = this.filterMenuItems(MENU, authorizedLabels);
+// } else {
+//   this.menuItems = [];
+// }
+
+//     console.log("menuitems",this.menuItems)
+
+//     this.cdr.detectChanges();
+//   }
   
  
   // private filterMenuItems(menuItems: MenuItem[], authorizedIds: string[]): MenuItem[] {
