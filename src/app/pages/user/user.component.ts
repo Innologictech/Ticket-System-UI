@@ -17,7 +17,11 @@ import { CommonModule } from '@angular/common';
 
 
 export class UserComponent  {
-//    ticketData: any[] = [];
+  ticketData: any[] = [];
+holdTickets: any[] = [];
+uatTickets: any[] = [];
+inProgressTickets: any[] = [];
+resolvedTickets: any[] = [];
 
 //    currentPage: number = 1;
 //   itemsPerPage: number = 10;
@@ -60,26 +64,48 @@ export class UserComponent  {
 //     }
 //   }
 
-//   constructor(private service: GeneralserviceService, private fb: FormBuilder,private loaderservice:LoaderService) {}
-//   ngOnInit(): void {
-//     this. getTickets()
-//   }
+  constructor(private service: GeneralserviceService, private fb: FormBuilder,private loaderservice:LoaderService) {}
+  ngOnInit(): void {
+    this. getTickets()
+  }
 
-//   getTickets(): void {
-//     this.loaderservice.showLoader();
-//     this.service.GetTicketDetails().subscribe(
+  // getTickets(): void {
+  //   this.loaderservice.showLoader();
+  //   this.service.GetTicketDetails().subscribe(
       
-//       (response: any) => {
-//         console.log('Ticket data:', response);
-//         this.ticketData = response.data;
-//         this.loaderservice.hideLoader();
-//       },
-//       (error) => {
-//         console.error('Error fetching tickets', error);
-//         this.loaderservice.hideLoader();
-//       }
-//     );
-//   }
+  //     (response: any) => {
+  //       console.log('Ticket data:', response);
+  //       this.ticketData = response.data;
+  //       this.loaderservice.hideLoader();
+  //     },
+  //     (error) => {
+  //       console.error('Error fetching tickets', error);
+  //       this.loaderservice.hideLoader();
+  //     }
+  //   );
+  // }
+  getTickets(): void {
+  this.loaderservice.showLoader();
+  this.service.GetTicketDetails().subscribe(
+    (response: any) => {
+      console.log('Ticket data:', response);
+      this.ticketData = response.data;
+
+      // Group tickets based on status (case-insensitive)
+      
+      this.inProgressTickets = this.ticketData.filter(ticket => ticket.status.toLowerCase() === 'inprocess');
+        this.holdTickets = this.ticketData.filter(ticket => ticket.status.toLowerCase() === 'hold');
+          this.uatTickets = this.ticketData.filter(ticket => ticket.status.toLowerCase() === 'uat');
+      this.resolvedTickets = this.ticketData.filter(ticket => ticket.status.toLowerCase() === 'resolved');
+
+      this.loaderservice.hideLoader();
+    },
+    (error) => {
+      console.error('Error fetching tickets', error);
+      this.loaderservice.hideLoader();
+    }
+  );
+}
 
 
 tickets = [
