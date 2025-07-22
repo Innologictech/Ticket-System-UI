@@ -53,7 +53,7 @@
                 <td>{{ ticket.date | date: 'dd-MM-yyyy' }}</td>
                 <td class="text-center">
                     <!-- View Button -->
-                    <button class="btn btn-sm btn-info me-2" (click)="editTicketModel(ticket, createBugTicketTemplate)">
+                    <button class="btn btn-sm btn-info me-2" (click)="viewTicketModel(ticket, createBugTicketTemplate)">
                         View
                     </button>
 
@@ -113,7 +113,7 @@
                 <!-- Environment (Read-only) -->
                 <div class="col-md-6">
                     <label>Environment</label>
-                    <select class="form-control" formControlName="environment" disabled>
+                    <select class="form-control" formControlName="environment" >
                         <option value="Development">Development</option>
                         <option value="Quality">Quality</option>
                         <option value="Production">Production</option>
@@ -123,7 +123,7 @@
                 <!-- Status (Read-only) -->
                 <div class="col-md-6">
                     <label>Status</label>
-                    <input class="form-control" formControlName="ticketstatus" type="text" readonly />
+                    <input class="form-control" formControlName="ticketstatus" type="text"  [disabled]="!isEditMode"  />
                 </div>
 
                 <!-- Date (Read-only) -->
@@ -135,7 +135,7 @@
                 <!-- Description (Read-only) -->
                 <div class="col-md-12">
                     <label>Description</label>
-                    <textarea class="form-control" formControlName="description" rows="4" readonly></textarea>
+                    <textarea class="form-control" formControlName="description" rows="4" [readonly]="!isEditMode" ></textarea>
                 </div>
 
                 <!-- Assigned To (Editable) -->
@@ -155,7 +155,7 @@
   <select class="form-control" formControlName="assignedTo">
     <option value="" disabled selected hidden>Select Assignee</option>
     <option *ngFor="let user of userList" [value]="user.userName">
-      {{ user.userName }} - {{ user.Role }}
+      {{ user.userName }} 
     </option>
   </select>
 </div>
@@ -172,7 +172,7 @@
     </div>
 
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary" (click)="UpdateTicket()">Submit</button>
+        <button type="button" class="btn btn-primary" (click)="UpdateTicket()" *ngIf="isEditMode">Submit</button>
         <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
     </div>
 </ng-template>

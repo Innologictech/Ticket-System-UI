@@ -576,7 +576,7 @@ submitUserForm() {
     Contact: formValues.contact,
     Password: formValues.password,
     ConfirmPassword: formValues.confirmPassword,
-    Role: formValues.activity === 'ADMIN' ? 'Admin' : 'User',
+    Role: formValues.role ,
     Status: formValues.status ? 'Active' : 'Inactive',
     Activity: formValues.activity
   };
@@ -629,7 +629,7 @@ updateUserForm() {
     Contact: formValues.contact,
     Password: formValues.password,
     ConfirmPassword: formValues.confirmPassword,
-    Role: formValues.activity === 'ADMIN' ? 'Admin' : 'User',
+    Role: formValues.role,
     Status: formValues.status ? 'Active' : 'Inactive',
     Activity: formValues.activity
   };

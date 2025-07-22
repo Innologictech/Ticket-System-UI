@@ -37,7 +37,7 @@ tickets$: Observable<any[]>;
   // Initialize form first
   this.bugTicketForm = this.fb.group({
     title: ['', Validators.required],
-    reportedBy: [this.currentUser?.data?.userName || '', Validators.required],
+    reportedBy: [this.currentUser?.userName || this.currentUser?.data?.userName || '', Validators.required],
     priority: ['', Validators.required],
     environment: ['', Validators.required],
     ticketstatus: ['Open'],
@@ -45,25 +45,8 @@ tickets$: Observable<any[]>;
     description: ['', Validators.required],
     attachments: [null]
   });
-
-  // Initialize tickets$ observable
-  this.tickets$ = this.service.GetTicketDetails().pipe(
-    map((response: any) => {
-      // Handle different response structures
-      const tickets = response?.data ? response.data : 
-                     Array.isArray(response) ? response : [];
-      
-      return this.currentUser?.Role === 'Admin' 
-        ? tickets 
-        : tickets.filter((ticket: any) => 
-            ticket.reportedBy === this.currentUser?.userName
-          );
-    }),
-    catchError(error => {
-      console.error('Error fetching tickets', error);
-      return of([]);
-    })
-  );
+this.getTickets();
+ 
 }
 
   // getTickets(): void {
@@ -79,7 +62,7 @@ tickets$: Observable<any[]>;
   //     }
   //   );
   // }
- getTickets(): void {
+  getTickets(): void {
     this.loaderService.showLoader();
     this.tickets$ = this.service.GetTicketDetails().pipe(
       map((response: any) => {
@@ -97,10 +80,17 @@ tickets$: Observable<any[]>;
     );
   }
 
-  filterTickets(tickets: any[]): any[] {
-    return this.currentUser?.Role === 'Admin' 
-      ? tickets 
-      : tickets.filter(ticket => ticket.reportedBy === this.currentUser?.userName);
+   filterTickets(tickets: any[]): any[] {
+    // Get the username consistently
+    const currentUserName = this.currentUser?.userName || this.currentUser?.data?.userName;
+    
+    if (this.currentUser?.Role === 'Admin') {
+      return tickets;
+    } else {
+      return tickets.filter(ticket => 
+        ticket.reportedBy === currentUserName
+      );
+    }
   }
 
 

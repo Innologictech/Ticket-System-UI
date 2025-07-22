@@ -20,7 +20,7 @@ export class TicketListComponent implements OnInit {
 userList: any[] = [];
   selectedTicket: any = null;
   bugTicketForm!: FormGroup;
-
+isEditMode: boolean = false;
   ticketData: any[] = [];
   EditmodalRef: any;
 
@@ -43,6 +43,31 @@ userList: any[] = [];
   
   constructor(private service: GeneralserviceService,private spinner:NgxSpinnerService, private modalService: NgbModal,private fb: FormBuilder,private loaderservice:LoaderService) {
 
+  }
+  viewTicketModel(ticket: any, templateRef: any): void {
+    this.isEditMode = false;
+    this.selectedTicket = ticket; 
+    const formattedDate = ticket.date ? ticket.date.split('T')[0] : '';
+    
+    // Disable all fields
+   
+    this.bugTicketForm.patchValue({
+      title: ticket.title,
+      reportedBy: ticket.reportedBy,
+      priority: ticket.priority,
+environment: ticket.environment,
+      ticketstatus: ticket.status,
+      date: formattedDate,
+      description: ticket.description,
+      assignedTo: ticket.consultant || '',
+      attachments: null
+    });
+ 
+    this.EditmodalRef = this.modalService.open(templateRef, {
+      backdrop: 'static',
+      keyboard: false,
+      size: 'lg'
+    });
   }
 
   /*pagination part */
@@ -104,11 +129,12 @@ userList: any[] = [];
     );
   }
  getAllUserList() {
+  console.log('Filtered Users:', this.userList);
   this.spinner.show();
   this.service.getAllUsers().subscribe({
     next: (res: any) => {
       // ✅ Filter only users with Role === 'User'
-      this.userList = (res?.data || []).filter(user => user.Role === 'User');
+      this.userList = (res?.data || []).filter(user => user.Role === 'USER');
       this.spinner.hide();
     },
     error: (err) => {
@@ -118,27 +144,55 @@ userList: any[] = [];
   });
 }
 
-    editTicketModel(ticket: any, templateRef: any): void {
+//     editTicketModel(ticket: any, templateRef: any): void {
+      
+//     this.selectedTicket = ticket; 
+//     const formattedDate = ticket.date ? ticket.date.split('T')[0] : '';
+//     this.bugTicketForm.patchValue({
+//       title: ticket.title,
+//       reportedBy: ticket.reportedBy,
+//       priority: ticket.priority,
+//       environment: ticket.environment,
+//       ticketstatus: ticket.status,
+//       date: formattedDate,
+//       description: ticket.description,
+      
+//       attachments: null // Clear file input
+//     });
+//     this.bugTicketForm.get('ticketstatus')?.enable();
+//   this.bugTicketForm.get('description')?.enable();
+//     // Open modal
+//     this.EditmodalRef = this.modalService.open(templateRef, {
+//       backdrop: 'static',
+//       keyboard: false,
+//       size: 'lg'
+//     });
+// }
+ editTicketModel(ticket: any, templateRef: any): void {
+    this.isEditMode = true;
     this.selectedTicket = ticket; 
     const formattedDate = ticket.date ? ticket.date.split('T')[0] : '';
+    
+   
+    
     this.bugTicketForm.patchValue({
       title: ticket.title,
       reportedBy: ticket.reportedBy,
       priority: ticket.priority,
-      environment: ticket.environment,
+       environment: ticket.environment,
       ticketstatus: ticket.status,
       date: formattedDate,
       description: ticket.description,
-      
-      attachments: null // Clear file input
+      assignedTo: ticket.consultant || '',
+      attachments: null
     });
-    // Open modal
+
     this.EditmodalRef = this.modalService.open(templateRef, {
       backdrop: 'static',
       keyboard: false,
       size: 'lg'
     });
-}
+  }
 
 //  UpdateTicket(): void {
 //   debugger;
