@@ -135,7 +135,7 @@ confirmFieldTextType: boolean = false;
       confirmPassword: selectedUser.ConfirmPassword,
       role: selectedUser.Role,
       activity: selectedUser.Activity?.[0]?.split(',') || [],
-      status: selectedUser.Status 
+      status: selectedUser.Status === 'Active' ? true : false
     });
     this.modalRef = this.modalService.open(this.editUserTemplate, { size: 'lg' });
     }
@@ -612,7 +612,7 @@ submitUserForm() {
 }
 
 updateUserForm() {
-  this.submit = true;
+  // this.submit = true;
 
   if (this.userEditForm.invalid) {
     return;
