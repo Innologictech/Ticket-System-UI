@@ -50,13 +50,27 @@ isEditMode: boolean = false;
     const formattedDate = ticket.date ? ticket.date.split('T')[0] : '';
     
     // Disable all fields
-   
+     const environmentMap: any = {
+  QA: 'Quality',
+  Dev: 'Development',
+  Prod: 'Production'
+};
+
+const statusMap: any = {
+  open: 'Open',
+  inprogress: 'In Progress',
+  hold: 'Hold',
+  uat: 'UAT',
+  resolved: 'Resolved',
+  closed: 'Closed',
+  reopen: 'Reopen'
+};
     this.bugTicketForm.patchValue({
       title: ticket.title,
       reportedBy: ticket.reportedBy,
       priority: ticket.priority,
-environment: ticket.environment,
-      ticketstatus: ticket.status,
+environment: environmentMap[ticket.environment] || ticket.environment,
+      ticketstatus: statusMap[ticket.status.toLowerCase()] || ticket.status,
       date: formattedDate,
       description: ticket.description,
       assignedTo: ticket.consultant || '',
@@ -172,15 +186,29 @@ environment: ticket.environment,
     this.isEditMode = true;
     this.selectedTicket = ticket; 
     const formattedDate = ticket.date ? ticket.date.split('T')[0] : '';
-    
+     const environmentMap: any = {
+  QA: 'Quality',
+  Dev: 'Development',
+  Prod: 'Production'
+};
+
+const statusMap: any = {
+  open: 'Open',
+  inprogress: 'In Progress',
+  hold: 'Hold',
+  uat: 'UAT',
+  resolved: 'Resolved',
+  closed: 'Closed',
+  reopen: 'Reopen'
+};
    
     
     this.bugTicketForm.patchValue({
       title: ticket.title,
       reportedBy: ticket.reportedBy,
       priority: ticket.priority,
-       environment: ticket.environment,
-      ticketstatus: ticket.status,
+       environment: environmentMap[ticket.environment] || ticket.environment,
+      ticketstatus: statusMap[ticket.status.toLowerCase()] || ticket.status,
       date: formattedDate,
       description: ticket.description,
       assignedTo: ticket.consultant || '',
@@ -351,6 +379,12 @@ UpdateTicket(status: string = 'InProcess', reason?: string): void {
     description: rawForm.description,
     attachment: rawForm.attachments || ''
   };
+  // ✅ Add assigned date & days only when assigning
+if (status === 'InProcess' && rawForm.assignedTo) {
+  payload.assignedDate = new Date();
+  payload.assignedDays = 0;
+}
+console.log("status",status)
 
   if (status === 'Rejected' && reason) {
     payload.rejectionReason = reason;

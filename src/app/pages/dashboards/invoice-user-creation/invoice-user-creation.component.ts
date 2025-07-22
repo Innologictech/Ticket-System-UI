@@ -577,7 +577,7 @@ submitUserForm() {
     Password: formValues.password,
     ConfirmPassword: formValues.confirmPassword,
     Role: formValues.role ,
-    Status: formValues.status ? 'Active' : 'Inactive',
+    Status: formValues.status,
     Activity: formValues.activity
   };
 
@@ -630,7 +630,7 @@ updateUserForm() {
     Password: formValues.password,
     ConfirmPassword: formValues.confirmPassword,
     Role: formValues.role,
-    Status: formValues.status ? 'Active' : 'Inactive',
+    Status: formValues.status,
     Activity: formValues.activity
   };
 

@@ -22,7 +22,7 @@ export class TicketCreationComponent {
   isEditMode = false;
   selectedFile: File | null = null;
   selectedTicket: any = null;
-
+ statusOptions = ['Open', 'In Progress', 'Hold', 'UAT', 'Resolved', 'Closed', 'Reopen'];
 
   ticketData: any[] = [];
  currentUser: any;
@@ -111,13 +111,13 @@ this.getTickets();
 
 
 
- CreateTicket(): void {
+ CreateTicket(bugTicketForm:any): void {
   this.submit = true; // ✅ Add this line
   if (this.bugTicketForm.invalid) {
     this.bugTicketForm.markAllAsTouched();
     return;
   }
-
+  const formattedDate = bugTicketForm.date ? bugTicketForm.date.split('T')[0] : '';
     const rawForm = this.bugTicketForm.value;
 
     const payload = {
@@ -126,7 +126,7 @@ this.getTickets();
       priority: rawForm.priority,
       environment: rawForm.environment,
       status: rawForm.ticketstatus || "open",
-      date: rawForm.date,
+      date: formattedDate,
       description: rawForm.description,
       attachment: rawForm.attachments || ''
     };
@@ -220,18 +220,36 @@ this.getTickets();
     this.selectedTicket = ticket; // Store ticket for updating
     this.submit = false;
     this.isEditMode = true;
+    const formattedDate = ticket.date ? ticket.date.split('T')[0] : '';
+    const environmentMap: any = {
+  QA: 'Quality',
+  Dev: 'Development',
+  Prod: 'Production'
+};
+
+const statusMap: any = {
+  open: 'Open',
+  inprogress: 'In Progress',
+  hold: 'Hold',
+  uat: 'UAT',
+  resolved: 'Resolved',
+  closed: 'Closed',
+  reopen: 'Reopen'
+};
     // Patch form with selected ticket data
     this.bugTicketForm.patchValue({
       title: ticket.title,
       reportedBy: ticket.reportedBy,
       priority: ticket.priority,
-      environment: ticket.environment,
-      ticketstatus: ticket.status,
-      date: ticket.date,
+     environment: environmentMap[ticket.environment] || ticket.environment,
+  ticketstatus: statusMap[ticket.status.toLowerCase()] || ticket.status,
+      date: formattedDate,
       description: ticket.description,
       attachments: null // Clear file input
     });
-
+console.log('Editing ticket:', ticket);
+console.log('Environment:', ticket.environment);
+console.log('Status:', ticket.status);
     // Open modal
     this.EditmodalRef = this.modalService.open(templateRef, {
       backdrop: 'static',

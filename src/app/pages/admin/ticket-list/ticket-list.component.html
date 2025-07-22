@@ -102,7 +102,7 @@
                 <!-- Priority (Read-only) -->
                 <div class="col-md-6">
                     <label>Priority</label>
-                    <select class="form-control" formControlName="priority" disabled>
+                    <select class="form-control" formControlName="priority" >
                         <option value="Low">Low</option>
                         <option value="Medium">Medium</option>
                         <option value="High">High</option>
@@ -123,7 +123,7 @@
                 <!-- Status (Read-only) -->
                 <div class="col-md-6">
                     <label>Status</label>
-                    <input class="form-control" formControlName="ticketstatus" type="text"  [disabled]="!isEditMode"  />
+                    <input class="form-control" formControlName="ticketstatus" type="text"    />
                 </div>
 
                 <!-- Date (Read-only) -->
