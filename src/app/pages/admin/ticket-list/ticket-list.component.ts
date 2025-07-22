@@ -40,7 +40,8 @@ isEditMode: boolean = false;
       this.getTickets();
         this.getAllUserList();
     }
-  
+   statusOptions = ['Open', 'In Progress', 'Hold', 'UAT', 'Resolved', 'Closed', 'Reopen'];
+
   constructor(private service: GeneralserviceService,private spinner:NgxSpinnerService, private modalService: NgbModal,private fb: FormBuilder,private loaderservice:LoaderService) {
 
   }
