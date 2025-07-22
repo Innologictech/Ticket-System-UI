@@ -93,7 +93,7 @@ resolvedTickets: any[] = [];
 
       // Group tickets based on status (case-insensitive)
       
-      this.inProgressTickets = this.ticketData.filter(ticket => ticket.status.toLowerCase() === 'inprocess');
+      this.inProgressTickets = this.ticketData.filter(ticket => ticket.status.toLowerCase() === 'inprogress');
         this.holdTickets = this.ticketData.filter(ticket => ticket.status.toLowerCase() === 'hold');
           this.uatTickets = this.ticketData.filter(ticket => ticket.status.toLowerCase() === 'uat');
       this.resolvedTickets = this.ticketData.filter(ticket => ticket.status.toLowerCase() === 'resolved');

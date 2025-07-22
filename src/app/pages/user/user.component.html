@@ -58,21 +58,25 @@
         class="pagination justify-content-end"></pagination-controls>
 </div> -->
 
-<div class="container my-4">
-  <h2 class="text-center mb-5">My Assigned Tickets</h2>
+<div class="card">
+  <h2 class="card-header">My Assigned Tickets</h2>
 
-  <div class="row">
-    <!-- Open Tickets -->
+ 
+</div>
+<div class="card1">
+     <div class="row">
+    <!-- In Progress Tickets -->
     <div class="col-md-3 mb-4">
-      <h4 class="mb-2">InProgress</h4>
-      <hr>
-      <div *ngFor="let ticket of inProgressTickets" class="card shadow-sm border-0 mb-3">
+      <h4 class="section-title">In Progress</h4>
+      <div class="custom-line"></div> <!-- Black line -->
+      
+      <div *ngFor="let ticket of inProgressTickets" class="card ticket-card mb-3">
         <div class="card-body">
-          <h5 class="card-title text-primary mb-2">{{ ticket.title }}</h5>
-          <p class="card-text text-muted small">{{ ticket.description }}</p>
-          <div class="d-flex justify-content-between align-items-center mt-3">
-            <span class="badge bg-warning text-dark">Open</span>
-            <a href="#" class="text-decoration-none">View</a>
+          <h5 class="card-title">{{ ticket.title }}</h5>
+          <p class="card-text">{{ ticket.description }}</p>
+          <div class="ticket-footer">
+            <span class="badge badge-open">Open</span>
+            <a href="#" class="view-link">View</a>
           </div>
         </div>
       </div>
@@ -80,15 +84,16 @@
 
     <!-- Hold Tickets -->
     <div class="col-md-3 mb-4">
-      <h4 class="mb-2">Hold Tickets</h4>
-      <hr>
-      <div *ngFor="let ticket of holdTickets" class="card shadow-sm border-0 mb-3">
+      <h4 class="section-title">Hold Tickets</h4>
+      <div class="custom-line"></div> <!-- Black line -->
+      
+      <div *ngFor="let ticket of holdTickets" class="card ticket-card mb-3">
         <div class="card-body">
-          <h5 class="card-title text-primary mb-2">{{ ticket.title }}</h5>
-          <p class="card-text text-muted small">{{ ticket.description }}</p>
-          <div class="d-flex justify-content-between align-items-center mt-3">
-            <span class="badge bg-info text-dark">Hold</span>
-            <a href="#" class="text-decoration-none">View</a>
+          <h5 class="card-title">{{ ticket.title }}</h5>
+          <p class="card-text">{{ ticket.description }}</p>
+          <div class="ticket-footer">
+            <span class="badge badge-hold">Hold</span>
+            <a href="#" class="view-link">View</a>
           </div>
         </div>
       </div>
@@ -96,15 +101,16 @@
 
     <!-- UAT Tickets -->
     <div class="col-md-3 mb-4">
-      <h4 class="mb-2">UAT Tickets</h4>
-      <hr>
-      <div *ngFor="let ticket of uatTickets" class="card shadow-sm border-0 mb-3">
+      <h4 class="section-title">UAT Tickets</h4>
+      <div class="custom-line"></div> <!-- Black line -->
+      
+      <div *ngFor="let ticket of uatTickets" class="card ticket-card mb-3">
         <div class="card-body">
-          <h5 class="card-title text-primary mb-2">{{ ticket.title }}</h5>
-          <p class="card-text text-muted small">{{ ticket.description }}</p>
-          <div class="d-flex justify-content-between align-items-center mt-3">
-            <span class="badge bg-info text-dark">UAT</span>
-            <a href="#" class="text-decoration-none">View</a>
+          <h5 class="card-title">{{ ticket.title }}</h5>
+          <p class="card-text">{{ ticket.description }}</p>
+          <div class="ticket-footer">
+            <span class="badge badge-uat">UAT</span>
+            <a href="#" class="view-link">View</a>
           </div>
         </div>
       </div>
@@ -112,22 +118,22 @@
 
     <!-- Resolved Tickets -->
     <div class="col-md-3 mb-4">
-      <h4 class="mb-2">Resolved</h4>
-      <hr>
-      <div *ngFor="let ticket of resolvedTickets" class="card shadow-sm border-0 mb-3">
+      <h4 class="section-title">Resolved</h4>
+      <div class="custom-line"></div> <!-- Black line -->
+      
+      <div *ngFor="let ticket of resolvedTickets" class="card ticket-card mb-3">
         <div class="card-body">
-          <h5 class="card-title text-primary mb-2">{{ ticket.title }}</h5>
-          <p class="card-text text-muted small">{{ ticket.description }}</p>
-          <div class="d-flex justify-content-between align-items-center mt-3">
-            <span class="badge bg-success">Resolved</span>
-            <a href="#" class="text-decoration-none">View</a>
+          <h5 class="card-title">{{ ticket.title }}</h5>
+          <p class="card-text">{{ ticket.description }}</p>
+          <div class="ticket-footer">
+            <span class="badge badge-resolved">Resolved</span>
+            <a href="#" class="view-link">View</a>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-
 
 
     

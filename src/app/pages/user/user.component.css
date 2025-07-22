@@ -1,3 +1,22 @@
+.container{
+    background-color:#e7ebef;
+}
+
+.card-body {
+    padding: 1rem;
+}
+
+.custom-line {
+  width: full;       /* adjust width */
+  height: 2px;       /* thickness */
+  background-color: #000; /* black color */
+  margin: 5px 0;     /* spacing */
+}
+
+
+/* Card Styles */
+
+
 .card {
   border-radius: 12px;
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
@@ -8,12 +27,74 @@
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
 }
 
-h4 {
+.card-title {
+  font-size: 1.1rem;
   font-weight: 600;
+  color: #0d6efd;
 }
 
+.card-text {
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+/* Section Titles */
+.section-title {
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+/* Footer of each card */
+.ticket-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+/* Badges */
 .badge {
   padding: 6px 12px;
   font-size: 0.85rem;
   border-radius: 8px;
+}
+
+.badge-open {
+  background-color: #ffc107;
+  color: #212529;
+}
+
+.badge-hold {
+  background-color: #17a2b8;
+  color: #fff;
+}
+
+.badge-uat {
+  background-color: #6f42c1;
+  color: #fff;
+}
+
+.badge-resolved {
+  background-color: #28a745;
+  color: #fff;
+}
+
+/* View link */
+.view-link {
+  text-decoration: none;
+  color: #0d6efd;
+  font-weight: 500;
+}
+.view-link:hover {
+  text-decoration: underline;
+}
+
+.row{
+    margin-top: 1rem;
+}
+
+.card1{
+    background-color: #e7ebef;
+    padding: 1rem;
 }
