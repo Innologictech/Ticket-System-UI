@@ -22,15 +22,29 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="
-          let ticket of sortedTickets
+            <tr *ngFor="let ticket of sortedTickets
             | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }
-        " class="align-middle">
+        " class="">
                 <td>{{ ticket.customerticketId }}</td>
                 <td>{{ ticket.title }}</td>
-                <td>{{ ticket.priority }}
+                <!-- <td>{{ ticket.priority }}
 
-                </td>
+                </td> -->
+                <td>
+  <span *ngIf="ticket.priority === 'High'">
+    {{ticket.priority}}
+    <i class="fas fa-arrow-up text-danger"></i> 
+  </span>
+  <span *ngIf="ticket.priority === 'Medium'">
+     {{ticket.priority}}
+    <i class="fas fa-minus text-warning"></i> 
+  </span>
+  <span *ngIf="ticket.priority === 'Low'">
+     {{ticket.priority}}
+    <i class="fas fa-arrow-down text-success"></i> 
+  </span>
+</td>
+
                 <td>
 
                     {{ ticket.status }}
