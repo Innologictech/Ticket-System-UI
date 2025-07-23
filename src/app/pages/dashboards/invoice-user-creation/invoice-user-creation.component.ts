@@ -77,6 +77,8 @@ confirmFieldTextType: boolean = false;
       email: ['', [Validators.required, Validators.email]],
       contact: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
       role: ['',Validators.required],
+      module: ['',Validators.required],
+      client: ['',Validators.required],
       activity: [[]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required]] ,
@@ -95,6 +97,8 @@ confirmFieldTextType: boolean = false;
       email: ['', [Validators.required, Validators.email]],
       contact: ['', Validators.required],
        role: ['',Validators.required],
+       module: ['',Validators.required],
+       client: ['',Validators.required],
       password: ['', Validators.required],
       confirmPassword: ['', Validators.required],
       activity: [[], Validators.required],
@@ -134,6 +138,8 @@ confirmFieldTextType: boolean = false;
       password: selectedUser.Password,
       confirmPassword: selectedUser.ConfirmPassword,
       role: selectedUser.Role,
+      module: selectedUser.Module,
+      client: selectedUser.Client,
       activity: selectedUser.Activity?.[0]?.split(',') || [],
       status: selectedUser.Status === 'Active' ? true : false
     });
@@ -236,6 +242,8 @@ confirmFieldTextType: boolean = false;
     email: '',
     contact: '',
     role: '',
+    module:'',
+    client:'',
     activity: '',
     password: '',
     confirmPassword: '',
@@ -577,7 +585,9 @@ submitUserForm() {
     Password: formValues.password,
     ConfirmPassword: formValues.confirmPassword,
     Role: formValues.role ,
-    Status: formValues.status,
+    Module: formValues.module,
+    Client: formValues.client,
+  Status: formValues.status ? 'Active' : 'Inactive',
     Activity: formValues.activity
   };
 
@@ -630,7 +640,9 @@ updateUserForm() {
     Password: formValues.password,
     ConfirmPassword: formValues.confirmPassword,
     Role: formValues.role,
-    Status: formValues.status,
+    Module: formValues.module,
+    Client: formValues.client,
+     Status: formValues.status ? 'Active' : 'Inactive',
     Activity: formValues.activity
   };
 

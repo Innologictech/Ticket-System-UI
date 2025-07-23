@@ -189,6 +189,18 @@
                         Module is required.
                     </div>
                 </div>
+                 <div class="col-md-4">
+                    <label>Client<span class="text-danger">*</span></label>
+                    <select class="form-control" formControlName="client">
+                        <option value="BAJAJ">BAJAJ</option>
+                        <option value="MKAGRO">MK AGRO</option>
+                        <option value="QHOLDING">QHOLDING</option>
+                        <option value="SEUTICPHARMA">SEUTIC PHARMA</option>
+                    </select>
+                    <div class="text-danger" *ngIf="submit && f['client'].errors">
+                        Client is required.
+                    </div>
+                </div>
 
                 <!-- Activity -->
 
@@ -349,12 +361,33 @@
                     <select class="form-control" formControlName="role">
                         <option value="CUSTOMER">CUSTOMER</option>
                         <option value="ADMIN">ADMIN</option>
-                        <option value="USER">USER</option>
+                        <option value="CONSULTANT">CONSULTANT</option>
                     </select>
-                    <!-- <input class="form-control form-control-sm" formControlName="role" type="text" placeholder="" >   -->
-
                     <!-- <div class="text-danger" *ngIf="submit && f['role'].errors">
                         Role is required.
+                    </div> -->
+                </div>
+                 <div class="col-md-4">
+                    <label>Module<span class="text-danger">*</span></label>
+                    <select class="form-control" formControlName="module">
+                        <option value="SAP">SAP</option>
+                        <option value="WEBTECHNOLOGY">WEB TECHNOLOGY</option>
+                        <option value="POWERBI">POWER BI</option>
+                    </select>
+                    <!-- <div class="text-danger" *ngIf="submit && f['module'].errors">
+                        Module is required.
+                    </div> -->
+                </div>
+                <div class="col-md-4">
+                    <label>Client<span class="text-danger">*</span></label>
+                    <select class="form-control" formControlName="client">
+                        <option value="BAJAJ">BAJAJ</option>
+                        <option value="MKAGRO">MK AGRO</option>
+                        <option value="QHOLDING">QHOLDING</option>
+                        <option value="SEUTICPHARMA">SEUTIC PHARMA</option>
+                    </select>
+                    <!-- <div class="text-danger" *ngIf="submit && f['client'].errors">
+                        Client is required.
                     </div> -->
                 </div>
 
