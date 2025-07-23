@@ -46,6 +46,7 @@ isEditMode: boolean = false;
 
   }
   viewTicketModel(ticket: any, templateRef: any): void {
+    console.log('ticket',ticket)
     this.isEditMode = false;
     this.selectedTicket = ticket; 
     const formattedDate = ticket.date ? ticket.date.split('T')[0] : '';
@@ -70,8 +71,8 @@ const statusMap: any = {
       title: ticket.title,
       reportedBy: ticket.reportedBy,
       priority: ticket.priority,
-environment: environmentMap[ticket.environment] || ticket.environment,
-      ticketstatus: statusMap[ticket.status.toLowerCase()] || ticket.status,
+environment:  ticket.environment,
+      ticketstatus:  ticket.status,
       date: formattedDate,
       description: ticket.description,
       assignedTo: ticket.consultant || '',
@@ -221,8 +222,8 @@ const statusMap: any = {
       title: ticket.title,
       reportedBy: ticket.reportedBy,
       priority: ticket.priority,
-       environment: environmentMap[ticket.environment] || ticket.environment,
-      ticketstatus: statusMap[ticket.status.toLowerCase()] || ticket.status,
+       environment: ticket.environment,
+      ticketstatus: ticket.status,
       date: formattedDate,
       description: ticket.description,
       assignedTo: ticket.consultant || '',
