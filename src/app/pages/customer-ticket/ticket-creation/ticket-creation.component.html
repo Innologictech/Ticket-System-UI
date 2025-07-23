@@ -31,15 +31,15 @@
                                 <td>{{ ticket.customerticketId }}</td>
                                 <td>{{ ticket.title }}</td>
                                 <td>
-                                   
-            
-                                        {{ ticket.priority }}
-                                    
+
+
+                                    {{ ticket.priority }}
+
                                 </td>
                                 <td>
-                                   
-                                        {{ ticket.status }}
-                                    
+
+                                    {{ ticket.status }}
+
                                 </td>
                                 <td>{{ ticket.date | date: 'dd-MM-yyyy' }}</td>
                                 <td class="text-center">
@@ -67,120 +67,158 @@
     </div>
 
     <div class="modal-body">
-    <form [formGroup]="bugTicketForm" autocomplete="off">
-        <div class="row">
+        <form [formGroup]="bugTicketForm" autocomplete="off">
+            <div class="row">
 
-            <!-- Title -->
-            <div class="col-md-6">
-                <label>Title<span class="text-danger">*</span></label>
-                <input class="form-control" formControlName="title" type="text" placeholder="Enter Title" />
-                <div class="text-danger" *ngIf="submit && f['title'].errors?.['required']">
-                    Title is required.
+                <!-- Title -->
+                <div class="col-md-6">
+                    <label>Title<span class="text-danger">*</span></label>
+                    <input class="form-control" formControlName="title" type="text" placeholder="Enter Title" />
+                    <div class="text-danger" *ngIf="submit && f['title'].errors?.['required']">
+                        Title is required.
+                    </div>
                 </div>
-            </div>
 
-            <!-- Reported By -->
-            <div class="col-md-6">
-                <label>Reported By<span class="text-danger">*</span></label>
-                <input class="form-control" formControlName="reportedBy" type="text"
-                    placeholder="Enter Reporter Name" readonly />
-                <div class="text-danger" *ngIf="submit && f['reportedBy'].errors?.['required']">
-                    Reported By is required.
+                <!-- Reported By -->
+                <div class="col-md-6">
+                    <label>Reported By<span class="text-danger">*</span></label>
+                    <input class="form-control" formControlName="reportedBy" type="text"
+                        placeholder="Enter Reporter Name" readonly />
+                    <div class="text-danger" *ngIf="submit && f['reportedBy'].errors?.['required']">
+                        Reported By is required.
+                    </div>
                 </div>
-            </div>
 
-            <!-- Priority -->
-            <div class="col-md-6">
-                <label>Priority<span class="text-danger">*</span></label>
-                <select class="form-control" formControlName="priority">
-                    <option value="" disabled hidden>Select Priority</option>
-                    <option value="Low">Low</option>
-                    <option value="Medium">Medium</option>
-                    <option value="High">High</option>
-                    <option value="Critical">Critical</option>
-                </select>
-                <div class="text-danger" *ngIf="submit && f['priority'].errors?.['required']">
-                    Priority is required.
+                <!-- Priority -->
+                <div class="col-md-6">
+                    <label>Priority<span class="text-danger">*</span></label>
+                    <select class="form-control" formControlName="priority">
+                        <option value="" disabled hidden>Select Priority</option>
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                        <!-- <option value="Critical">Critical</option> -->
+                    </select>
+                    <div class="text-danger" *ngIf="submit && f['priority'].errors?.['required']">
+                        Priority is required.
+                    </div>
                 </div>
-            </div>
 
-            <!-- Environment -->
-            <div class="col-md-6">
-                <label>Environment<span class="text-danger">*</span></label>
-                <select class="form-control" formControlName="environment">
-                    <option value="" disabled hidden>Select</option>
-                    <option value="Development">Development</option>
-                    <option value="Quality">Quality</option>
-                    <option value="Production">Production</option>
-                </select>
-                <div class="text-danger" *ngIf="submit && f['environment'].errors?.['required']">
-                    Environment is required.
+                <!-- Environment -->
+                <div class="col-md-6">
+                    <label>Environment<span class="text-danger">*</span></label>
+                    <select class="form-control" formControlName="environment">
+                        <option value="" disabled hidden>Select</option>
+                        <option value="Development">Development</option>
+                        <option value="Quality">Quality</option>
+                        <option value="Production">Production</option>
+                    </select>
+                    <div class="text-danger" *ngIf="submit && f['environment'].errors?.['required']">
+                        Environment is required.
+                    </div>
                 </div>
-            </div>
 
-             <!-- Issue Type-->
-            <div class="col-md-6">
-                <label>Issue Type<span class="text-danger">*</span></label>
-                <select class="form-control" formControlName="issueType">
-                    <option value="" disabled hidden>Select</option>
-                    <option value="bug">Bug</option>
-                    <option value="enhancement">Enhancement</option>
-                    <option value="technicalIssue">Technical Issue</option>
-                    <option value="other">Other</option>
-                </select>
-                <div class="text-danger" *ngIf="submit && f['issueType'].errors?.['required']">
-                    Environment is required.
+                <!-- Issue Type-->
+                <div class="col-md-6">
+                    <label>Issue Type<span class="text-danger">*</span></label>
+                    <select class="form-control" formControlName="issueType">
+                        <option value="" disabled hidden>Select</option>
+                        <option value="bug">Bug</option>
+                        <option value="enhancement">Enhancement</option>
+                        <option value="technicalIssue">Technical Issue</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <div class="text-danger" *ngIf="submit && f['issueType'].errors?.['required']">
+                        Environment is required.
+                    </div>
                 </div>
-            </div>
 
-            <!-- Status (readonly) -->
-            <!-- <div class="col-md-6">
+                <!-- Status (readonly) -->
+                <!-- <div class="col-md-6">
                 <label>Status</label>
                 <input class="form-control" formControlName="ticketstatus" value="open" type="text" readonly />
             </div> -->
-            <!-- ... (previous HTML remains the same until the Status field) -->
+                <!-- ... (previous HTML remains the same until the Status field) -->
 
-<!-- Status Field - Different display based on mode -->
-<div class="col-md-6">
-    <label>Status</label>
-    <!-- Show dropdown in edit mode -->
-    <select *ngIf="isEditMode" class="form-control" formControlName="ticketstatus">
-        <option *ngFor="let status of statusOptions" [value]="status">{{status}}</option>
-    </select>
-    <!-- Show readonly input in create mode -->
-    <input *ngIf="!isEditMode" class="form-control" formControlName="ticketstatus" type="text" readonly />
-</div>
-
-
-
-            <!-- Date -->
-            <div class="col-md-6">
-                <label>Date<span class="text-danger">*</span></label>
-                <input class="form-control" formControlName="date" type="date" />
-                <div class="text-danger" *ngIf="submit && f['date'].errors?.['required']">
-                    Date is required.
+                <!-- Status Field - Different display based on mode -->
+                <div class="col-md-6">
+                    <label>Status</label>
+                    <!-- Show dropdown in edit mode -->
+                    <select *ngIf="isEditMode" class="form-control" formControlName="ticketstatus">
+                        <option *ngFor="let status of statusOptions" [value]="status">{{status}}</option>
+                    </select>
+                    <!-- Show readonly input in create mode -->
+                    <input *ngIf="!isEditMode" class="form-control" formControlName="ticketstatus" type="text"
+                        readonly />
                 </div>
-            </div>
 
-            <!-- Description -->
-            <div class="col-md-12">
-                <label>Description<span class="text-danger">*</span></label>
-                <textarea class="form-control" formControlName="description" rows="4"
-                    placeholder="Describe the issue..."></textarea>
-                <div class="text-danger" *ngIf="submit && f['description'].errors?.['required']">
-                    Description is required.
+
+
+                <!-- Date -->
+                <div class="col-md-6">
+                    <label>Date<span class="text-danger">*</span></label>
+                    <input class="form-control" formControlName="date" type="date" />
+                    <div class="text-danger" *ngIf="submit && f['date'].errors?.['required']">
+                        Date is required.
+                    </div>
                 </div>
-            </div>
 
-            <!-- Attachment -->
-            <div class="col-md-12">
-                <label>Attachments</label>
-                <input class="form-control"   formControlName="attachments" type="file" (change)="onFileSelected($event)" />
-            </div>
+                <!-- Description -->
+                <div class="col-md-12">
+                    <label>Description<span class="text-danger">*</span></label>
+                    <textarea class="form-control" formControlName="description" rows="4"
+                        placeholder="Describe the issue..."></textarea>
+                    <div class="text-danger" *ngIf="submit && f['description'].errors?.['required']">
+                        Description is required.
+                    </div>
+                </div>
 
-        </div>
-    </form>
-</div>
+                <!-- Attachment -->
+                <div *ngIf="!isEditMode" class="col-md-12">
+                    <label>Attachments</label>
+                    <input class="form-control" formControlName="attachments" type="file"
+                        (change)="onFileSelected($event)" />
+                </div>
+
+                <!-- <div   class="col-md-12" *ngIf="isEditMode && selectedTicket?.attachment?.contentType?.startsWith('image/')">
+                    <label>Attachment</label><br>
+                    <img [src]="getAttachmentUrl(selectedTicket)" [alt]="selectedTicket?.attachment?.filename"
+                        style="max-width:50%; max-height:20%; object-fit:contain; border: 1px solid #ddd; padding: 5px;" />
+                </div> -->
+
+                <!-- <div class="col-md-12"
+                    *ngIf="isEditMode && selectedTicket?.attachment?.contentType?.startsWith('image/')">
+                    <label>Attachment</label><br>
+                    <img [src]="getAttachmentUrl(selectedTicket)" [alt]="selectedTicket?.attachment?.filename"
+                        style="max-width:80%; max-height:40%; object-fit:contain; border:1px solid #ddd; padding:5px; cursor:pointer;"
+                        (click)="viewFullImage(getAttachmentUrl(selectedTicket))" />
+                </div> -->
+
+                <div class="col-md-12"
+                    *ngIf="isEditMode && selectedTicket?.attachment?.contentType?.startsWith('image/')">
+                    <label>Attachment</label><br>
+                    <div class="image-container">
+                        <img [src]="getAttachmentUrl(selectedTicket)" [alt]="selectedTicket?.attachment?.filename"
+                            (click)="viewFullImage(getAttachmentUrl(selectedTicket))" />
+                    </div>
+                </div>
+
+
+                <!-- Overlay -->
+                <div class="fullscreen-image" *ngIf="isImageFullScreen" (click)="closeFullImage()">
+                    <img [src]="selectedImageUrl" [alt]="selectedTicket?.attachment?.filename">
+                </div>
+
+
+                <div *ngIf="isEditMode" class="col-md-12">
+                    <label>Upload</label>
+                    <input class="form-control" formControlName="upload" type="file"
+                        (change)="onFileSelected($event)" />
+                </div>
+
+            </div>
+        </form>
+    </div>
 
 
     <div class="modal-footer">

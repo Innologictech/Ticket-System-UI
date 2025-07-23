@@ -43,7 +43,7 @@ export class TicketCreationComponent {
       title: ['', Validators.required],
       reportedBy: [this.currentUser?.userName || this.currentUser?.data?.userName || '', Validators.required],
       priority: ['', Validators.required],
-      environment: ['', Validators.required],
+      environment: ['Production', Validators.required],
       ticketstatus: ['Open'],
       issueType: [''],
       // date: ['', Validators.required],
@@ -254,7 +254,7 @@ export class TicketCreationComponent {
       title: ticket.title,
       reportedBy: ticket.reportedBy,
       priority: ticket.priority,
-      IssueType:ticket.issueType,
+      issueType:ticket.IssueType,
       environment: environmentMap[ticket.environment] || ticket.environment,
       ticketstatus: statusMap[ticket.status.toLowerCase()] || ticket.status,
       date: formattedDate,
@@ -264,6 +264,7 @@ export class TicketCreationComponent {
     console.log('Editing ticket:', ticket);
     console.log('Environment:', ticket.environment);
     console.log('Status:', ticket.status);
+    console.log("issuetype:",ticket.IssueType)
     // Open modal
     this.EditmodalRef = this.modalService.open(templateRef, {
       backdrop: 'static',
@@ -292,6 +293,7 @@ export class TicketCreationComponent {
     this.bugTicketForm.patchValue({
       reportedBy: this.currentUser?.data?.userName || '', // Correct path
       ticketstatus: 'Open',
+      environment:'Production',
       status: true
     });
     this.CreatemodalRef = this.modalService.open(createBugTicketTemplate, {
@@ -301,6 +303,31 @@ export class TicketCreationComponent {
 
   }
 
+   getAttachmentUrl(ticket: any): string {
+    console.log("ticketttttttttt",ticket);
+  if (ticket.attachment && ticket.attachment.data && ticket.attachment.data.data) {
+    console.log("ticketttttttttt",ticket);
+    const byteArray = new Uint8Array(ticket.attachment.data.data);
+    let binary = '';
+    for (let i = 0; i < byteArray.length; i++) {
+      binary += String.fromCharCode(byteArray[i]);
+    }
+    return `data:${ticket.attachment.contentType};base64,${btoa(binary)}`;
+  }
+  return '';
+}
+
+isImageFullScreen = false;
+selectedImageUrl = '';
+
+viewFullImage(url: string): void {
+  this.selectedImageUrl = url;
+  this.isImageFullScreen = true;
+}
+
+closeFullImage(): void {
+  this.isImageFullScreen = false;
+}
 
 
 
