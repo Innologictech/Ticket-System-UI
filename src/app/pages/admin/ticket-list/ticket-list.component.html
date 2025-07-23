@@ -31,19 +31,19 @@
 
                 </td> -->
                 <td>
-  <span *ngIf="ticket.priority === 'High'">
-    {{ticket.priority}}
-    <i class="fas fa-arrow-up text-danger"></i> 
-  </span>
-  <span *ngIf="ticket.priority === 'Medium'">
-     {{ticket.priority}}
-    <i class="fas fa-minus text-warning"></i> 
-  </span>
-  <span *ngIf="ticket.priority === 'Low'">
-     {{ticket.priority}}
-    <i class="fas fa-arrow-down text-success"></i> 
-  </span>
-</td>
+                    <span *ngIf="ticket.priority === 'High'">
+                        {{ticket.priority}}
+                        <i class="fas fa-arrow-up text-danger"></i>
+                    </span>
+                    <span *ngIf="ticket.priority === 'Medium'">
+                        {{ticket.priority}}
+                        <i class="fas fa-minus text-warning"></i>
+                    </span>
+                    <span *ngIf="ticket.priority === 'Low'">
+                        {{ticket.priority}}
+                        <i class="fas fa-arrow-down text-success"></i>
+                    </span>
+                </td>
 
                 <td>
 
@@ -113,7 +113,7 @@
                 <!-- Environment (Read-only) -->
                 <div class="col-md-6">
                     <label>Environment</label>
-                    <select class="form-control" formControlName="environment" >
+                    <select class="form-control" formControlName="environment">
                         <option value="Development">Development</option>
                         <option value="Quality">Quality</option>
                         <option value="Production">Production</option>
@@ -123,7 +123,7 @@
                 <!-- Status (Read-only) -->
                 <div class="col-md-6">
                     <label>Status</label>
-                    <input class="form-control" formControlName="ticketstatus" type="text"  [disabled]="!isEditMode"  />
+                    <input class="form-control" formControlName="ticketstatus" type="text" [disabled]="!isEditMode" />
                 </div>
 
                 <!-- Date (Read-only) -->
@@ -135,7 +135,8 @@
                 <!-- Description (Read-only) -->
                 <div class="col-md-12">
                     <label>Description</label>
-                    <textarea class="form-control" formControlName="description" rows="4" [readonly]="!isEditMode" ></textarea>
+                    <textarea class="form-control" formControlName="description" rows="4"
+                        [readonly]="!isEditMode"></textarea>
                 </div>
 
                 <!-- Assigned To (Editable) -->
@@ -151,21 +152,28 @@
                     </select>
                 </div> -->
                 <div class="col-md-12">
-  <label>Assigned To<span class="text-danger">*</span></label>
-  <select class="form-control" formControlName="assignedTo">
-    <option value="" disabled selected hidden>Select Assignee</option>
-    <option *ngFor="let user of userList" [value]="user.userName">
-      {{ user.userName }} 
-    </option>
-  </select>
-</div>
+                    <label>Assigned To<span class="text-danger">*</span></label>
+                    <select class="form-control" formControlName="assignedTo">
+                        <option value="" disabled selected hidden>Select Assignee</option>
+                        <option *ngFor="let user of userList" [value]="user.userName">
+                            {{ user.userName }}
+                        </option>
+                    </select>
+                </div>
 
 
                 <!-- Attachment -->
-                <div class="col-md-12">
+                <!-- <div class="col-md-12">
                     <label>Attachments</label>
                     <input class="form-control" type="file" (change)="onFileSelected($event)" />
+                </div> -->
+                <!-- Image Display -->
+                <div class="col-md-12" *ngIf="selectedTicket?.attachment?.contentType?.startsWith('image/')">
+                    <label>Attachment</label><br>
+                    <img [src]="getAttachmentUrl(selectedTicket)" [alt]="selectedTicket?.attachment?.filename"
+                        style="max-width:100%; max-height:200px; object-fit:contain; border: 1px solid #ddd; padding: 5px;" />
                 </div>
+
 
             </div>
         </form>

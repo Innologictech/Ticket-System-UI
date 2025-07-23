@@ -59,81 +59,206 @@
 </div> -->
 
 <div class="card">
-  <h2 class="card-header">My Assigned Tickets</h2>
+    <h2 class="card-header">My Assigned Tickets</h2>
 
- 
+
 </div>
 <div class="card1">
-     <div class="row">
-    <!-- In Progress Tickets -->
-    <div class="col-md-3 mb-4">
-      <h4 class="section-title">In Progress</h4>
-      <div class="custom-line"></div> <!-- Black line -->
-      
-      <div *ngFor="let ticket of inProgressTickets" class="card ticket-card mb-3">
-        <div class="card-body">
-          <h5 class="card-title">{{ ticket.title }}</h5>
-          <p class="card-text">{{ ticket.description }}</p>
-          <div class="ticket-footer">
-            <span class="badge badge-open">Open</span>
-            <a href="#" class="view-link">View</a>
-          </div>
-        </div>
-      </div>
-    </div>
+    <div class="row">
+        <!-- In Progress Tickets -->
+        <div class="col-md-3 mb-4">
+            <h4 class="section-title">In Progress</h4>
+            <div class="custom-line"></div> <!-- Black line -->
 
-    <!-- Hold Tickets -->
-    <div class="col-md-3 mb-4">
-      <h4 class="section-title">Hold Tickets</h4>
-      <div class="custom-line"></div> <!-- Black line -->
-      
-      <div *ngFor="let ticket of holdTickets" class="card ticket-card mb-3">
-        <div class="card-body">
-          <h5 class="card-title">{{ ticket.title }}</h5>
-          <p class="card-text">{{ ticket.description }}</p>
-          <div class="ticket-footer">
-            <span class="badge badge-hold">Hold</span>
-            <a href="#" class="view-link">View</a>
-          </div>
-        </div>
-      </div>
-    </div>
+            <div *ngFor="let ticket of inProgressTickets" class="card ticket-card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">{{ ticket.title }}<small style="float: right;"
+                            [ngStyle]="{ color: ticket.priority === 'High' ? 'red' : ticket.priority === 'Medium' ? 'orange' : 'green' }">{{ticket.priority}}
+                        </small></h5>
+                    <p class="card-text">{{ ticket.description }}</p>
+                    <p class="card-text">assigned:{{ ticket.assignedDays }}</p>
+                    <div class="ticket-footer">
+                        <span class="badge badge-open">In Progress</span>
+                        <a href="javascript:void(0)" class="view-link"
+                            (click)="openTicketModal(ticket, editTicketTemplate)">View</a>
 
-    <!-- UAT Tickets -->
-    <div class="col-md-3 mb-4">
-      <h4 class="section-title">UAT Tickets</h4>
-      <div class="custom-line"></div> <!-- Black line -->
-      
-      <div *ngFor="let ticket of uatTickets" class="card ticket-card mb-3">
-        <div class="card-body">
-          <h5 class="card-title">{{ ticket.title }}</h5>
-          <p class="card-text">{{ ticket.description }}</p>
-          <div class="ticket-footer">
-            <span class="badge badge-uat">UAT</span>
-            <a href="#" class="view-link">View</a>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <!-- Resolved Tickets -->
-    <div class="col-md-3 mb-4">
-      <h4 class="section-title">Resolved</h4>
-      <div class="custom-line"></div> <!-- Black line -->
-      
-      <div *ngFor="let ticket of resolvedTickets" class="card ticket-card mb-3">
-        <div class="card-body">
-          <h5 class="card-title">{{ ticket.title }}</h5>
-          <p class="card-text">{{ ticket.description }}</p>
-          <div class="ticket-footer">
-            <span class="badge badge-resolved">Resolved</span>
-            <a href="#" class="view-link">View</a>
-          </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
+
+        <!-- Hold Tickets -->
+        <div class="col-md-3 mb-4">
+            <h4 class="section-title">Hold Tickets</h4>
+            <div class="custom-line"></div> <!-- Black line -->
+
+            <div *ngFor="let ticket of holdTickets" class="card ticket-card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">{{ ticket.title }}<small style="float: right;"
+                            [ngStyle]="{ color: ticket.priority === 'High' ? 'red' : ticket.priority === 'Medium' ? 'orange' : 'green' }">{{ticket.priority}}
+                        </small></h5>
+                    <p class="card-text">assigned:{{ ticket.description }}</p>
+                     <p class="card-text">assigned:{{ ticket.assignedDays }}</p>
+                    <div class="ticket-footer">
+                        <span class="badge badge-hold">Hold</span>
+                        <a href="javascript:void(0)" class="view-link"
+                            (click)="openTicketModal(ticket, editTicketTemplate)">View</a>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- UAT Tickets -->
+        <div class="col-md-3 mb-4">
+            <h4 class="section-title">UAT Tickets</h4>
+            <div class="custom-line"></div> <!-- Black line -->
+
+            <div *ngFor="let ticket of uatTickets" class="card ticket-card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">{{ ticket.title }}<small style="float: right;"
+                            [ngStyle]="{ color: ticket.priority === 'High' ? 'red' : ticket.priority === 'Medium' ? 'orange' : 'green' }">{{ticket.priority}}
+                        </small></h5>
+                    <p class="card-text">{{ ticket.description }}</p>
+                    <p class="card-text">assigned:{{ ticket.assignedDays }}</p>
+                    <div class="ticket-footer">
+                        <span class="badge badge-uat">UAT</span>
+                        <a href="javascript:void(0)" class="view-link"
+                            (click)="openTicketModal(ticket, editTicketTemplate)">View</a>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resolved Tickets -->
+        <div class="col-md-3 mb-4">
+            <h4 class="section-title">Resolved</h4>
+            <div class="custom-line"></div> <!-- Black line -->
+
+            <div *ngFor="let ticket of resolvedTickets" class="card ticket-card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">{{ ticket.title }}<small style="float: right;"
+                            [ngStyle]="{ color: ticket.priority === 'High' ? 'red' : ticket.priority === 'Medium' ? 'orange' : 'green' }">{{ticket.priority}}
+                        </small></h5>
+                    <p class="card-text">{{ ticket.description }}</p>
+                    <p class="card-text">assigned:{{ ticket.assignedDays }}</p>
+                    <div class="ticket-footer">
+                        <span class="badge badge-resolved">Resolved</span>
+                        <a href="javascript:void(0)" class="view-link"
+                            (click)="openTicketModal(ticket, editTicketTemplate)">View</a>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
+<ng-template #editTicketTemplate let-c="close">
+    <div class="modal-body">
+        <form [formGroup]="bugTicketForm" autocomplete="off">
+            <div class="row">
 
-    
+
+                <div class="col-md-6">
+                    <label>Title</label>
+                    <input class="form-control" formControlName="title" type="text" readonly />
+                </div>
+
+
+                <div class="col-md-6">
+                    <label>Reported By</label>
+                    <input class="form-control" formControlName="reportedBy" type="text" readonly />
+                </div>
+
+
+                <div class="col-md-6">
+                    <label>Priority</label>
+                    <select class="form-control" formControlName="priority"  [disabled]="true">
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                        <option value="Critical">Critical</option>
+                    </select>
+                </div>
+
+
+                <div class="col-md-6">
+                    <label>Environment</label>
+                    <select class="form-control" formControlName="environment" [disabled]="true">
+                        <option value="Development">Development</option>
+                        <option value="Quality">Quality</option>
+                        <option value="Production">Production</option>
+                    </select>
+                </div>
+
+
+                <div class="col-md-6">
+                    <label>Status</label>
+                    <select class="form-control" formControlName="ticketstatus" >
+                        
+                        <option value="InProgress">In Progress</option>
+                        <option value="hold">Hold</option>
+                        <option value="UAT">UAT</option>
+                        <option value="resolved">Resolved</option>
+                        <option value="Closed">Closed</option>
+                    </select>
+                </div>
+
+
+                <div class="col-md-6">
+                    <label>Date</label>
+                    <input class="form-control" formControlName="date" type="date" readonly />
+                </div>
+
+
+                <div class="col-md-12">
+                    <label>Description</label>
+                    <textarea class="form-control" formControlName="description" rows="4"
+                        [readonly]="true"></textarea>
+                </div>
+
+                <div class="col-md-12">
+                    <label>Remarks</label>
+                    <textarea class="form-control" formControlName="remarks" rows="4"
+                        ></textarea>
+                </div>
+
+<!-- 
+                <div class="col-md-12">
+                    <label>Assigned To<span class="text-danger">*</span></label>
+                    <select class="form-control" formControlName="assignedTo">
+                        <option value="" disabled selected hidden>Select Assignee</option>
+                        <option *ngFor="let user of userList" [value]="user.userName">
+                            {{ user.userName }}
+                        </option>
+                    </select>
+                </div> -->
+
+                  <div class="col-md-12" *ngIf="selectedTicket?.attachment?.contentType?.startsWith('image/')">
+                    <label>Attachment</label><br>
+                    <img [src]="getAttachmentUrl(selectedTicket)" [alt]="selectedTicket?.attachment?.filename"
+                        style="max-width:100%; max-height:200px; object-fit:contain; border: 1px solid #ddd; padding: 5px;" />
+                </div>
+
+
+
+                <div class="col-md-12">
+                    <label>Attachments</label>
+                    <input class="form-control" type="file" (change)="onFileSelected($event)" />
+                </div>
+
+            </div>
+        </form>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="UpdateTicket()" >Update</button>
+        <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
+    </div>
+</ng-template>

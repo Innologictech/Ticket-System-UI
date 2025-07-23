@@ -25,43 +25,32 @@ export class TicketCreationComponent {
 
 
   ticketData: any[] = [];
- currentUser: any;
+  currentUser: any;
   EditmodalRef: any;
   CreatemodalRef: any;
+  selectedFileBase64: string | null = null;
 
-  constructor(private fb: FormBuilder,private cdr: ChangeDetectorRef, private modalService: NgbModal, private service: GeneralserviceService, private loaderService: LoaderService,private authService: AuthenticationService) { }
-tickets$: Observable<any[]>;
- ngOnInit(): void {
- this.currentUser = this.authService.currentUser();
-  console.log('Current User:', this.currentUser);   
-  // Initialize form first
-  this.bugTicketForm = this.fb.group({
-    title: ['', Validators.required],
-    reportedBy: [this.currentUser?.userName || this.currentUser?.data?.userName || '', Validators.required],
-    priority: ['', Validators.required],
-    environment: ['', Validators.required],
-    ticketstatus: ['Open'],
-    date: ['', Validators.required],
-    description: ['', Validators.required],
-    attachments: [null]
-  });
-this.getTickets();
- 
-}
+  constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef, private modalService: NgbModal, private service: GeneralserviceService, private loaderService: LoaderService, private authService: AuthenticationService) { }
+  tickets$: Observable<any[]>;
+  ngOnInit(): void {
+    this.currentUser = this.authService.currentUser();
+    console.log('Current User:', this.currentUser);
+    // Initialize form first
+    this.bugTicketForm = this.fb.group({
+      title: ['', Validators.required],
+      reportedBy: [this.currentUser?.userName || this.currentUser?.data?.userName || '', Validators.required],
+      priority: ['', Validators.required],
+      environment: ['', Validators.required],
+      ticketstatus: ['Open'],
+      date: ['', Validators.required],
+      description: ['', Validators.required],
+      attachments: ['']
+    });
+    this.getTickets();
 
-  // getTickets(): void {
-  //   this.loaderservice.showLoader();
-  //   this.service.GetTicketDetails().subscribe(
-  //     (response: any) => {
-  //       console.log('Ticket data:', response);
-  //       this.ticketData = response.data;
-  //       this.loaderservice.hideLoader();
-  //     },
-  //     (error) => {
-  //       console.error('Error fetching tickets', error);
-  //     }
-  //   );
-  // }
+  }
+
+
   getTickets(): void {
     this.loaderService.showLoader();
     this.tickets$ = this.service.GetTicketDetails().pipe(
@@ -80,14 +69,14 @@ this.getTickets();
     );
   }
 
-   filterTickets(tickets: any[]): any[] {
+  filterTickets(tickets: any[]): any[] {
     // Get the username consistently
     const currentUserName = this.currentUser?.userName || this.currentUser?.data?.userName;
-    
+
     if (this.currentUser?.Role === 'Admin') {
       return tickets;
     } else {
-      return tickets.filter(ticket => 
+      return tickets.filter(ticket =>
         ticket.reportedBy === currentUserName
       );
     }
@@ -100,23 +89,26 @@ this.getTickets();
     return this.bugTicketForm.controls;
   }
 
-  onFileSelected(event: any) {
-    if (event.target.files.length > 0) {
-      this.selectedFile = event.target.files[0];
-      this.bugTicketForm.patchValue({
-        attachment: this.selectedFile
-      });
+  onFileSelected(event: any): void {
+  const file: File = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.selectedFileBase64 = reader.result as string;  // Base64 string
+      console.log('Base64:', this.selectedFileBase64);
+    };
+    reader.readAsDataURL(file); // Convert to Base64
+  }
+}
+
+
+
+  CreateTicket(): void {
+    this.submit = true; // ✅ Add this line
+    if (this.bugTicketForm.invalid) {
+      this.bugTicketForm.markAllAsTouched();
+      return;
     }
-  }
-
-
-
- CreateTicket(): void {
-  this.submit = true; // ✅ Add this line
-  if (this.bugTicketForm.invalid) {
-    this.bugTicketForm.markAllAsTouched();
-    return;
-  }
 
     const rawForm = this.bugTicketForm.value;
 
@@ -128,37 +120,37 @@ this.getTickets();
       status: rawForm.ticketstatus || "open",
       date: rawForm.date,
       description: rawForm.description,
-      attachment: rawForm.attachments || ''
+      attachment: this.selectedFileBase64 // Base64 string
     };
 
- this.service.CreateTicket(payload).subscribe(
-  (response: any) => {
-    console.log('Ticket created:', response);
+    this.service.CreateTicket(payload).subscribe(
+      (response: any) => {
+        console.log('Ticket created:', response);
 
-    Swal.fire({
-      icon: 'success',
-      title: 'Ticket Created',
-      text: `${response.customerticketId} was created successfully.`,
-      confirmButtonText: 'OK'
-    }).then(() => {
-      this.bugTicketForm.reset();
-      this.getTickets(); // refresh list
-      if (this.CreatemodalRef) {
-        this.CreatemodalRef.close();
+        Swal.fire({
+          icon: 'success',
+          title: 'Ticket Created',
+          text: `${response.customerticketId} was created successfully.`,
+          confirmButtonText: 'OK'
+        }).then(() => {
+          this.bugTicketForm.reset();
+          this.getTickets(); // refresh list
+          if (this.CreatemodalRef) {
+            this.CreatemodalRef.close();
+          }
+        });
+      },
+      (error) => {
+        console.error('Ticket creation failed:', error);
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Creation Failed',
+          text: 'Sorry, we could not create the ticket. Please try again.',
+          confirmButtonText: 'OK'
+        });
       }
-    });
-  },
-  (error) => {
-    console.error('Ticket creation failed:', error);
-
-    Swal.fire({
-      icon: 'error',
-      title: 'Creation Failed',
-      text: 'Sorry, we could not create the ticket. Please try again.',
-      confirmButtonText: 'OK'
-    });
-  }
-);
+    );
 
   }
 
@@ -180,39 +172,39 @@ this.getTickets();
       status: rawForm.ticketstatus || "Open",
       date: rawForm.date,
       description: rawForm.description,
-      attachment: rawForm.attachments || ''
+      attachment: rawForm.attachments ,
     };
 
     this.service.UpdateTicket(payload).subscribe(
-    (response: any) => {
-      console.log('Ticket updated:', response);
+      (response: any) => {
+        console.log('Ticket updated:', response);
 
-      Swal.fire({
-        icon: 'success',
-        title: 'Ticket Updated',
-        text: 'The ticket was updated successfully.',
-        confirmButtonText: 'OK'
-      }).then(() => {
-        this.bugTicketForm.reset();
-        this.selectedTicket = null;
-        this.getTickets(); // refresh
+        Swal.fire({
+          icon: 'success',
+          title: 'Ticket Updated',
+          text: 'The ticket was updated successfully.',
+          confirmButtonText: 'OK'
+        }).then(() => {
+          this.bugTicketForm.reset();
+          this.selectedTicket = null;
+          this.getTickets(); // refresh
 
-        if (this.EditmodalRef) {
-          this.EditmodalRef.close();
-        }
-      });
-    },
-    (error) => {
-      console.error('Update failed:', error);
+          if (this.EditmodalRef) {
+            this.EditmodalRef.close();
+          }
+        });
+      },
+      (error) => {
+        console.error('Update failed:', error);
 
-      Swal.fire({
-        icon: 'error',
-        title: 'Update Failed',
-        text: 'Sorry, we could not update the ticket. Please try again.',
-        confirmButtonText: 'OK'
-      });
-    }
-  );
+        Swal.fire({
+          icon: 'error',
+          title: 'Update Failed',
+          text: 'Sorry, we could not update the ticket. Please try again.',
+          confirmButtonText: 'OK'
+        });
+      }
+    );
   }
 
 
@@ -241,23 +233,23 @@ this.getTickets();
   }
 
 
-  
+
   viewTicket(ticket: any) {
 
   }
 
   TicketCreationModel(createBugTicketTemplate: any): void {
-     
-    this.isEditMode=false;
+
+    this.isEditMode = false;
     this.submit = false
-   this.bugTicketForm.reset({
-   
-  });
-     this.bugTicketForm.patchValue({
-    reportedBy: this.currentUser?.data?.userName || '', // Correct path
-    ticketstatus: 'Open',
-    status: true
-  });
+    this.bugTicketForm.reset({
+
+    });
+    this.bugTicketForm.patchValue({
+      reportedBy: this.currentUser?.data?.userName || '', // Correct path
+      ticketstatus: 'Open',
+      status: true
+    });
     this.CreatemodalRef = this.modalService.open(createBugTicketTemplate, {
       backdrop: 'static',
       keyboard: false, size: 'lg'
@@ -265,7 +257,7 @@ this.getTickets();
 
   }
 
- 
+
 
 
 }

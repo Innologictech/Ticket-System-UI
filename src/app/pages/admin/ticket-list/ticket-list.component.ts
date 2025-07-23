@@ -60,7 +60,7 @@ environment: ticket.environment,
       date: formattedDate,
       description: ticket.description,
       assignedTo: ticket.consultant || '',
-      attachments: null
+      attachments: ticket.attachment
     });
  
     this.EditmodalRef = this.modalService.open(templateRef, {
@@ -143,6 +143,19 @@ environment: ticket.environment,
     }
   });
 }
+
+getAttachmentUrl(ticket: any): string {
+  if (ticket.attachment && ticket.attachment.data && ticket.attachment.data.data) {
+    const byteArray = new Uint8Array(ticket.attachment.data.data);
+    let binary = '';
+    for (let i = 0; i < byteArray.length; i++) {
+      binary += String.fromCharCode(byteArray[i]);
+    }
+    return `data:${ticket.attachment.contentType};base64,${btoa(binary)}`;
+  }
+  return '';
+}
+
 
 //     editTicketModel(ticket: any, templateRef: any): void {
       

@@ -1334,9 +1334,17 @@ background-repeat: no-repeat;
 
 
 
+/*styles for blur for readonly  start*/
+input:read-only,
+textarea:read-only,
+select:disabled {
+  background-color: #f8f9fa; /* Light grey background */
+  color: #6c757d; /* Slightly dimmed text */
+  opacity: 0.7;   /* Blurry/dimmed look */
+  cursor: not-allowed;
+}
 
-
-
+/*styles for blur for readonly  end */
 
 
 

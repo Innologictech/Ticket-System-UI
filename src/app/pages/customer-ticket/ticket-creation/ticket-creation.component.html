@@ -118,6 +118,21 @@
                 </div>
             </div>
 
+             <!-- Issue Type-->
+            <div class="col-md-6">
+                <label>Issue Type<span class="text-danger">*</span></label>
+                <select class="form-control" formControlName="issueType">
+                    <option value="" disabled hidden>Select</option>
+                    <option value="bug">Bug</option>
+                    <option value="enhancement">Enhancement</option>
+                    <option value="technicalIssue">Technical Issue</option>
+                    <option value="other">Other</option>
+                </select>
+                <div class="text-danger" *ngIf="submit && f['issueType'].errors?.['required']">
+                    Environment is required.
+                </div>
+            </div>
+
             <!-- Status (readonly) -->
             <div class="col-md-6">
                 <label>Status</label>
@@ -146,7 +161,7 @@
             <!-- Attachment -->
             <div class="col-md-12">
                 <label>Attachments</label>
-                <input class="form-control" type="file" (change)="onFileSelected($event)" />
+                <input class="form-control"   formControlName="attachments" type="file" (change)="onFileSelected($event)" />
             </div>
 
         </div>
