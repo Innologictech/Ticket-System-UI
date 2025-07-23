@@ -102,7 +102,7 @@
                 <!-- Priority (Read-only) -->
                 <div class="col-md-6">
                     <label>Priority</label>
-                    <select class="form-control" formControlName="priority" disabled>
+                    <select class="form-control" formControlName="priority" >
                         <option value="Low">Low</option>
                         <option value="Medium">Medium</option>
                         <option value="High">High</option>
@@ -121,10 +121,24 @@
                 </div>
 
                 <!-- Status (Read-only) -->
-                <div class="col-md-6">
+                <!-- <div class="col-md-6">
                     <label>Status</label>
-                    <input class="form-control" formControlName="ticketstatus" type="text" [disabled]="!isEditMode" />
-                </div>
+                    <input class="form-control" formControlName="ticketstatus" type="text"   />
+                </div> -->
+                <!-- ... (previous HTML remains the same until the Status field) -->
+
+<!-- Status Field - Different display based on mode -->
+<div class="col-md-6">
+    <label>Status</label>
+    <!-- Show dropdown in edit mode -->
+    <select *ngIf="isEditMode" class="form-control" formControlName="ticketstatus">
+        <option *ngFor="let status of statusOptions" [value]="status">{{status}}</option>
+    </select>
+    <!-- Show readonly input in create mode -->
+    <input *ngIf="!isEditMode"class="form-control" formControlName="ticketstatus" type="text" readonly />
+</div>
+
+<!-- ... (rest of the HTML remains the same) -->
 
                 <!-- Date (Read-only) -->
                 <div class="col-md-6">

@@ -38,7 +38,7 @@
                                 <td>{{data.Contact}}</td>
                                 <td>{{data.Role}}</td>
                                 <td>
-                                    {{ data.Status ? 'Active' : 'Inactive' }}
+                                    {{ data.Status}}
                                 </td>
 
                                 <td class="text-center">
@@ -245,9 +245,9 @@
                         <label>User Name<span class="text-danger">*</span></label>
                         <input class="form-control form-control-sm" formControlName="userName" type="text"
                             placeholder="">
-                        <div class="text-danger" *ngIf="submit && f['userName'].errors">
+                        <!-- <div class="text-danger" *ngIf="submit && f['userName'].errors">
                             User Name is required.
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <!-- First Name -->
@@ -256,9 +256,9 @@
                         <label>First Name<span class="text-danger">*</span></label>
                         <input class="form-control form-control-sm" formControlName="firstName" type="text"
                             placeholder="">
-                        <div class="text-danger" *ngIf="submit && f['firstName'].errors">
+                        <!-- <div class="text-danger" *ngIf="submit && f['firstName'].errors">
                             First Name is required.
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <!-- Last Name -->
@@ -267,9 +267,9 @@
                         <label>Last Name<span class="text-danger">*</span></label>
                         <input class="form-control form-control-sm" formControlName="lastName" type="text"
                             placeholder="">
-                        <div class="text-danger" *ngIf="submit && f['lastName'].errors">
+                        <!-- <div class="text-danger" *ngIf="submit && f['lastName'].errors">
                             Last Name is required.
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <!-- Email -->
@@ -278,9 +278,9 @@
                         <label for="contactemail">EMAIL: <span class="text-danger">*</span></label>
                         <input type="email" id="contactemail" class="form-control form-control-sm"
                             formControlName="email" required />
-                        <div class="text-danger" *ngIf="submit && f['email'].errors">
+                        <!-- <div class="text-danger" *ngIf="submit && f['email'].errors">
                             Email is required.
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <!-- Contact -->
@@ -302,9 +302,9 @@
                         <input class="form-control form-control-sm" formControlName="contact" type="text"
                             placeholder="Enter Contact Number" maxlength="10" pattern="[0-9]{10}"
                             oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-                        <div class="text-danger" *ngIf="submit && f['contact'].errors">
+                        <!-- <div class="text-danger" *ngIf="submit && f['contact'].errors">
                             Contact is required.
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <!-- Password -->
@@ -319,9 +319,9 @@
                                 [ngClass]="{ 'mdi-eye-off-outline': !fieldTextType, 'mdi-eye-outline': fieldTextType }"></i>
                         </button>
                     </div>
-                    <div class="text-danger" *ngIf="submit && f['password'].errors">
+                    <!-- <div class="text-danger" *ngIf="submit && f['password'].errors">
                         Password is required.
-                    </div>
+                    </div> -->
                 </div>
 
                 <!-- Confirm Password -->
@@ -337,12 +337,12 @@
                                 [ngClass]="{ 'mdi-eye-off-outline': !confirmFieldTextType, 'mdi-eye-outline': confirmFieldTextType }"></i>
                         </button>
                     </div>
-                    <div class="text-danger" *ngIf="submit && f['confirmPassword'].errors">
+                    <!-- <div class="text-danger" *ngIf="submit && f['confirmPassword'].errors">
                         Confirm password is required.
                     </div>
                     <div class="text-danger" *ngIf="f.confirmPassword?.hasError('mustMatch')">
                         Password and Confirm Password do not match.
-                    </div>
+                    </div> -->
                 </div>
                 <div class="col-md-4">
                     <label>Role<span class="text-danger">*</span></label>
@@ -353,9 +353,9 @@
                     </select>
                     <!-- <input class="form-control form-control-sm" formControlName="role" type="text" placeholder="" >   -->
 
-                    <div class="text-danger" *ngIf="submit && f['role'].errors">
+                    <!-- <div class="text-danger" *ngIf="submit && f['role'].errors">
                         Role is required.
-                    </div>
+                    </div> -->
                 </div>
 
                 <!-- Activity -->

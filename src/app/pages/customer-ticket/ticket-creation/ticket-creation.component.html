@@ -134,10 +134,24 @@
             </div>
 
             <!-- Status (readonly) -->
-            <div class="col-md-6">
+            <!-- <div class="col-md-6">
                 <label>Status</label>
                 <input class="form-control" formControlName="ticketstatus" value="open" type="text" readonly />
-            </div>
+            </div> -->
+            <!-- ... (previous HTML remains the same until the Status field) -->
+
+<!-- Status Field - Different display based on mode -->
+<div class="col-md-6">
+    <label>Status</label>
+    <!-- Show dropdown in edit mode -->
+    <select *ngIf="isEditMode" class="form-control" formControlName="ticketstatus">
+        <option *ngFor="let status of statusOptions" [value]="status">{{status}}</option>
+    </select>
+    <!-- Show readonly input in create mode -->
+    <input *ngIf="!isEditMode" class="form-control" formControlName="ticketstatus" type="text" readonly />
+</div>
+
+
 
             <!-- Date -->
             <div class="col-md-6">

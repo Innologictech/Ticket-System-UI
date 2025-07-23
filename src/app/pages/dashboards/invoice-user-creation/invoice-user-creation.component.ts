@@ -97,7 +97,7 @@ confirmFieldTextType: boolean = false;
        role: ['',Validators.required],
       password: ['', Validators.required],
       confirmPassword: ['', Validators.required],
-      activity: ['', Validators.required],
+      activity: [[], Validators.required],
       status: [false]
     }, {
       validator: this.mustMatch('password', 'confirmPassword')
@@ -135,7 +135,7 @@ confirmFieldTextType: boolean = false;
       confirmPassword: selectedUser.ConfirmPassword,
       role: selectedUser.Role,
       activity: selectedUser.Activity?.[0]?.split(',') || [],
-      status: selectedUser.Status 
+      status: selectedUser.Status === 'Active' ? true : false
     });
     this.modalRef = this.modalService.open(this.editUserTemplate, { size: 'lg' });
     }
@@ -577,7 +577,7 @@ submitUserForm() {
     Password: formValues.password,
     ConfirmPassword: formValues.confirmPassword,
     Role: formValues.role ,
-    Status: formValues.status ? 'Active' : 'Inactive',
+    Status: formValues.status,
     Activity: formValues.activity
   };
 
@@ -612,7 +612,7 @@ submitUserForm() {
 }
 
 updateUserForm() {
-  this.submit = true;
+  // this.submit = true;
 
   if (this.userEditForm.invalid) {
     return;
@@ -630,7 +630,7 @@ updateUserForm() {
     Password: formValues.password,
     ConfirmPassword: formValues.confirmPassword,
     Role: formValues.role,
-    Status: formValues.status ? 'Active' : 'Inactive',
+    Status: formValues.status,
     Activity: formValues.activity
   };
 
