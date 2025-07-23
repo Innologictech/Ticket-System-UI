@@ -22,7 +22,7 @@ export class TicketCreationComponent {
   isEditMode = false;
   selectedFile: File | null = null;
   selectedTicket: any = null;
- statusOptions = ['Open', 'In Progress', 'Hold', 'UAT', 'Resolved', 'Closed', 'Reopen'];
+  statusOptions = ['Open', 'In Progress', 'Hold', 'UAT', 'Resolved', 'Closed', 'Reopen'];
 
   ticketData: any[] = [];
   currentUser: any;
@@ -42,11 +42,23 @@ export class TicketCreationComponent {
       priority: ['', Validators.required],
       environment: ['', Validators.required],
       ticketstatus: ['Open'],
-      date: ['', Validators.required],
+      issueType: [''],
+      // date: ['', Validators.required],
+      date: [this.formatDate(new Date()), Validators.required],
+
       description: ['', Validators.required],
       attachments: ['']
     });
     this.getTickets();
+
+  }
+
+  formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`; // Example: "2025-07-22"
+
 
   }
 
@@ -90,26 +102,28 @@ export class TicketCreationComponent {
   }
 
   onFileSelected(event: any): void {
-  const file: File = event.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.selectedFileBase64 = reader.result as string;  // Base64 string
-      console.log('Base64:', this.selectedFileBase64);
-    };
-    reader.readAsDataURL(file); // Convert to Base64
+    const file: File = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.selectedFileBase64 = reader.result as string;  // Base64 string
+        console.log('Base64:', this.selectedFileBase64);
+      };
+      reader.readAsDataURL(file); // Convert to Base64
+    }
   }
-}
 
 
 
-  CreateTicket(bugTicketForm:any): void {
+  CreateTicket(bugTicketForm: any): void {
     this.submit = true; // ✅ Add this line
     if (this.bugTicketForm.invalid) {
       this.bugTicketForm.markAllAsTouched();
       return;
     }
-  const formattedDate = bugTicketForm.date ? bugTicketForm.date.split('T')[0] : '';
+    const formattedDate = this.bugTicketForm.get('date')?.value
+      ? this.bugTicketForm.get('date')?.value
+        .split('T')[0] : '';
     const rawForm = this.bugTicketForm.value;
 
     const payload = {
@@ -117,6 +131,7 @@ export class TicketCreationComponent {
       reportedBy: rawForm.reportedBy,
       priority: rawForm.priority,
       environment: rawForm.environment,
+      IssueType: rawForm.issueType,
       status: rawForm.ticketstatus || "open",
       date: formattedDate,
       description: rawForm.description,
@@ -169,10 +184,12 @@ export class TicketCreationComponent {
       reportedBy: rawForm.reportedBy,
       priority: rawForm.priority,
       environment: rawForm.environment,
+      IssueType: rawForm.issueType,
+
       status: rawForm.ticketstatus || "Open",
       date: rawForm.date,
       description: rawForm.description,
-      attachment: rawForm.attachments ,
+      attachment: rawForm.attachments,
     };
 
     this.service.UpdateTicket(payload).subscribe(
@@ -214,34 +231,34 @@ export class TicketCreationComponent {
     this.isEditMode = true;
     const formattedDate = ticket.date ? ticket.date.split('T')[0] : '';
     const environmentMap: any = {
-  QA: 'Quality',
-  Dev: 'Development',
-  Prod: 'Production'
-};
+      QA: 'Quality',
+      Dev: 'Development',
+      Prod: 'Production'
+    };
 
-const statusMap: any = {
-  open: 'Open',
-  inprogress: 'In Progress',
-  hold: 'Hold',
-  uat: 'UAT',
-  resolved: 'Resolved',
-  closed: 'Closed',
-  reopen: 'Reopen'
-};
+    const statusMap: any = {
+      open: 'Open',
+      inprogress: 'In Progress',
+      hold: 'Hold',
+      uat: 'UAT',
+      resolved: 'Resolved',
+      closed: 'Closed',
+      reopen: 'Reopen'
+    };
     // Patch form with selected ticket data
     this.bugTicketForm.patchValue({
       title: ticket.title,
       reportedBy: ticket.reportedBy,
       priority: ticket.priority,
-     environment: environmentMap[ticket.environment] || ticket.environment,
-  ticketstatus: statusMap[ticket.status.toLowerCase()] || ticket.status,
+      environment: environmentMap[ticket.environment] || ticket.environment,
+      ticketstatus: statusMap[ticket.status.toLowerCase()] || ticket.status,
       date: formattedDate,
       description: ticket.description,
       attachments: null // Clear file input
     });
-console.log('Editing ticket:', ticket);
-console.log('Environment:', ticket.environment);
-console.log('Status:', ticket.status);
+    console.log('Editing ticket:', ticket);
+    console.log('Environment:', ticket.environment);
+    console.log('Status:', ticket.status);
     // Open modal
     this.EditmodalRef = this.modalService.open(templateRef, {
       backdrop: 'static',
@@ -260,8 +277,12 @@ console.log('Status:', ticket.status);
 
     this.isEditMode = false;
     this.submit = false
-    this.bugTicketForm.reset({
+    // this.bugTicketForm.reset({
 
+    // });
+
+    this.bugTicketForm.reset({
+      date: this.formatDate(new Date())  // set current date
     });
     this.bugTicketForm.patchValue({
       reportedBy: this.currentUser?.data?.userName || '', // Correct path
