@@ -329,6 +329,10 @@ closeFullImage(): void {
   this.isImageFullScreen = false;
 }
 
+removeAttachment() {
+  this.selectedTicket.attachment = null;  // Remove the existing image
+}
+
 
 
 }

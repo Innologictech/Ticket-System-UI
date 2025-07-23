@@ -194,13 +194,20 @@
                         (click)="viewFullImage(getAttachmentUrl(selectedTicket))" />
                 </div> -->
 
-                <div class="col-md-12"
-                    *ngIf="isEditMode && selectedTicket?.attachment?.contentType?.startsWith('image/')">
+                <div class="col-md-12" *ngIf="isEditMode">
+
                     <label>Attachment</label><br>
-                    <div class="image-container">
+                    <div class="image-container"
+                        *ngIf="selectedTicket?.attachment?.contentType?.startsWith('image/'); else uploadNew">
                         <img [src]="getAttachmentUrl(selectedTicket)" [alt]="selectedTicket?.attachment?.filename"
                             (click)="viewFullImage(getAttachmentUrl(selectedTicket))" />
+                        <span class="remove-icon" (click)="removeAttachment()">&times;</span>
+                        <!-- <button type="button" class="btn btn-sm btn-danger mt-2" (click)="removeAttachment()">Remove</button> -->
                     </div>
+                    <!-- File Upload (Shown when no attachment) -->
+                    <ng-template #uploadNew>
+                        <input type="file" (change)="onFileSelected($event)" accept="image/*" />
+                    </ng-template>
                 </div>
 
 
