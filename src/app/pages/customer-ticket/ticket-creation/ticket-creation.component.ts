@@ -26,6 +26,7 @@ export class TicketCreationComponent {
 
   ticketData: any[] = [];
   currentUser: any;
+  client:any;
   EditmodalRef: any;
   CreatemodalRef: any;
   selectedFileBase64: string | null = null;
@@ -34,6 +35,8 @@ export class TicketCreationComponent {
   tickets$: Observable<any[]>;
   ngOnInit(): void {
     this.currentUser = this.authService.currentUser();
+    this.client=this.currentUser?.Client || this.currentUser?.data?.Client || '',
+    console.log("client",this.client);
     console.log('Current User:', this.currentUser);
     // Initialize form first
     this.bugTicketForm = this.fb.group({
@@ -45,7 +48,7 @@ export class TicketCreationComponent {
       issueType: [''],
       // date: ['', Validators.required],
       date: [this.formatDate(new Date()), Validators.required],
-
+      // Client:[this.currentUser?.Client || this.currentUser?.data?.Client || '',],
       description: ['', Validators.required],
       attachments: ['']
     });
@@ -131,6 +134,7 @@ export class TicketCreationComponent {
       reportedBy: rawForm.reportedBy,
       priority: rawForm.priority,
       environment: rawForm.environment,
+      Client:this.client,
       IssueType: rawForm.issueType,
       status: rawForm.ticketstatus || "open",
       date: formattedDate,
@@ -185,7 +189,7 @@ export class TicketCreationComponent {
       priority: rawForm.priority,
       environment: rawForm.environment,
       IssueType: rawForm.issueType,
-
+      Client:this.client,
       status: rawForm.ticketstatus || "Open",
       date: rawForm.date,
       description: rawForm.description,
@@ -250,6 +254,7 @@ export class TicketCreationComponent {
       title: ticket.title,
       reportedBy: ticket.reportedBy,
       priority: ticket.priority,
+      IssueType:ticket.issueType,
       environment: environmentMap[ticket.environment] || ticket.environment,
       ticketstatus: statusMap[ticket.status.toLowerCase()] || ticket.status,
       date: formattedDate,
