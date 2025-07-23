@@ -400,9 +400,9 @@ if (status === 'InProcess' && rawForm.assignedTo) {
 }
 console.log("status",status)
 
-  if (status === 'Rejected' && reason) {
-    payload.rejectionReason = reason;
-  }
+  // if (status === 'Rejected' && reason) {
+  //   payload.rejectionReason = reason;
+  // }
 
   this.service.UpdateTicket(payload).subscribe(
     (response: any) => {
@@ -439,46 +439,46 @@ console.log("status",status)
 
 
 
-onRejectTicket(ticket: any): void {
-  Swal.fire({
-    title: 'Are you sure to reject?',
-    text: 'Please provide a reason for rejection',
-    input: 'textarea',
-    inputPlaceholder: 'Enter reason for rejection...',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Reject',
-    cancelButtonText: 'Cancel',
-    confirmButtonColor: '#d33',
-    cancelButtonColor: '#3085d6',
-    inputValidator: (value) => {
-      if (!value) {
-        return 'You need to write a reason!';
-      }
-      return null;
-    }
-  }).then((result) => {
-    if (result.isConfirmed) {
-      const reason = result.value;
-      this.selectedTicket = ticket; // Set ticket to update
-      // Patch form only if required
-      this.bugTicketForm.patchValue({
-        title: ticket.title,
-        reportedBy: ticket.reportedBy,
-        priority: ticket.priority,
-        environment: ticket.environment,
-        date: ticket.date,
-        description: ticket.description,
-        attachments: ticket.attachments,
-        assignedTo:ticket.consultant
+// onRejectTicket(ticket: any): void {
+//   Swal.fire({
+//     title: 'Are you sure to reject?',
+//     text: 'Please provide a reason for rejection',
+//     input: 'textarea',
+//     inputPlaceholder: 'Enter reason for rejection...',
+//     icon: 'warning',
+//     showCancelButton: true,
+//     confirmButtonText: 'Reject',
+//     cancelButtonText: 'Cancel',
+//     confirmButtonColor: '#d33',
+//     cancelButtonColor: '#3085d6',
+//     inputValidator: (value) => {
+//       if (!value) {
+//         return 'You need to write a reason!';
+//       }
+//       return null;
+//     }
+//   }).then((result) => {
+//     if (result.isConfirmed) {
+//       const reason = result.value;
+//       this.selectedTicket = ticket; // Set ticket to update
+//       // Patch form only if required
+//       this.bugTicketForm.patchValue({
+//         title: ticket.title,
+//         reportedBy: ticket.reportedBy,
+//         priority: ticket.priority,
+//         environment: ticket.environment,
+//         date: ticket.date,
+//         description: ticket.description,
+//         attachments: ticket.attachments,
+//         assignedTo:ticket.consultant
 
-      });
+//       });
 
-      // ✅ Call update method with status = 'Rejected' and reason
-      this.UpdateTicket('Rejected', reason);
-    }
-  });
-}
+//       // ✅ Call update method with status = 'Rejected' and reason
+//       this.UpdateTicket('Rejected', reason);
+//     }
+//   });
+// }
 
 
 

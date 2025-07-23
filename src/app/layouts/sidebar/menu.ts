@@ -49,7 +49,7 @@ export const MENU: MenuItem[] = [
     , {
 
         id: 5,
-        label: 'user',
+        label: 'consultant',
         link: '/user',
         parentId: 3,
         icon: 'bx bx-user-plus', // User creation icon
