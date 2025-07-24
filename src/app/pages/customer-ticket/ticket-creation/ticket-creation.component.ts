@@ -1,6 +1,3 @@
-
-
-
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -10,6 +7,10 @@ import { LoaderService } from 'src/app/core/services/loader.service';
 import { AuthenticationService } from 'src/app/core/services/auth.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { catchError, finalize, map, Observable, of } from 'rxjs';
+import { Store } from '@ngrx/store';
+import * as TicketActions from 'src/app/store/ticketSytem/ticket.actions';
+import { selectAllStatus } from 'src/app/store/ticketSytem/ticket.selectors';
+import { Status } from 'src/app/store/ticketSytem/ticket.model';
 
 @Component({
   selector: 'app-ticket-creation',
@@ -35,8 +36,14 @@ export class TicketCreationComponent {
   CreatemodalRef: any;
   selectedFileBase64: string | null = null;
   selectedUploadBase64: string | null = null;
-  constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef, private modalService: NgbModal, private service: GeneralserviceService, private loaderService: LoaderService, private authService: AuthenticationService) { }
-  tickets$: Observable<any[]>;
+    tickets$: Observable<any[]>;
+    status$: Observable<Status[]>;
+  allStatus: any[]=[];
+
+
+  constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef, private modalService: NgbModal, private service: GeneralserviceService, private loaderService: LoaderService, private authService: AuthenticationService, private store: Store) { }
+
+
   ngOnInit(): void {
     this.currentUser = this.authService.currentUser();
     this.client = this.currentUser?.Client || this.currentUser?.data?.Client || '',
@@ -58,7 +65,12 @@ export class TicketCreationComponent {
       upload: [''],
     });
     this.getTickets();
-
+ this.store.dispatch(TicketActions.loadStatus())
+    this.status$ = this.store.select(selectAllStatus);
+    this.status$.subscribe((status: any) => {
+      this.allStatus = status?.data || []; // Ensure it's an array
+      console.log(' this.allStatus', this.allStatus)
+    });
   }
 
   formatDate(date: Date): string {
