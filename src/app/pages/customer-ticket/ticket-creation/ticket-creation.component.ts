@@ -24,7 +24,7 @@ export class TicketCreationComponent {
   selectedFile: File | null = null;
   selectedTicket: any = null;
   statusOptions = ['Open', 'In Progress', 'Hold', 'UAT', 'Resolved', 'Closed', 'Reopen'];
-
+  modalTitle: string = '';
   ticketData: any[] = [];
   currentUser: any;
   client: any;
@@ -256,6 +256,7 @@ export class TicketCreationComponent {
 
 
   editTicketModel(ticket: any, templateRef: any): void {
+    this.modalTitle = 'Edit Ticket';
     this.selectedTicket = ticket; // Store ticket for updating
     console.log("selected tkttttttttt", this.selectedTicket);
     this.submit = false;
@@ -303,6 +304,7 @@ export class TicketCreationComponent {
 
 
   viewTicket(ticket: any, templateRef: any): void {
+    this.modalTitle = 'View Ticket';
     this.resetModeFlags(); // Clear previous mode
     this.selectedTicket = ticket;
     this.submit = false;
@@ -333,7 +335,7 @@ export class TicketCreationComponent {
 
 
   TicketCreationModel(createBugTicketTemplate: any): void {
-
+    this.modalTitle = 'Raise New Ticket';
     this.isEditMode = false;
     this.submit = false
     // this.bugTicketForm.reset({
