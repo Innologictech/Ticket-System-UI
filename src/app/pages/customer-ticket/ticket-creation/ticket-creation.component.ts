@@ -23,10 +23,11 @@ export class TicketCreationComponent {
   submit: boolean = false;
   submitted = false;
   isEditMode = false;
+  isViewMode = false;
   selectedFile: File | null = null;
   selectedTicket: any = null;
   statusOptions = ['Open', 'In Progress', 'Hold', 'UAT', 'Resolved', 'Closed', 'Reopen'];
-
+  modalTitle: string = '';
   ticketData: any[] = [];
   currentUser: any;
   client: any;
@@ -129,7 +130,7 @@ export class TicketCreationComponent {
   // }
 
   onFileSelected(event: any, type: 'attachments' | 'upload'): void {
-    const file: File = event.target.files[0];
+      const file: File = event.target.files[0];
 
     if (file) {
       const reader = new FileReader();
@@ -168,7 +169,7 @@ export class TicketCreationComponent {
       reportedBy: rawForm.reportedBy,
       priority: rawForm.priority,
       environment: rawForm.environment,
-      Client: this.client,
+      Client:this.client,
       IssueType: rawForm.issueType,
       status: rawForm.ticketstatus || "open",
       date: formattedDate,
@@ -224,12 +225,12 @@ export class TicketCreationComponent {
       priority: rawForm.priority,
       environment: rawForm.environment,
       IssueType: rawForm.issueType,
-      Client: this.client,
+      Client:  this.client,
       status: rawForm.ticketstatus || "Open",
       date: rawForm.date,
       description: rawForm.description,
       attachment: this.selectedFileBase64,
-      upload: this.selectedUploadBase64,
+      upload:  this.selectedUploadBase64,
     };
 
     this.service.UpdateTicket(payload).subscribe(
@@ -266,9 +267,11 @@ export class TicketCreationComponent {
 
 
   editTicketModel(ticket: any, templateRef: any): void {
+    this.modalTitle = 'Edit Ticket';
     this.selectedTicket = ticket; // Store ticket for updating
-    console.log("selected tkttttttttt", this.selectedTicket);
+    console.log("selected tkttttttttt",  this.selectedTicket);
     this.submit = false;
+    this.resetModeFlags(); // Clear previous mode
     this.isEditMode = true;
     const formattedDate = ticket.date ? ticket.date.split('T')[0] : '';
     const environmentMap: any = {
@@ -291,7 +294,7 @@ export class TicketCreationComponent {
       title: ticket.title,
       reportedBy: ticket.reportedBy,
       priority: ticket.priority,
-      issueType: ticket.IssueType,
+      issueType:  ticket.IssueType,
       environment: environmentMap[ticket.environment] || ticket.environment,
       ticketstatus: statusMap[ticket.status.toLowerCase()] || ticket.status,
       date: formattedDate,
@@ -311,13 +314,39 @@ export class TicketCreationComponent {
   }
 
 
+  viewTicket(ticket: any, templateRef: any): void {
+    this.modalTitle = 'View Ticket';
+    this.resetModeFlags(); // Clear previous mode
+    this.selectedTicket = ticket;
+    this.submit = false;
+    // this.isEditMode = false;
+    this.isViewMode = true;
 
-  viewTicket(ticket: any) {
+   
+   
 
+    this.bugTicketForm.patchValue({
+      title: ticket.title,
+      reportedBy: ticket.reportedBy,
+      priority: ticket.priority,
+      issueType: ticket.IssueType,
+      environment: ticket.environment,
+      ticketstatus:  ticket.status,
+      date:ticket.date,
+      description: ticket.description,
+      attachments: ticket.attachment
+    });
+
+    this.EditmodalRef = this.modalService.open(templateRef, {
+      backdrop: 'static',
+      keyboard: false,
+      size: 'lg'
+    });
   }
 
-  TicketCreationModel(createBugTicketTemplate: any): void {
 
+  TicketCreationModel(createBugTicketTemplate: any): void {
+    this.modalTitle = 'Raise New Ticket';
     this.isEditMode = false;
     this.submit = false
     // this.bugTicketForm.reset({
@@ -330,15 +359,42 @@ export class TicketCreationComponent {
     this.bugTicketForm.patchValue({
       reportedBy: this.currentUser?.data?.userName || '', // Correct path
       ticketstatus: 'Open',
-      environment: 'Production',
+      environment:  'Production',
       status: true
     });
-    this.CreatemodalRef = this.modalService.open(createBugTicketTemplate, {
+    this.EditmodalRef = this.modalService.open(createBugTicketTemplate, {
       backdrop: 'static',
       keyboard: false, size: 'lg'
     });
 
   }
+
+//   TicketCreationModel(templateRef: any) {
+//   this.resetModeFlags(); // optional, good practice
+//   this.isEditMode = false;
+//   this.isViewMode = false;
+//   this.submit = false;
+
+//   this.bugTicketForm.reset({
+//       date: this.formatDate(new Date())  // set current date
+//     });
+//       this.bugTicketForm.patchValue({
+//       reportedBy: this.currentUser?.data?.userName || '', // Correct path
+//       ticketstatus: 'Open',
+//       environment: 'Production',
+//       status: true
+//     });
+//    this.CreatemodalRef = this.modalService.open(templateRef, {
+//       backdrop: 'static',
+//       keyboard: false, size: 'lg'
+//     });
+
+//   this.CreatemodalRef.result.then(
+//     (result) => this.resetModeFlags(),
+//     (reason) => this.resetModeFlags()
+//   );
+// }
+
 
   getAttachmentUrl(ticket: any): string {
     console.log("ticketttttttttt", ticket);
@@ -354,21 +410,21 @@ export class TicketCreationComponent {
     return '';
   }
 
-  isImageFullScreen = false;
-  selectedImageUrl = '';
+    isImageFullScreen = false;
+    selectedImageUrl = '';
 
-  viewFullImage(url: string): void {
-    this.selectedImageUrl = url;
-    this.isImageFullScreen = true;
-  }
+    viewFullImage(url: string): void {
+      this.selectedImageUrl = url;
+      this.isImageFullScreen = true;
+    }
 
-  closeFullImage(): void {
-    this.isImageFullScreen = false;
-  }
+    closeFullImage(): void {
+      this.isImageFullScreen = false;
+    }
 
-  removeAttachment() {
-    this.selectedTicket.attachment = null;  // Remove the existing image
-  }
+removeAttachment() {
+  this.selectedTicket.attachment = null;  // Remove the existing image
+}
 
 
 
