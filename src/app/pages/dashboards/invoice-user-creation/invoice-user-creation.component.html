@@ -371,20 +371,20 @@
                     <label>Module<span class="text-danger">*</span></label>
                     <select class="form-control" formControlName="module">
                         <option value="SAP">SAP</option>
-                        <option value="WEBTECHNOLOGY">WEB TECHNOLOGY</option>
+                        <option value="WEBAPPLICATION">WEB APPLICATION</option>
                         <option value="POWERBI">POWER BI</option>
                     </select>
                     <!-- <div class="text-danger" *ngIf="submit && f['module'].errors">
                         Module is required.
                     </div> -->
                 </div>
-                <div class="col-md-4">
+                 <div class="col-md-4">
                     <label>Client<span class="text-danger">*</span></label>
                     <select class="form-control" formControlName="client">
-                        <option value="BAJAJ">BAJAJ</option>
-                        <option value="MKAGRO">MK AGRO</option>
-                        <option value="QHOLDING">QHOLDING</option>
-                        <option value="SEUTICPHARMA">SEUTIC PHARMA</option>
+                        <option value="BAJ">BAJAJ</option>
+                        <option value="MKA">MK AGRO</option>
+                        <option value="QHO">QHOLDING</option>
+                        <option value="SEU">SEUTIC PHARMA</option>
                     </select>
                     <!-- <div class="text-danger" *ngIf="submit && f['client'].errors">
                         Client is required.
@@ -392,6 +392,7 @@
                 </div>
 
                 <!-- Activity -->
+
                 <div class="col-md-4">
                     <label>Activity<span class="text-danger">*</span></label>
                     <ng-select [items]="activities" [multiple]="true" [closeOnSelect]="false" bindLabel=""

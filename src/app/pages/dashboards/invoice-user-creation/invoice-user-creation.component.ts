@@ -41,7 +41,7 @@ confirmFieldTextType: boolean = false;
   c: any;
   editModalRef: any;
   
-  activities: string[] = ['Dashboard', 'Ticket-Creation', 'Ticket-Management', 'User-Creation'];
+  activities: string[] = ['Dashboard', 'Ticket-Creation', 'Ticket-Management', 'User-Creation','consultant'];
   
  
 
@@ -128,6 +128,7 @@ confirmFieldTextType: boolean = false;
     this.userId =null
     const selectedUser = user;
     this.userId = user.userId
+    
     this.userEditForm.patchValue({
       userId: selectedUser.userId,
       userName: selectedUser.userName,
@@ -140,7 +141,7 @@ confirmFieldTextType: boolean = false;
       role: selectedUser.Role,
       module: selectedUser.Module,
       client: selectedUser.Client,
-      activity: selectedUser.Activity?.[0]?.split(',') || [],
+activity: selectedUser.Activity || [],
       status: selectedUser.Status === 'Active' ? true : false
     });
     this.modalRef = this.modalService.open(this.editUserTemplate, { size: 'lg' });
