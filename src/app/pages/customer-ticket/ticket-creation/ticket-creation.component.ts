@@ -20,23 +20,24 @@ export class TicketCreationComponent {
   submit: boolean = false;
   submitted = false;
   isEditMode = false;
+  isViewMode = false;
   selectedFile: File | null = null;
   selectedTicket: any = null;
   statusOptions = ['Open', 'In Progress', 'Hold', 'UAT', 'Resolved', 'Closed', 'Reopen'];
 
   ticketData: any[] = [];
   currentUser: any;
-  client:any;
+  client: any;
   EditmodalRef: any;
   CreatemodalRef: any;
   selectedFileBase64: string | null = null;
-  selectedUploadBase64:string | null = null;
+  selectedUploadBase64: string | null = null;
   constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef, private modalService: NgbModal, private service: GeneralserviceService, private loaderService: LoaderService, private authService: AuthenticationService) { }
   tickets$: Observable<any[]>;
   ngOnInit(): void {
     this.currentUser = this.authService.currentUser();
-    this.client=this.currentUser?.Client || this.currentUser?.data?.Client || '',
-    console.log("client",this.client);
+    this.client = this.currentUser?.Client || this.currentUser?.data?.Client || '',
+      console.log("client", this.client);
     console.log('Current User:', this.currentUser);
     // Initialize form first
     this.bugTicketForm = this.fb.group({
@@ -51,7 +52,7 @@ export class TicketCreationComponent {
       // Client:[this.currentUser?.Client || this.currentUser?.data?.Client || '',],
       description: ['', Validators.required],
       attachments: [''],
-      upload:[''],
+      upload: [''],
     });
     this.getTickets();
 
@@ -118,25 +119,25 @@ export class TicketCreationComponent {
   // }
 
   onFileSelected(event: any, type: 'attachments' | 'upload'): void {
-  const file: File = event.target.files[0];
+    const file: File = event.target.files[0];
 
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const base64 = reader.result as string;
-      console.log(`Base64 [${type}]:`, base64);
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64 = reader.result as string;
+        console.log(`Base64 [${type}]:`, base64);
 
-      if (type === 'attachments') {
-        this.selectedFileBase64 = base64;
-        // handle non-edit mode attachment logic
-      } else if (type === 'upload') {
-        this.selectedUploadBase64 = base64;
-        // handle edit mode upload logic
-      }
-    };
-    reader.readAsDataURL(file);
+        if (type === 'attachments') {
+          this.selectedFileBase64 = base64;
+          // handle non-edit mode attachment logic
+        } else if (type === 'upload') {
+          this.selectedUploadBase64 = base64;
+          // handle edit mode upload logic
+        }
+      };
+      reader.readAsDataURL(file);
+    }
   }
-}
 
 
 
@@ -157,13 +158,13 @@ export class TicketCreationComponent {
       reportedBy: rawForm.reportedBy,
       priority: rawForm.priority,
       environment: rawForm.environment,
-      Client:this.client,
+      Client: this.client,
       IssueType: rawForm.issueType,
       status: rawForm.ticketstatus || "open",
       date: formattedDate,
       description: rawForm.description,
-      attachment: this.selectedFileBase64 ,// Base64 string
-      upload:''
+      attachment: this.selectedFileBase64,// Base64 string
+      upload: ''
     };
 
     this.service.CreateTicket(payload).subscribe(
@@ -213,12 +214,12 @@ export class TicketCreationComponent {
       priority: rawForm.priority,
       environment: rawForm.environment,
       IssueType: rawForm.issueType,
-      Client:this.client,
+      Client: this.client,
       status: rawForm.ticketstatus || "Open",
       date: rawForm.date,
       description: rawForm.description,
       attachment: this.selectedFileBase64,
-      upload:this.selectedUploadBase64,
+      upload: this.selectedUploadBase64,
     };
 
     this.service.UpdateTicket(payload).subscribe(
@@ -256,8 +257,9 @@ export class TicketCreationComponent {
 
   editTicketModel(ticket: any, templateRef: any): void {
     this.selectedTicket = ticket; // Store ticket for updating
-    console.log("selected tkttttttttt",this.selectedTicket);
+    console.log("selected tkttttttttt", this.selectedTicket);
     this.submit = false;
+    this.resetModeFlags(); // Clear previous mode
     this.isEditMode = true;
     const formattedDate = ticket.date ? ticket.date.split('T')[0] : '';
     const environmentMap: any = {
@@ -280,7 +282,7 @@ export class TicketCreationComponent {
       title: ticket.title,
       reportedBy: ticket.reportedBy,
       priority: ticket.priority,
-      issueType:ticket.IssueType,
+      issueType: ticket.IssueType,
       environment: environmentMap[ticket.environment] || ticket.environment,
       ticketstatus: statusMap[ticket.status.toLowerCase()] || ticket.status,
       date: formattedDate,
@@ -290,7 +292,7 @@ export class TicketCreationComponent {
     console.log('Editing ticket:', ticket);
     console.log('Environment:', ticket.environment);
     console.log('Status:', ticket.status);
-    console.log("issuetype:",ticket.IssueType)
+    console.log("issuetype:", ticket.IssueType)
     // Open modal
     this.EditmodalRef = this.modalService.open(templateRef, {
       backdrop: 'static',
@@ -300,10 +302,35 @@ export class TicketCreationComponent {
   }
 
 
+  viewTicket(ticket: any, templateRef: any): void {
+    this.resetModeFlags(); // Clear previous mode
+    this.selectedTicket = ticket;
+    this.submit = false;
+    // this.isEditMode = false;
+    this.isViewMode = true;
 
-  viewTicket(ticket: any) {
+   
+   
 
+    this.bugTicketForm.patchValue({
+      title: ticket.title,
+      reportedBy: ticket.reportedBy,
+      priority: ticket.priority,
+      issueType: ticket.IssueType,
+      environment: ticket.environment,
+      ticketstatus:  ticket.status,
+      date:ticket.date,
+      description: ticket.description,
+      attachments: ticket.attachment
+    });
+
+    this.EditmodalRef = this.modalService.open(templateRef, {
+      backdrop: 'static',
+      keyboard: false,
+      size: 'lg'
+    });
   }
+
 
   TicketCreationModel(createBugTicketTemplate: any): void {
 
@@ -319,44 +346,82 @@ export class TicketCreationComponent {
     this.bugTicketForm.patchValue({
       reportedBy: this.currentUser?.data?.userName || '', // Correct path
       ticketstatus: 'Open',
-      environment:'Production',
+      environment: 'Production',
       status: true
     });
-    this.CreatemodalRef = this.modalService.open(createBugTicketTemplate, {
+    this.EditmodalRef = this.modalService.open(createBugTicketTemplate, {
       backdrop: 'static',
       keyboard: false, size: 'lg'
     });
 
   }
 
-   getAttachmentUrl(ticket: any): string {
-    console.log("ticketttttttttt",ticket);
-  if (ticket.attachment && ticket.attachment.data && ticket.attachment.data.data) {
-    console.log("ticketttttttttt",ticket);
-    const byteArray = new Uint8Array(ticket.attachment.data.data);
-    let binary = '';
-    for (let i = 0; i < byteArray.length; i++) {
-      binary += String.fromCharCode(byteArray[i]);
+//   TicketCreationModel(templateRef: any) {
+//   this.resetModeFlags(); // optional, good practice
+//   this.isEditMode = false;
+//   this.isViewMode = false;
+//   this.submit = false;
+
+//   this.bugTicketForm.reset({
+//       date: this.formatDate(new Date())  // set current date
+//     });
+//       this.bugTicketForm.patchValue({
+//       reportedBy: this.currentUser?.data?.userName || '', // Correct path
+//       ticketstatus: 'Open',
+//       environment: 'Production',
+//       status: true
+//     });
+//    this.CreatemodalRef = this.modalService.open(templateRef, {
+//       backdrop: 'static',
+//       keyboard: false, size: 'lg'
+//     });
+
+//   this.CreatemodalRef.result.then(
+//     (result) => this.resetModeFlags(),
+//     (reason) => this.resetModeFlags()
+//   );
+// }
+
+
+  getAttachmentUrl(ticket: any): string {
+    console.log("ticketttttttttt", ticket);
+    if (ticket.attachment && ticket.attachment.data && ticket.attachment.data.data) {
+      console.log("ticketttttttttt", ticket);
+      const byteArray = new Uint8Array(ticket.attachment.data.data);
+      let binary = '';
+      for (let i = 0; i < byteArray.length; i++) {
+        binary += String.fromCharCode(byteArray[i]);
+      }
+      return `data:${ticket.attachment.contentType};base64,${btoa(binary)}`;
     }
-    return `data:${ticket.attachment.contentType};base64,${btoa(binary)}`;
+    return '';
   }
-  return '';
+
+  isImageFullScreen = false;
+  selectedImageUrl = '';
+
+  viewFullImage(url: string): void {
+    this.selectedImageUrl = url;
+    this.isImageFullScreen = true;
+  }
+
+  closeFullImage(): void {
+    this.isImageFullScreen = false;
+  }
+
+  removeAttachment() {
+    this.selectedTicket.attachment = null;  // Remove the existing image
+  }
+
+
+  closeModal(reason: any) {
+  this.EditmodalRef.close(reason);
+  this.resetModeFlags();
 }
 
-isImageFullScreen = false;
-selectedImageUrl = '';
-
-viewFullImage(url: string): void {
-  this.selectedImageUrl = url;
-  this.isImageFullScreen = true;
-}
-
-closeFullImage(): void {
-  this.isImageFullScreen = false;
-}
-
-removeAttachment() {
-  this.selectedTicket.attachment = null;  // Remove the existing image
+resetModeFlags() {
+  this.isEditMode = false;
+  this.isViewMode = false;
 }
 
 

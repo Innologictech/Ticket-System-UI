@@ -5,7 +5,7 @@ import { AuthfakeauthenticationService } from '../../../core/services/authfake.s
 import { login } from 'src/app/store/Authentication/authentication.actions';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { FormBuilder, FormGroup} from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { CommonModule } from '@angular/common';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
@@ -20,7 +20,7 @@ import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
   templateUrl: './login2.component.html',
   styleUrls: ['./login2.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, SlickCarouselModule,NgxSpinnerModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, SlickCarouselModule, NgxSpinnerModule],
   providers: [NgxSpinnerService]
 })
 /**
@@ -28,19 +28,21 @@ import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
  */
 export class Login2Component implements OnInit {
   // fieldTextType !: boolean;
-  
+
   images = [
     // 'assets/images/worldMapImage.png',
     // 'assets/images/AircraftFlight.png',
 
-    
-     'https://www.innologictechnologies.com/assets/template/images/img/slide_02.jpg',
-    'assets/images/Innologiclogo.webp',
+    'assets/images/Sap_image.png',
+
+    'assets/images/Sap_image2.png',
+    'https://www.innologictechnologies.com/assets/template/images/img/slide_02.jpg',
+    // 'assets/images/Innologiclogo.webp',
     // 'assets/images/pic5.jpg',
-     'assets/images/pic3.jpg',
-     	
+    'assets/images/pic3.jpg',
+
     //  'assets/images/pic.jpg',
-    
+
     // 'assets/images/flightparking.jpg',
     // 'assets/images/flightHalf.jpg',
     // 'assets/images/Flight38.jpeg',
@@ -51,17 +53,17 @@ export class Login2Component implements OnInit {
   successMessage: string;
   errorMessage: string;
   constructor(private formBuilder: UntypedFormBuilder, private route: ActivatedRoute, private router: Router, private authenticationService: AuthenticationService,
-    private authFackservice: AuthfakeauthenticationService, public store: Store, private service: GeneralserviceService, private toaster: ToastrService,private spinner: NgxSpinnerService) { }
-    loginForm: FormGroup;
-    forgotPasswordForm: FormGroup;
-    submitted = false;
-    submittedForgot = false;
-    isForgotPassword = false;
-    showForgotPassword = false;
-    
-    fieldTextType = false;
-    year = new Date().getFullYear();
-    interval: any;
+    private authFackservice: AuthfakeauthenticationService, public store: Store, private service: GeneralserviceService, private toaster: ToastrService, private spinner: NgxSpinnerService) { }
+  loginForm: FormGroup;
+  forgotPasswordForm: FormGroup;
+  submitted = false;
+  submittedForgot = false;
+  isForgotPassword = false;
+  showForgotPassword = false;
+
+  fieldTextType = false;
+  year = new Date().getFullYear();
+  interval: any;
   ngOnInit(): void {
     document.body.classList.add("auth-body-bg");
     this.loginForm = this.formBuilder.group({
@@ -72,7 +74,7 @@ export class Login2Component implements OnInit {
       email: ['', [Validators.required, Validators.email]]
     });
     this.startSlideshow();
-// Change image every 5 seconds
+    // Change image every 5 seconds
   }
   // showSpinner() {
   //   this.spinner.show();
@@ -104,26 +106,26 @@ export class Login2Component implements OnInit {
    */
   // dynamic login below 
   // onSubmit() {
- 
+
   //   if(this.loginForm.invalid == true){
   //     this.submitted = true;
   //   }else{
   //     const userName = this.f['userName'].value; // Get the username from the form
   //     const password = this.f['password'].value; // Get the password from the form
- 
+
   //     // Login Api
   //     // this.store.dispatch(login({ userName: userName, password: password }));
-   
+
   //     this.login(userName, password)
   //   }
-   
- 
-   
+
+
+
   // }
 
 
   showForgotPasswordScreen() {
-    this.showForgotPassword = true; 
+    this.showForgotPassword = true;
     this.successMessage = '';
     this.errorMessage = '';
   }
@@ -140,8 +142,8 @@ export class Login2Component implements OnInit {
     this.submittedForgot = true;
     if (this.forgotPasswordForm.invalid) return;
 
-    const payload = { 
-      userEmail: this.forgotPasswordForm.value.email 
+    const payload = {
+      userEmail: this.forgotPasswordForm.value.email
     };
 
     this.service.forgotPassword(payload).subscribe((res: any) => {
@@ -154,40 +156,40 @@ export class Login2Component implements OnInit {
           icon: 'success',
           title: 'Success',
           text: res.message,
-          timer:5000
+          timer: 5000
         }).then(() => {
-          
+
         });
       }
-      else{
+      else {
         Swal.fire('Login Failed', `${response.message} `, 'error');
         // Swal.fire("",dummy, "success")
         this.submitted = false;
       }
-      
-  },error=>{
-    console.log("error",error)
-    this.toaster.error(error)
-   
-  });
+
+    }, error => {
+      console.log("error", error)
+      this.toaster.error(error)
+
+    });
   }
 
 
   // Toggle password visibility
- 
+
 
   // local login without API
   // onSubmit() {
- 
+
   //   if(this.loginForm.invalid == true){
   //     this.submitted = true;
   //   }else{
   //     const userName = this.f['userName'].value; // Get the username from the form
   //     const password = this.f['password'].value; // Get the password from the form
- 
+
   //     // Login Api
   //     // this.store.dispatch(login({ userName: userName, password: password }));
-     
+
   //       const  response   ={
   //           "message": "Login Successful",
   //           "status": 200,
@@ -205,19 +207,19 @@ export class Login2Component implements OnInit {
   //         localStorage.setItem('currentUser', JSON.stringify(response || { token: response.token }));
   //         const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   //         this.router.navigate([returnUrl], { skipLocationChange: true });
- 
+
   //     // this.login(userName, password)
   //   }
-   
- 
-   
+
+
+
   // }
   // goBackToLogin() {
   //   this.showForgotPassword = false;
   //   this.successMessage = '';
   //   this.errorMessage = '';
   // }
- 
+
   toggleFieldTextType() {
     this.fieldTextType = !this.fieldTextType;
   }
@@ -280,24 +282,24 @@ export class Login2Component implements OnInit {
   // login(userName, password) {
   //   this.spinner.show();
   //   this.submitted = true;
-  
+
   //   if (this.loginForm.invalid) {
   //     this.spinner.hide();
   //     return;
   //   }
-  
+
   //   const loginPayload = {
   //     employeeID: userName,
   //     employeePassword: password
   //   };
-  
+
   //   this.service.submitLogin(loginPayload).subscribe(
   //     (res: any) => {
   //       const response = res;
-  
+
   //       // First, stop the spinner
   //       this.spinner.hide();
-  
+
   //       // Ensure UI update completes before showing Swal
   //       setTimeout(() => {
   //         if (response.status === 200 && response.data.isValid) {
@@ -305,7 +307,7 @@ export class Login2Component implements OnInit {
   //           const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   //           this.router.navigate([returnUrl], { skipLocationChange: true });
   //           this.service.setLoginResponse(response);
-  
+
   //           // Swal.fire(response.message, `Welcome ${response.data.userFirstName} ${response.data.userLastName}`, 'success');
   //           Swal.fire({
   //             title: response.message,
@@ -321,13 +323,13 @@ export class Login2Component implements OnInit {
   //         else {
   //           Swal.fire('', 'Invalid login credentials!', 'error');
   //         }
-  
+
   //         this.submitted = false;
   //       }, 0); // Delay ensures UI updates before modal appears
   //     },
   //     (error) => {
   //       this.spinner.hide();
-  
+
   //       setTimeout(() => {
   //         console.log('error', error);
   //         this.toaster.error(error);
@@ -335,51 +337,51 @@ export class Login2Component implements OnInit {
   //     }
   //   );
   // }
-  
+
 
   onSubmit() {
-  this.submitted = true;
+    this.submitted = true;
 
-  if (this.loginForm.invalid) {
-    return;
+    if (this.loginForm.invalid) {
+      return;
+    }
+
+    const payload = {
+      userName: this.loginForm.value.userName,
+      Password: this.loginForm.value.password // Make sure it's "Password" (capital P)
+    };
+
+    this.spinner.show();
+
+    this.service.submitLogin(payload).subscribe({
+      next: (res: any) => {
+        this.spinner.hide();
+
+        if (res.status === 200 && res.data?.isValid) {
+          localStorage.setItem('currentUser', JSON.stringify(res));
+          this.service.setLoginResponse(res);
+
+          Swal.fire({
+            title: res.message,
+            icon: 'success',
+            timer: 2000,
+            timerProgressBar: true
+          }).then(() => {
+            const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+            this.router.navigate([returnUrl]);
+          });
+        } else {
+          Swal.fire('Login Failed', res.message || 'Invalid credentials.', 'error');
+        }
+      },
+      error: (err) => {
+        this.spinner.hide();
+        Swal.fire('Error', err?.error?.message || 'Login failed. Please try again.', 'error');
+      }
+    });
   }
 
-  const payload = {
-    userName: this.loginForm.value.userName,
-    Password: this.loginForm.value.password // Make sure it's "Password" (capital P)
-  };
 
-  this.spinner.show();
 
-  this.service.submitLogin(payload).subscribe({
-    next: (res: any) => {
-      this.spinner.hide();
-
-      if (res.status === 200 && res.data?.isValid) {
-        localStorage.setItem('currentUser', JSON.stringify(res));
-        this.service.setLoginResponse(res);
-
-        Swal.fire({
-          title: res.message,
-          icon: 'success',
-          timer: 2000,
-          timerProgressBar: true
-        }).then(() => {
-          const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-          this.router.navigate([returnUrl]);
-        });
-      } else {
-        Swal.fire('Login Failed', res.message || 'Invalid credentials.', 'error');
-      }
-    },
-    error: (err) => {
-      this.spinner.hide();
-      Swal.fire('Error', err?.error?.message || 'Login failed. Please try again.', 'error');
-    }
-  });
-}
-
-  
-  
 
 }

@@ -3,7 +3,7 @@
 
         <div class="card">
             <div class="card-header">
-                Ticket Creation
+                My Tickets
             </div>
             <div class="card-body">
 
@@ -43,7 +43,7 @@
                                 </td>
                                 <td>{{ ticket.date | date: 'dd-MM-yyyy' }}</td>
                                 <td class="text-center">
-                                    <i class="fa fa-eye text-info me-2" (click)="viewTicket()"></i>
+                                    <i class="fa fa-eye text-info me-2" (click)="viewTicket(ticket, createBugTicketTemplate)"></i>
                                     <i class="fa fa-edit text-warning me-2"
                                         (click)="editTicketModel(ticket, createBugTicketTemplate)"></i>
                                 </td>
@@ -73,7 +73,7 @@
                 <!-- Title -->
                 <div class="col-md-6">
                     <label>Title<span class="text-danger">*</span></label>
-                    <input class="form-control" formControlName="title" type="text" placeholder="Enter Title" />
+                    <input class="form-control" formControlName="title" type="text" placeholder="Enter Title" [readonly]="isViewMode" />
                     <div class="text-danger" *ngIf="submit && f['title'].errors?.['required']">
                         Title is required.
                     </div>
@@ -83,7 +83,7 @@
                 <div class="col-md-6">
                     <label>Reported By<span class="text-danger">*</span></label>
                     <input class="form-control" formControlName="reportedBy" type="text"
-                        placeholder="Enter Reporter Name" readonly />
+                        placeholder="Enter Reporter Name" readonly  [readonly]="isViewMode"/>
                     <div class="text-danger" *ngIf="submit && f['reportedBy'].errors?.['required']">
                         Reported By is required.
                     </div>
@@ -92,7 +92,7 @@
                 <!-- Priority -->
                 <div class="col-md-6">
                     <label>Priority<span class="text-danger">*</span></label>
-                    <select class="form-control" formControlName="priority">
+                    <select class="form-control" formControlName="priority" [disabled]="isViewMode">
                         <option value="" disabled hidden>Select Priority</option>
                         <option value="Low">Low</option>
                         <option value="Medium">Medium</option>
@@ -107,7 +107,7 @@
                 <!-- Environment -->
                 <div class="col-md-6">
                     <label>Environment<span class="text-danger">*</span></label>
-                    <select class="form-control" formControlName="environment">
+                    <select class="form-control" formControlName="environment" [disabled]="isViewMode">
                         <option value="" disabled hidden>Select</option>
                         <option value="Development">Development</option>
                         <option value="Quality">Quality</option>
@@ -121,7 +121,7 @@
                 <!-- Issue Type-->
                 <div class="col-md-6">
                     <label>Issue Type<span class="text-danger">*</span></label>
-                    <select class="form-control" formControlName="issueType">
+                    <select class="form-control" formControlName="issueType" [disabled]="isViewMode">
                         <option value="" disabled hidden>Select</option>
                         <option value="bug">Bug</option>
                         <option value="enhancement">Enhancement</option>
@@ -144,12 +144,12 @@
                 <div class="col-md-6">
                     <label>Status</label>
                     <!-- Show dropdown in edit mode -->
-                    <select *ngIf="isEditMode" class="form-control" formControlName="ticketstatus">
+                    <select *ngIf="isEditMode" class="form-control" formControlName="ticketstatus" [disabled]="isViewMode">
                         <option *ngFor="let status of statusOptions" [value]="status">{{status}}</option>
                     </select>
                     <!-- Show readonly input in create mode -->
                     <input *ngIf="!isEditMode" class="form-control" formControlName="ticketstatus" type="text"
-                        readonly />
+                        readonly [readonly]="isViewMode"/>
                 </div>
 
 
@@ -157,7 +157,7 @@
                 <!-- Date -->
                 <div class="col-md-6">
                     <label>Date<span class="text-danger">*</span></label>
-                    <input class="form-control" formControlName="date" type="date" />
+                    <input class="form-control" formControlName="date" type="date" [readonly]="isViewMode"/>
                     <div class="text-danger" *ngIf="submit && f['date'].errors?.['required']">
                         Date is required.
                     </div>
@@ -176,7 +176,7 @@
                 <!-- Attachment -->
                 <div *ngIf="!isEditMode" class="col-md-12">
                     <label>Attachments</label>
-                    <input class="form-control" formControlName="attachments" type="file"
+                    <input class="form-control" formControlName="attachments" type="file" [readonly]="isViewMode"
                         (change)="onFileSelected($event,'attachments')" />
                 </div>
 
@@ -211,7 +211,7 @@
                     <!-- File Upload (Shown when no attachment) -->
                     <ng-template #uploadNew>
 
-                        <input type="file" class="form-control" formControlName="attachments"
+                        <input type="file" class="form-control" formControlName="attachments" [readonly]="isViewMode"
                             (change)="onFileSelected($event,'attachments')" />
                     </ng-template>
                 </div>
@@ -225,7 +225,7 @@
 
                 <div *ngIf="isEditMode" class="col-md-12">
                     <label>Upload</label>
-                    <input class="form-control" formControlName="upload" type="file"
+                    <input class="form-control" formControlName="upload" type="file" [readonly]="isViewMode"
                         (change)="onFileSelected($event,'upload')" />
                 </div>
 
@@ -235,8 +235,10 @@
 
 
     <div class="modal-footer">
-        <button *ngIf="!isEditMode" class="btn btn-primary" (click)="CreateTicket()">Submit</button>
-        <button *ngIf="isEditMode" class="btn btn-warning" (click)="updateTicket()">Update</button>
-        <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
+        <button *ngIf="!isEditMode && !isViewMode" class="btn btn-primary" (click)="CreateTicket()">Submit</button>
+        <button *ngIf="isEditMode && !isViewMode" class="btn btn-warning" (click)="updateTicket()">Update</button>
+        <!-- <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button> -->
+        <button type="button" class="btn btn-secondary" (click)="closeModal('Close click')">Close</button>
+
     </div>
 </ng-template>
