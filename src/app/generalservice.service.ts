@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
-import { Ticket } from './store/ticketSytem/ticket.model';
+import { Ticket,Status} from './store/ticketSytem/ticket.model';
 @Injectable({
   providedIn: 'root'
 })
@@ -270,6 +270,10 @@ getLoginResponse(){
   /*ticketing tool methods start here*/
   GetTicketDetails() : Observable<Ticket[]>{
     return this.http.get<Ticket[]>(environment.baseUrl+'/ticket/getticket');
+  }
+
+    GetAllStatus() : Observable<Status[]>{
+    return this.http.get<Status[]>(environment.baseUrl+'/ticket/status-options');
   }
 
   CreateTicket(data){

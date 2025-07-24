@@ -1,6 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
-import { initialTicketState } from './ticket.state';
+import { initialStatusState, initialTicketState } from './ticket.state';
 import * as TicketActions from './ticket.actions';
+import * as StatusActions from './ticket.actions';
 
 export const ticketReducer = createReducer(
   initialTicketState,
@@ -15,4 +16,21 @@ export const ticketReducer = createReducer(
     error,
     loading: false
   }))
+
+   
 );
+
+export const statusReducer = createReducer(
+ initialStatusState,
+  on(StatusActions.loadStatus, state => ({ ...state, loading: true })),
+  on(StatusActions.loadStatusSuccess, (state, { status }) => ({
+    ...state,
+    status,
+    loading: false
+  })),
+  on(StatusActions.loadStatusFailure, (state, { error }) => ({
+    ...state,
+    error,
+    loading: false
+  }))
+)

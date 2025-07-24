@@ -47,7 +47,7 @@ isEditMode: boolean = false;
             this.tickets$ = this.store.select(selectAllTickets);
             this.tickets$.subscribe((tickets:any) => {
     this.ticketData =  tickets?.data || []; // Ensure it's an array
-    // console.log('this.ticketData',this.ticketData)
+    console.log('this.ticketData',this.tickets$)  
   });
                 // this.loading$ = this.store.select(selectTicketLoading);
       // this.getTickets();

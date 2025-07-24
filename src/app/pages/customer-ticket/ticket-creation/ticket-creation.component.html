@@ -145,11 +145,12 @@
                     <label>Status</label>
                     <!-- Show dropdown in edit mode -->
                     <select *ngIf="isEditMode" class="form-control" formControlName="ticketstatus">
-                        <option *ngFor="let status of statusOptions" [value]="status">{{status}}</option>
+                        <option  [value]=""></option>
+                        <option *ngFor="let status of allStatus" [value]="status.status">{{status.label}}</option>
                     </select>
                     <!-- Show readonly input in create mode -->
                     <input *ngIf="!isEditMode" class="form-control" formControlName="ticketstatus" type="text"
-                        readonly />
+                       readonly />
                 </div>
 
 

@@ -35,7 +35,7 @@ import { provideRouter } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { BsDropdownConfig } from 'ngx-bootstrap/dropdown';
 import { TicketEffects } from './store/ticketSytem/ticket.effects';
-import { ticketReducer } from './store/ticketSytem/ticket.reducer';
+import { statusReducer, ticketReducer } from './store/ticketSytem/ticket.reducer';
 
 export function createTranslateLoader(http: HttpClient): any {
   return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
@@ -46,6 +46,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes),
     provideStore(rootReducer),
      provideState('tickets', ticketReducer),
+       provideState('status', statusReducer),
     provideEffects(TicketEffects),
     provideEffects(
       [

@@ -1,4 +1,4 @@
-import { Ticket } from "./ticket.model";
+import { Status, Ticket } from "./ticket.model";
 
 export interface TicketState {
   tickets: Ticket[];
@@ -11,3 +11,16 @@ export const initialTicketState: TicketState = {
   loading: false,
   error: null,
 };
+
+export interface StatusState {
+  status: Status[];
+  loading: boolean;
+  error: any;
+}   
+
+export const initialStatusState: StatusState = {
+  status: [],
+  loading: false,
+  error: null,
+};
+

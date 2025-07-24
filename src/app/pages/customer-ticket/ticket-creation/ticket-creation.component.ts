@@ -7,7 +7,10 @@ import { LoaderService } from 'src/app/core/services/loader.service';
 import { AuthenticationService } from 'src/app/core/services/auth.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { catchError, finalize, map, Observable, of } from 'rxjs';
-
+import { Store } from '@ngrx/store';
+import * as TicketActions from 'src/app/store/ticketSytem/ticket.actions';
+import { selectAllStatus } from 'src/app/store/ticketSytem/ticket.selectors';
+import { Status } from 'src/app/store/ticketSytem/ticket.model';
 @Component({
   selector: 'app-ticket-creation',
   templateUrl: './ticket-creation.component.html',
@@ -26,17 +29,19 @@ export class TicketCreationComponent {
 
   ticketData: any[] = [];
   currentUser: any;
-  client:any;
+  client: any;
   EditmodalRef: any;
   CreatemodalRef: any;
   selectedFileBase64: string | null = null;
-  selectedUploadBase64:string | null = null;
-  constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef, private modalService: NgbModal, private service: GeneralserviceService, private loaderService: LoaderService, private authService: AuthenticationService) { }
+  selectedUploadBase64: string | null = null;
+  status$: Observable<Status[]>;
+  allStatus: any;
+  constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef, private modalService: NgbModal, private service: GeneralserviceService, private loaderService: LoaderService, private authService: AuthenticationService, private store: Store) { }
   tickets$: Observable<any[]>;
   ngOnInit(): void {
     this.currentUser = this.authService.currentUser();
-    this.client=this.currentUser?.Client || this.currentUser?.data?.Client || '',
-    console.log("client",this.client);
+    this.client = this.currentUser?.Client || this.currentUser?.data?.Client || '',
+      console.log("client", this.client);
     console.log('Current User:', this.currentUser);
     // Initialize form first
     this.bugTicketForm = this.fb.group({
@@ -44,17 +49,23 @@ export class TicketCreationComponent {
       reportedBy: [this.currentUser?.userName || this.currentUser?.data?.userName || '', Validators.required],
       priority: ['', Validators.required],
       environment: ['Production', Validators.required],
-      ticketstatus: ['Open'],
+      ticketstatus: ['New'],
       issueType: [''],
       // date: ['', Validators.required],
       date: [this.formatDate(new Date()), Validators.required],
       // Client:[this.currentUser?.Client || this.currentUser?.data?.Client || '',],
       description: ['', Validators.required],
       attachments: [''],
-      upload:[''],
+      upload: [''],
     });
     this.getTickets();
 
+    this.store.dispatch(TicketActions.loadStatus())
+    this.status$ = this.store.select(selectAllStatus);
+    this.status$.subscribe((status: any) => {
+      this.allStatus = status?.data || []; // Ensure it's an array
+      console.log(' this.allStatus', this.allStatus)
+    });
   }
 
   formatDate(date: Date): string {
@@ -118,25 +129,25 @@ export class TicketCreationComponent {
   // }
 
   onFileSelected(event: any, type: 'attachments' | 'upload'): void {
-  const file: File = event.target.files[0];
+    const file: File = event.target.files[0];
 
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const base64 = reader.result as string;
-      console.log(`Base64 [${type}]:`, base64);
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64 = reader.result as string;
+        console.log(`Base64 [${type}]:`, base64);
 
-      if (type === 'attachments') {
-        this.selectedFileBase64 = base64;
-        // handle non-edit mode attachment logic
-      } else if (type === 'upload') {
-        this.selectedUploadBase64 = base64;
-        // handle edit mode upload logic
-      }
-    };
-    reader.readAsDataURL(file);
+        if (type === 'attachments') {
+          this.selectedFileBase64 = base64;
+          // handle non-edit mode attachment logic
+        } else if (type === 'upload') {
+          this.selectedUploadBase64 = base64;
+          // handle edit mode upload logic
+        }
+      };
+      reader.readAsDataURL(file);
+    }
   }
-}
 
 
 
@@ -157,13 +168,13 @@ export class TicketCreationComponent {
       reportedBy: rawForm.reportedBy,
       priority: rawForm.priority,
       environment: rawForm.environment,
-      Client:this.client,
+      Client: this.client,
       IssueType: rawForm.issueType,
       status: rawForm.ticketstatus || "open",
       date: formattedDate,
       description: rawForm.description,
-      attachment: this.selectedFileBase64 ,// Base64 string
-      upload:''
+      attachment: this.selectedFileBase64,// Base64 string
+      upload: ''
     };
 
     this.service.CreateTicket(payload).subscribe(
@@ -213,12 +224,12 @@ export class TicketCreationComponent {
       priority: rawForm.priority,
       environment: rawForm.environment,
       IssueType: rawForm.issueType,
-      Client:this.client,
+      Client: this.client,
       status: rawForm.ticketstatus || "Open",
       date: rawForm.date,
       description: rawForm.description,
       attachment: this.selectedFileBase64,
-      upload:this.selectedUploadBase64,
+      upload: this.selectedUploadBase64,
     };
 
     this.service.UpdateTicket(payload).subscribe(
@@ -256,7 +267,7 @@ export class TicketCreationComponent {
 
   editTicketModel(ticket: any, templateRef: any): void {
     this.selectedTicket = ticket; // Store ticket for updating
-    console.log("selected tkttttttttt",this.selectedTicket);
+    console.log("selected tkttttttttt", this.selectedTicket);
     this.submit = false;
     this.isEditMode = true;
     const formattedDate = ticket.date ? ticket.date.split('T')[0] : '';
@@ -280,7 +291,7 @@ export class TicketCreationComponent {
       title: ticket.title,
       reportedBy: ticket.reportedBy,
       priority: ticket.priority,
-      issueType:ticket.IssueType,
+      issueType: ticket.IssueType,
       environment: environmentMap[ticket.environment] || ticket.environment,
       ticketstatus: statusMap[ticket.status.toLowerCase()] || ticket.status,
       date: formattedDate,
@@ -290,7 +301,7 @@ export class TicketCreationComponent {
     console.log('Editing ticket:', ticket);
     console.log('Environment:', ticket.environment);
     console.log('Status:', ticket.status);
-    console.log("issuetype:",ticket.IssueType)
+    console.log("issuetype:", ticket.IssueType)
     // Open modal
     this.EditmodalRef = this.modalService.open(templateRef, {
       backdrop: 'static',
@@ -319,7 +330,7 @@ export class TicketCreationComponent {
     this.bugTicketForm.patchValue({
       reportedBy: this.currentUser?.data?.userName || '', // Correct path
       ticketstatus: 'Open',
-      environment:'Production',
+      environment: 'Production',
       status: true
     });
     this.CreatemodalRef = this.modalService.open(createBugTicketTemplate, {
@@ -329,35 +340,35 @@ export class TicketCreationComponent {
 
   }
 
-   getAttachmentUrl(ticket: any): string {
-    console.log("ticketttttttttt",ticket);
-  if (ticket.attachment && ticket.attachment.data && ticket.attachment.data.data) {
-    console.log("ticketttttttttt",ticket);
-    const byteArray = new Uint8Array(ticket.attachment.data.data);
-    let binary = '';
-    for (let i = 0; i < byteArray.length; i++) {
-      binary += String.fromCharCode(byteArray[i]);
+  getAttachmentUrl(ticket: any): string {
+    console.log("ticketttttttttt", ticket);
+    if (ticket.attachment && ticket.attachment.data && ticket.attachment.data.data) {
+      console.log("ticketttttttttt", ticket);
+      const byteArray = new Uint8Array(ticket.attachment.data.data);
+      let binary = '';
+      for (let i = 0; i < byteArray.length; i++) {
+        binary += String.fromCharCode(byteArray[i]);
+      }
+      return `data:${ticket.attachment.contentType};base64,${btoa(binary)}`;
     }
-    return `data:${ticket.attachment.contentType};base64,${btoa(binary)}`;
+    return '';
   }
-  return '';
-}
 
-isImageFullScreen = false;
-selectedImageUrl = '';
+  isImageFullScreen = false;
+  selectedImageUrl = '';
 
-viewFullImage(url: string): void {
-  this.selectedImageUrl = url;
-  this.isImageFullScreen = true;
-}
+  viewFullImage(url: string): void {
+    this.selectedImageUrl = url;
+    this.isImageFullScreen = true;
+  }
 
-closeFullImage(): void {
-  this.isImageFullScreen = false;
-}
+  closeFullImage(): void {
+    this.isImageFullScreen = false;
+  }
 
-removeAttachment() {
-  this.selectedTicket.attachment = null;  // Remove the existing image
-}
+  removeAttachment() {
+    this.selectedTicket.attachment = null;  // Remove the existing image
+  }
 
 
 
