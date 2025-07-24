@@ -11,7 +11,7 @@ import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { provideToastr } from 'ngx-toastr';
-import { provideStore, StoreModule } from '@ngrx/store';
+import { provideState, provideStore, StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { EffectsModule, provideEffects } from '@ngrx/effects';
 import { rootReducer } from './store';
@@ -34,6 +34,8 @@ import { routes } from './app.routes';
 import { provideRouter } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { BsDropdownConfig } from 'ngx-bootstrap/dropdown';
+import { TicketEffects } from './store/ticketSytem/ticket.effects';
+import { ticketReducer } from './store/ticketSytem/ticket.reducer';
 
 export function createTranslateLoader(http: HttpClient): any {
   return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
@@ -43,6 +45,8 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes),
     provideStore(rootReducer),
+     provideState('tickets', ticketReducer),
+    provideEffects(TicketEffects),
     provideEffects(
       [
         FilemanagerEffects,
