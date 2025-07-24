@@ -6,7 +6,11 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import { LoaderService } from 'src/app/core/services/loader.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-
+import { Ticket } from 'src/app/store/ticketSytem/ticket.model';
+import { Store } from '@ngrx/store';
+import * as TicketActions from 'src/app/store/ticketSytem/ticket.actions';
+import { selectAllTickets } from 'src/app/store/ticketSytem/ticket.selectors';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-ticket-list',
@@ -24,6 +28,8 @@ isEditMode: boolean = false;
   ticketData: any[] = [];
   EditmodalRef: any;
 
+    tickets$: Observable<Ticket[]>;
+  loading$: Observable<boolean>;
   ngOnInit(): void {
       this.bugTicketForm = this.fb.group({
         title: ['', Validators.required],
@@ -37,12 +43,19 @@ isEditMode: boolean = false;
         status:[''],
         assignedTo:['']
       });
-      this.getTickets();
+        this.store.dispatch(TicketActions.loadTickets())
+            this.tickets$ = this.store.select(selectAllTickets);
+            this.tickets$.subscribe((tickets:any) => {
+    this.ticketData =  tickets?.data || []; // Ensure it's an array
+    // console.log('this.ticketData',this.ticketData)
+  });
+                // this.loading$ = this.store.select(selectTicketLoading);
+      // this.getTickets();
         this.getAllUserList();
     }
    statusOptions = ['Open', 'In Progress', 'Hold', 'UAT', 'Resolved', 'Closed', 'Reopen'];
 
-  constructor(private service: GeneralserviceService,private spinner:NgxSpinnerService, private modalService: NgbModal,private fb: FormBuilder,private loaderservice:LoaderService) {
+  constructor(private service: GeneralserviceService,private spinner:NgxSpinnerService, private modalService: NgbModal,private fb: FormBuilder,private loaderservice:LoaderService,private store: Store) {
 
   }
   viewTicketModel(ticket: any, templateRef: any): void {
@@ -94,30 +107,33 @@ environment:  ticket.environment,
   currentPage: number = 1;
   itemsPerPage: number = 10;
 
-  get sortedTickets() {
-    let filtered = this.ticketData;
+get sortedTickets() {
+  if (!Array.isArray(this.ticketData)) return [];
 
-    // Search filter
-    if (this.searchText) {
-      filtered = filtered.filter(ticket =>
-        Object.values(ticket).some(val =>
-          String(val).toLowerCase().includes(this.searchText.toLowerCase())
-        )
-      );
-    }
+  let filtered = [...this.ticketData]; // create a shallow copy to avoid mutation
 
-    // Sorting
-    filtered = filtered.sort((a, b) => {
-      const valA = a[this.sortKey];
-      const valB = b[this.sortKey];
-
-      if (valA < valB) return this.reverse ? 1 : -1;
-      if (valA > valB) return this.reverse ? -1 : 1;
-      return 0;
-    });
-
-    return filtered;
+  // Search filter
+  if (this.searchText) {
+    filtered = filtered.filter(ticket =>
+      Object.values(ticket).some(val =>
+        String(val).toLowerCase().includes(this.searchText.toLowerCase())
+      )
+    );
   }
+
+  // Sorting
+  filtered = filtered.sort((a, b) => {
+    const valA = a[this.sortKey];
+    const valB = b[this.sortKey];
+
+    if (valA < valB) return this.reverse ? 1 : -1;
+    if (valA > valB) return this.reverse ? -1 : 1;
+    return 0;
+  });
+
+  return filtered;
+}
+
 
   setSort(key: string) {
     if (this.sortKey === key) {

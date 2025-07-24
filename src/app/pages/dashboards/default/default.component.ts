@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit,AfterViewInit, ChangeDetectorRef } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule } from '@angular/forms';
 import { Chart } from 'chart.js';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
@@ -8,10 +8,16 @@ import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { GeneralserviceService } from 'src/app/generalservice.service';
 import { ViewChild, ElementRef } from '@angular/core';
-import { interval, Subscription } from 'rxjs';
+import { interval, Observable, Subscription } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { trigger, transition, style, animate, query, stagger } from '@angular/animations';// ... (Other imports and interfaces remain the same)
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { LoaderService } from 'src/app/core/services/loader.service';
+import { Ticket } from 'src/app/store/ticketSytem/ticket.model';
+import { Store } from '@ngrx/store';
+import * as TicketActions from 'src/app/store/ticketSytem/ticket.actions';
+import { selectAllTickets } from 'src/app/store/ticketSytem/ticket.selectors';
 
 export interface Employee {
   id: number;
@@ -88,8 +94,18 @@ interface StatusItem {
 
 
 export class DefaultComponent implements OnInit {
+  ticketData: any[]=[];
+    tickets$: Observable<Ticket[]>;
+  loading$: Observable<boolean>;
+  constructor(private service: GeneralserviceService,private spinner:NgxSpinnerService, private modalService: NgbModal,private fb: FormBuilder,private loaderservice:LoaderService,private store: Store){
+
+  }
   ngOnInit(): void {
-    throw new Error('Method not implemented.');
+    this.store.dispatch(TicketActions.loadTickets())
+      this.tickets$ = this.store.select(selectAllTickets);
+          this.loading$ = this.store.select(selectTicketLoading);
+
+// this.getTickets();
   }
    isSlide = false;
 
@@ -146,37 +162,29 @@ export class DefaultComponent implements OnInit {
     colors: ["#f39c12", "#3498db", "#2ecc71"]
   };
 
-  // Dummy table data
-  filteredAssignments = [
-    {
-      assignmentUniqueId: "TKT001",
-      projectName: [{ projectName: "Support Portal" }],
-      employeeName: "Anuhya",
-      employeeID: "EMP001",
-      projectStartDate: "2024-01-10",
-      projectEndDate: "2024-03-10"
-    },
-    {
-      assignmentUniqueId: "TKT002",
-      projectName: [{ projectName: "CRM System" }],
-      employeeName: "Ravi",
-      employeeID: "EMP002",
-      projectStartDate: "2024-02-15",
-      projectEndDate: "2024-04-20"
-    },
-    {
-      assignmentUniqueId: "TKT003",
-      projectName: [{ projectName: "E-commerce" }],
-      employeeName: "Sita",
-      employeeID: "EMP003",
-      projectStartDate: "2024-03-01",
-      projectEndDate: "2024-06-01"
-    }
-  ];
+  getTickets(): void {
+    this.loaderservice.showLoader();
+    this.service.GetTicketDetails().subscribe(
+      
+      (response: any) => {
+        console.log('Ticket data:', response);
+        this.ticketData = response.data;
+        this.loaderservice.hideLoader();
+      },
+      (error) => {
+        console.error('Error fetching tickets', error);
+        this.loaderservice.hideLoader();
+      }
+    );
+  }
 
   resetView() {
     // Reset logic if needed
   }
 
 
+}
+
+function selectTicketLoading(state: object): boolean {
+  throw new Error('Function not implemented.');
 }

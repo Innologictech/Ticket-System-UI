@@ -79,28 +79,24 @@
       <table class="table table-bordered">
         <thead class="thead-dark">
           <tr>
-            <th>Assignment ID</th>
-            <th>Project Name</th>
-            <th>Employee Name</th>
-            <th>Employee ID</th>
-            <th>Project Start Date</th>
-            <th>Project End Date</th>
+            <th>Ticket Id</th>
+            <th>Title</th>
+            <th>Status</th>
+            <th>Priority</th>
+            <th>Created Date</th>
+      
           </tr>
         </thead>
-        <tbody>
-          <tr *ngFor="let item of filteredAssignments">
-            <td>{{ item.assignmentUniqueId }}</td>
-            <td>
-              <ng-container *ngFor="let project of item.projectName; let last = last">
-                {{ project.projectName }}<span *ngIf="!last">, </span>
-              </ng-container>
-            </td>
-            <td>{{ item.employeeName }}</td>
-            <td>{{ item.employeeID }}</td>
-            <td>{{ item.projectStartDate }}</td>
-            <td>{{ item.projectEndDate }}</td>
-          </tr>
-        </tbody>
+       <tbody>
+  <tr *ngFor="let item of (tickets$ | async)?.data">
+    <td>{{ item.customerticketId }}</td>
+    <td>{{ item.title }}</td>
+    <td>{{ item.status }}</td>
+    <td>{{ item.priority }}</td>
+    <td>{{ item.createdAt | date: 'dd-MM-yyyy' }}</td>
+  </tr>
+</tbody>
+
       </table>
     </div>
   </div>
