@@ -177,7 +177,7 @@
                 <div *ngIf="!isEditMode" class="col-md-12">
                     <label>Attachments</label>
                     <input class="form-control" formControlName="attachments" type="file"
-                        (change)="onFileSelected($event)" />
+                        (change)="onFileSelected($event,'attachments')" />
                 </div>
 
                 <!-- <div   class="col-md-12" *ngIf="isEditMode && selectedTicket?.attachment?.contentType?.startsWith('image/')">
@@ -198,15 +198,21 @@
 
                     <label>Attachment</label><br>
                     <div class="image-container"
-                        *ngIf="selectedTicket?.attachment?.contentType?.startsWith('image/'); else uploadNew">
-                        <img [src]="getAttachmentUrl(selectedTicket)" [alt]="selectedTicket?.attachment?.filename"
-                            (click)="viewFullImage(getAttachmentUrl(selectedTicket))" />
+                        *ngIf="selectedTicket?.attachment?.startsWith('data:image'); else uploadNew">
+
+                        <img [src]="selectedTicket.attachment" alt="Attachment"
+                            (click)="viewFullImage(selectedTicket.attachment)" />
+
                         <span class="remove-icon" (click)="removeAttachment()">&times;</span>
-                        <!-- <button type="button" class="btn btn-sm btn-danger mt-2" (click)="removeAttachment()">Remove</button> -->
                     </div>
+
+                    
+
                     <!-- File Upload (Shown when no attachment) -->
                     <ng-template #uploadNew>
-                        <input type="file" (change)="onFileSelected($event)" accept="image/*" />
+
+                        <input type="file" class="form-control" formControlName="attachments"
+                            (change)="onFileSelected($event,'attachments')" />
                     </ng-template>
                 </div>
 
@@ -220,7 +226,7 @@
                 <div *ngIf="isEditMode" class="col-md-12">
                     <label>Upload</label>
                     <input class="form-control" formControlName="upload" type="file"
-                        (change)="onFileSelected($event)" />
+                        (change)="onFileSelected($event,'upload')" />
                 </div>
 
             </div>

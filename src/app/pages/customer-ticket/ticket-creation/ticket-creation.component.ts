@@ -30,7 +30,7 @@ export class TicketCreationComponent {
   EditmodalRef: any;
   CreatemodalRef: any;
   selectedFileBase64: string | null = null;
-
+  selectedUploadBase64:string | null = null;
   constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef, private modalService: NgbModal, private service: GeneralserviceService, private loaderService: LoaderService, private authService: AuthenticationService) { }
   tickets$: Observable<any[]>;
   ngOnInit(): void {
@@ -50,7 +50,8 @@ export class TicketCreationComponent {
       date: [this.formatDate(new Date()), Validators.required],
       // Client:[this.currentUser?.Client || this.currentUser?.data?.Client || '',],
       description: ['', Validators.required],
-      attachments: ['']
+      attachments: [''],
+      upload:[''],
     });
     this.getTickets();
 
@@ -104,17 +105,39 @@ export class TicketCreationComponent {
     return this.bugTicketForm.controls;
   }
 
-  onFileSelected(event: any): void {
-    const file: File = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.selectedFileBase64 = reader.result as string;  // Base64 string
-        console.log('Base64:', this.selectedFileBase64);
-      };
-      reader.readAsDataURL(file); // Convert to Base64
-    }
+  // onFileSelected(event: any): void {
+  //   const file: File = event.target.files[0];
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onload = () => {
+  //       this.selectedFileBase64 = reader.result as string;  // Base64 string
+  //       console.log('Base64:', this.selectedFileBase64);
+  //     };
+  //     reader.readAsDataURL(file); // Convert to Base64
+  //   }
+  // }
+
+  onFileSelected(event: any, type: 'attachments' | 'upload'): void {
+  const file: File = event.target.files[0];
+
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64 = reader.result as string;
+      console.log(`Base64 [${type}]:`, base64);
+
+      if (type === 'attachments') {
+        this.selectedFileBase64 = base64;
+        // handle non-edit mode attachment logic
+      } else if (type === 'upload') {
+        this.selectedUploadBase64 = base64;
+        // handle edit mode upload logic
+      }
+    };
+    reader.readAsDataURL(file);
   }
+}
+
 
 
 
@@ -139,7 +162,8 @@ export class TicketCreationComponent {
       status: rawForm.ticketstatus || "open",
       date: formattedDate,
       description: rawForm.description,
-      attachment: this.selectedFileBase64 // Base64 string
+      attachment: this.selectedFileBase64 ,// Base64 string
+      upload:''
     };
 
     this.service.CreateTicket(payload).subscribe(
@@ -193,7 +217,8 @@ export class TicketCreationComponent {
       status: rawForm.ticketstatus || "Open",
       date: rawForm.date,
       description: rawForm.description,
-      attachment: rawForm.attachments,
+      attachment: this.selectedFileBase64,
+      upload:this.selectedUploadBase64,
     };
 
     this.service.UpdateTicket(payload).subscribe(
@@ -231,6 +256,7 @@ export class TicketCreationComponent {
 
   editTicketModel(ticket: any, templateRef: any): void {
     this.selectedTicket = ticket; // Store ticket for updating
+    console.log("selected tkttttttttt",this.selectedTicket);
     this.submit = false;
     this.isEditMode = true;
     const formattedDate = ticket.date ? ticket.date.split('T')[0] : '';
@@ -259,7 +285,7 @@ export class TicketCreationComponent {
       ticketstatus: statusMap[ticket.status.toLowerCase()] || ticket.status,
       date: formattedDate,
       description: ticket.description,
-      attachments: null // Clear file input
+      attachments: ticket.attachment
     });
     console.log('Editing ticket:', ticket);
     console.log('Environment:', ticket.environment);
