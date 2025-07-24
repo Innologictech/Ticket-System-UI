@@ -1,3 +1,6 @@
+
+
+
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -7,10 +10,7 @@ import { LoaderService } from 'src/app/core/services/loader.service';
 import { AuthenticationService } from 'src/app/core/services/auth.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { catchError, finalize, map, Observable, of } from 'rxjs';
-import { Store } from '@ngrx/store';
-import * as TicketActions from 'src/app/store/ticketSytem/ticket.actions';
-import { selectAllStatus } from 'src/app/store/ticketSytem/ticket.selectors';
-import { Status } from 'src/app/store/ticketSytem/ticket.model';
+
 @Component({
   selector: 'app-ticket-creation',
   templateUrl: './ticket-creation.component.html',
@@ -35,9 +35,7 @@ export class TicketCreationComponent {
   CreatemodalRef: any;
   selectedFileBase64: string | null = null;
   selectedUploadBase64: string | null = null;
-  status$: Observable<Status[]>;
-  allStatus: any;
-  constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef, private modalService: NgbModal, private service: GeneralserviceService, private loaderService: LoaderService, private authService: AuthenticationService, private store: Store) { }
+  constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef, private modalService: NgbModal, private service: GeneralserviceService, private loaderService: LoaderService, private authService: AuthenticationService) { }
   tickets$: Observable<any[]>;
   ngOnInit(): void {
     this.currentUser = this.authService.currentUser();
@@ -50,7 +48,7 @@ export class TicketCreationComponent {
       reportedBy: [this.currentUser?.userName || this.currentUser?.data?.userName || '', Validators.required],
       priority: ['', Validators.required],
       environment: ['Production', Validators.required],
-      ticketstatus: ['New'],
+      ticketstatus: ['Open'],
       issueType: [''],
       // date: ['', Validators.required],
       date: [this.formatDate(new Date()), Validators.required],
@@ -61,12 +59,6 @@ export class TicketCreationComponent {
     });
     this.getTickets();
 
-    this.store.dispatch(TicketActions.loadStatus())
-    this.status$ = this.store.select(selectAllStatus);
-    this.status$.subscribe((status: any) => {
-      this.allStatus = status?.data || []; // Ensure it's an array
-      console.log(' this.allStatus', this.allStatus)
-    });
   }
 
   formatDate(date: Date): string {
@@ -130,7 +122,7 @@ export class TicketCreationComponent {
   // }
 
   onFileSelected(event: any, type: 'attachments' | 'upload'): void {
-      const file: File = event.target.files[0];
+    const file: File = event.target.files[0];
 
     if (file) {
       const reader = new FileReader();
@@ -169,7 +161,7 @@ export class TicketCreationComponent {
       reportedBy: rawForm.reportedBy,
       priority: rawForm.priority,
       environment: rawForm.environment,
-      Client:this.client,
+      Client: this.client,
       IssueType: rawForm.issueType,
       status: rawForm.ticketstatus || "open",
       date: formattedDate,
@@ -190,8 +182,8 @@ export class TicketCreationComponent {
         }).then(() => {
           this.bugTicketForm.reset();
           this.getTickets(); // refresh list
-          if (this.CreatemodalRef) {
-            this.CreatemodalRef.close();
+          if (this.EditmodalRef) {
+            this.EditmodalRef.close();
           }
         });
       },
@@ -225,12 +217,12 @@ export class TicketCreationComponent {
       priority: rawForm.priority,
       environment: rawForm.environment,
       IssueType: rawForm.issueType,
-      Client:  this.client,
+      Client: this.client,
       status: rawForm.ticketstatus || "Open",
       date: rawForm.date,
       description: rawForm.description,
       attachment: this.selectedFileBase64,
-      upload:  this.selectedUploadBase64,
+      upload: this.selectedUploadBase64,
     };
 
     this.service.UpdateTicket(payload).subscribe(
@@ -269,7 +261,7 @@ export class TicketCreationComponent {
   editTicketModel(ticket: any, templateRef: any): void {
     this.modalTitle = 'Edit Ticket';
     this.selectedTicket = ticket; // Store ticket for updating
-    console.log("selected tkttttttttt",  this.selectedTicket);
+    console.log("selected tkttttttttt", this.selectedTicket);
     this.submit = false;
     this.resetModeFlags(); // Clear previous mode
     this.isEditMode = true;
@@ -294,7 +286,7 @@ export class TicketCreationComponent {
       title: ticket.title,
       reportedBy: ticket.reportedBy,
       priority: ticket.priority,
-      issueType:  ticket.IssueType,
+      issueType: ticket.IssueType,
       environment: environmentMap[ticket.environment] || ticket.environment,
       ticketstatus: statusMap[ticket.status.toLowerCase()] || ticket.status,
       date: formattedDate,
@@ -359,7 +351,7 @@ export class TicketCreationComponent {
     this.bugTicketForm.patchValue({
       reportedBy: this.currentUser?.data?.userName || '', // Correct path
       ticketstatus: 'Open',
-      environment:  'Production',
+      environment: 'Production',
       status: true
     });
     this.EditmodalRef = this.modalService.open(createBugTicketTemplate, {
@@ -410,20 +402,31 @@ export class TicketCreationComponent {
     return '';
   }
 
-    isImageFullScreen = false;
-    selectedImageUrl = '';
+  isImageFullScreen = false;
+  selectedImageUrl = '';
 
-    viewFullImage(url: string): void {
-      this.selectedImageUrl = url;
-      this.isImageFullScreen = true;
-    }
+  viewFullImage(url: string): void {
+    this.selectedImageUrl = url;
+    this.isImageFullScreen = true;
+  }
 
-    closeFullImage(): void {
-      this.isImageFullScreen = false;
-    }
+  closeFullImage(): void {
+    this.isImageFullScreen = false;
+  }
 
-removeAttachment() {
-  this.selectedTicket.attachment = null;  // Remove the existing image
+  removeAttachment() {
+    this.selectedTicket.attachment = null;  // Remove the existing image
+  }
+
+
+  closeModal(reason: any) {
+  this.EditmodalRef.close(reason);
+  this.resetModeFlags();
+}
+
+resetModeFlags() {
+  this.isEditMode = false;
+  this.isViewMode = false;
 }
 
 
