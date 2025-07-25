@@ -36,10 +36,10 @@ export class TicketCreationComponent {
   CreatemodalRef: any;
   selectedFileBase64: string | null = null;
   selectedUploadBase64: string | null = null;
-    tickets$: Observable<any[]>;
-    status$: Observable<Status[]>;
-  allStatus: any[]=[];
-  allowedNextStatuses: any[]=[];
+  tickets$: Observable<any[]>;
+  status$: Observable<Status[]>;
+  allStatus: any[] = [];
+  allowedNextStatuses: any[] = [];
 
 
   constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef, private modalService: NgbModal, private service: GeneralserviceService, private loaderService: LoaderService, private authService: AuthenticationService, private store: Store) { }
@@ -66,7 +66,7 @@ export class TicketCreationComponent {
       upload: [''],
     });
     this.getTickets();
- this.store.dispatch(TicketActions.loadStatus())
+    this.store.dispatch(TicketActions.loadStatus())
     this.status$ = this.store.select(selectAllStatus);
     this.status$.subscribe((status: any) => {
       this.allStatus = status?.data || []; // Ensure it's an array
@@ -74,14 +74,30 @@ export class TicketCreationComponent {
     });
   }
 
+  // formatDate(date: Date): string {
+  //   const year = date.getFullYear();
+  //   const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  //   const day = date.getDate().toString().padStart(2, '0');
+  //   return `${year}-${month}-${day}`; // Example: "2025-07-22"
+  // }
+
+
   formatDate(date: Date): string {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
-    return `${year}-${month}-${day}`; // Example: "2025-07-22"
+    // Convert to IST (UTC+5:30)
+    const istOffset = 5.5 * 60 * 60 * 1000; // IST offset in milliseconds
+    const istDate = new Date(date.getTime() + istOffset);
 
+    const year = istDate.getFullYear();
+    const month = (istDate.getMonth() + 1).toString().padStart(2, '0');
+    const day = istDate.getDate().toString().padStart(2, '0');
+    const hours = istDate.getHours().toString().padStart(2, '0');
+    const minutes = istDate.getMinutes().toString().padStart(2, '0');
+    const seconds = istDate.getSeconds().toString().padStart(2, '0');
 
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    // Example: "2025-07-25 16:32:45"
   }
+
 
 
   getTickets(): void {
@@ -164,9 +180,16 @@ export class TicketCreationComponent {
       this.bugTicketForm.markAllAsTouched();
       return;
     }
-    const formattedDate = this.bugTicketForm.get('date')?.value
-      ? this.bugTicketForm.get('date')?.value
-        .split('T')[0] : '';
+    // const formattedDate = this.bugTicketForm.get('date')?.value
+    //   ? this.bugTicketForm.get('date')?.value
+    //     .split('T')[0] : '';
+
+    const rawDateValue = this.bugTicketForm.get('date')?.value;
+
+    const formattedDate = rawDateValue
+      ? this.formatDate(new Date(rawDateValue))
+      : '';
+    console.log("formatted date", formattedDate);
     const rawForm = this.bugTicketForm.value;
 
     const payload = {
@@ -181,7 +204,7 @@ export class TicketCreationComponent {
       description: rawForm.description,
       attachment: this.selectedFileBase64,// Base64 string
       upload: '',
-      assignedTo:''
+      assignedTo: ''
     };
 
     this.service.CreateTicket(payload).subscribe(
@@ -280,10 +303,10 @@ export class TicketCreationComponent {
     this.resetModeFlags(); // Clear previous mode
     this.isEditMode = true;
     const formattedDate = ticket.date ? ticket.date.split('T')[0] : '';
-    this.allStatus= ticket.allowedNextStatuses || [];
-    this.allowedNextStatuses=ticket.allowedNextStatuses|| [];
-    
-  
+    this.allStatus = ticket.allowedNextStatuses || [];
+    this.allowedNextStatuses = ticket.allowedNextStatuses || [];
+
+
     this.bugTicketForm.patchValue({
       title: ticket.title,
       reportedBy: ticket.reportedBy,
@@ -291,7 +314,7 @@ export class TicketCreationComponent {
       issueType: ticket.IssueType,
       environment: ticket.environment,
       // ticketstatus:  ticket.allowedNextStatuses || '',
-       ticketstatus: ticket.allowedNextStatuses?.[0]?.status || '',
+      ticketstatus: ticket.allowedNextStatuses?.[0]?.status || '',
       date: formattedDate,
       description: ticket.description,
       attachments: ticket.attachment
@@ -300,7 +323,7 @@ export class TicketCreationComponent {
     console.log('Environment:', ticket.environment);
     console.log('Status:', ticket.status);
     console.log("issuetype:", ticket.IssueType);
-    console.log("ticketstatus",ticket.allowedNextStatuses);
+    console.log("ticketstatus", ticket.allowedNextStatuses);
     // Open modal
     this.EditmodalRef = this.modalService.open(templateRef, {
       backdrop: 'static',
@@ -318,8 +341,8 @@ export class TicketCreationComponent {
     // this.isEditMode = false;
     this.isViewMode = true;
 
-   
-   
+
+
 
     this.bugTicketForm.patchValue({
       title: ticket.title,
@@ -327,8 +350,8 @@ export class TicketCreationComponent {
       priority: ticket.priority,
       issueType: ticket.IssueType,
       environment: ticket.environment,
-      ticketstatus:  ticket.status,
-      date:ticket.date,
+      ticketstatus: ticket.status,
+      date: ticket.date,
       description: ticket.description,
       attachments: ticket.attachment
     });
@@ -365,31 +388,31 @@ export class TicketCreationComponent {
 
   }
 
-//   TicketCreationModel(templateRef: any) {
-//   this.resetModeFlags(); // optional, good practice
-//   this.isEditMode = false;
-//   this.isViewMode = false;
-//   this.submit = false;
+  //   TicketCreationModel(templateRef: any) {
+  //   this.resetModeFlags(); // optional, good practice
+  //   this.isEditMode = false;
+  //   this.isViewMode = false;
+  //   this.submit = false;
 
-//   this.bugTicketForm.reset({
-//       date: this.formatDate(new Date())  // set current date
-//     });
-//       this.bugTicketForm.patchValue({
-//       reportedBy: this.currentUser?.data?.userName || '', // Correct path
-//       ticketstatus: 'Open',
-//       environment: 'Production',
-//       status: true
-//     });
-//    this.CreatemodalRef = this.modalService.open(templateRef, {
-//       backdrop: 'static',
-//       keyboard: false, size: 'lg'
-//     });
+  //   this.bugTicketForm.reset({
+  //       date: this.formatDate(new Date())  // set current date
+  //     });
+  //       this.bugTicketForm.patchValue({
+  //       reportedBy: this.currentUser?.data?.userName || '', // Correct path
+  //       ticketstatus: 'Open',
+  //       environment: 'Production',
+  //       status: true
+  //     });
+  //    this.CreatemodalRef = this.modalService.open(templateRef, {
+  //       backdrop: 'static',
+  //       keyboard: false, size: 'lg'
+  //     });
 
-//   this.CreatemodalRef.result.then(
-//     (result) => this.resetModeFlags(),
-//     (reason) => this.resetModeFlags()
-//   );
-// }
+  //   this.CreatemodalRef.result.then(
+  //     (result) => this.resetModeFlags(),
+  //     (reason) => this.resetModeFlags()
+  //   );
+  // }
 
 
   getAttachmentUrl(ticket: any): string {
@@ -424,14 +447,14 @@ export class TicketCreationComponent {
 
 
   closeModal(reason: any) {
-  this.EditmodalRef.close(reason);
-  this.resetModeFlags();
-}
+    this.EditmodalRef.close(reason);
+    this.resetModeFlags();
+  }
 
-resetModeFlags() {
-  this.isEditMode = false;
-  this.isViewMode = false;
-}
+  resetModeFlags() {
+    this.isEditMode = false;
+    this.isViewMode = false;
+  }
 
 
 

@@ -19,7 +19,7 @@
                         <thead class="table-dark text-center">
                             <tr>
                                 <th>Ticket Id</th>
-                                <th>Title</th>
+                                <th>Issue Short Description</th>
                                 <th>Priority</th>
                                 <th>Status</th>
                                 <th>Created Date</th>
@@ -78,11 +78,11 @@
 
                 <!-- Title -->
                 <div class="col-md-6">
-                    <label>Title<span class="text-danger">*</span></label>
+                    <label>Issue Short Description<span class="text-danger">*</span></label>
                     <input class="form-control" formControlName="title" type="text" placeholder="Enter Title"
                         [readonly]="isViewMode" />
                     <div class="text-danger" *ngIf="submit && f['title'].errors?.['required']">
-                        Title is required.
+                        Issue short Description is required.
                     </div>
                 </div>
 
@@ -130,10 +130,10 @@
                     <label>Issue Type<span class="text-danger">*</span></label>
                     <select class="form-control" formControlName="issueType" [disabled]="isViewMode">
                         <option value="" disabled hidden>Select</option>
-                        <option value="bug">Bug</option>
-                        <option value="enhancement">Enhancement</option>
-                        <option value="technicalIssue">Technical Issue</option>
-                        <option value="other">Other</option>
+                        <option value="serviceRequest">Service Request</option>
+                        <option value="serviceRestoration">Service Restoration</option>
+                        <option value="miniProject">Mini Project</option>
+                        <!-- <option value="other">Other</option> -->
                     </select>
                     <div class="text-danger" *ngIf="submit && f['issueType'].errors?.['required']">
                         Environment is required.
@@ -167,7 +167,7 @@
 
                 <!-- Date -->
                 <div class="col-md-6">
-                    <label>Date<span class="text-danger">*</span></label>
+                    <label>Date&Time<span class="text-danger">*</span></label>
                     <input class="form-control" formControlName="date" type="date" [readonly]="isViewMode" />
                     <div class="text-danger" *ngIf="submit && f['date'].errors?.['required']">
                         Date is required.
