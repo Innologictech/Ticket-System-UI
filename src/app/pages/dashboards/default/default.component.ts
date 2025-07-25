@@ -8,7 +8,7 @@ import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { GeneralserviceService } from 'src/app/generalservice.service';
 import { ViewChild, ElementRef } from '@angular/core';
-import { interval, Observable, Subscription } from 'rxjs';
+import { catchError, finalize, interval, map, Observable, of, Subscription } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { trigger, transition, style, animate, query, stagger } from '@angular/animations';// ... (Other imports and interfaces remain the same)
@@ -28,7 +28,7 @@ export interface Employee {
 export interface Project {
   id: number;
   name: string;
-  client: string;
+  Client: string;
   budget: number;
 }
 
@@ -45,7 +45,7 @@ export interface ProjectAssignment {
   id: number;
   employeeId: number;
   projectId: number;
-  role: string;
+  Role: string;
 }
 export type ChartOptions = {
   series: any;
@@ -94,39 +94,236 @@ interface StatusItem {
 
 
 export class DefaultComponent implements OnInit {
-  ticketData: any[]=[];
-    tickets$: Observable<Ticket[]>;
-  loading$: Observable<boolean>;
-  constructor(private service: GeneralserviceService,private spinner:NgxSpinnerService, private modalService: NgbModal,private fb: FormBuilder,private loaderservice:LoaderService,private store: Store){
-
-  }
-  ngOnInit(): void {
-    this.store.dispatch(TicketActions.loadTickets())
-      this.tickets$ = this.store.select(selectAllTickets);
-          this.loading$ = this.store.select(selectTicketLoading);
-
-// this.getTickets();
-  }
-   isSlide = false;
-
-  // Dummy Summary Stats
+   tickets: any[] = [];
+  filteredTickets: any[] = [];
+ isSlide = false;
   summaryStats = {
-    totalTickets: 120,
-    openTickets: 40,
-    inProgressTickets: 30,
-    closedTickets: 50
+    totalTickets: 0,
+    openTickets: 0,
+    inProgressTickets: 0,
+    closedTickets: 0
   };
 
-  // Bar chart for yearly ticket status
-  barChartOptions: any = {
+
+ searchText: string = '';
+  loginData : any = {};
+  Client: string = '';
+  Role: string = '';
+barChartOptions: any = {
+  series: [],
+  chart: {},
+  xaxis: {},
+  yaxis: {},
+  plotOptions: {},
+  colors: []
+};
+
+pieChartOptions: any = {
+  series: [],
+  chart: {},
+  labels: [],
+  colors: []
+};
+  user: any;
+  loggedInUser: any;
+
+  constructor(
+    private service: GeneralserviceService,
+    private loader: LoaderService,
+    private cdr: ChangeDetectorRef
+  ) {}
+
+  ngOnInit(): void {
+    
+    this.getUserFromLocalStorage();
+    
+  }
+getUserFromLocalStorage() {
+  const userData = localStorage.getItem('currentUser'); // ✅ Correct key
+  if (userData) {
+    const parsedData = JSON.parse(userData);
+    this.loggedInUser = parsedData?.data; // assuming user info is inside res.data
+
+    this.Role = this.loggedInUser?.Role;
+    this.Client = this.loggedInUser?.Client;
+
+    this.getTickets(); // ✅ Call only after setting Role & Client
+  } else {
+    console.error('User not found in localStorage');
+  }
+}
+
+
+  getTickets(): void {
+    this.loader.showLoader();
+    this.service.GetTicketDetails().pipe(
+      map((response: any) => {
+        const tickets = response?.data || [];
+        this.tickets = tickets;
+        // this.filteredTickets = this.filterTickets(tickets);
+        this.applySearchFilter();
+        
+        console.log('Fetched Tickets:', tickets); // Check all tickets
+console.log('Filtered Tickets:', this.filteredTickets); // Check what passes filter
+
+        this.generateSummary();
+        this.prepareCharts();
+      }),
+      catchError(error => {
+        console.error('Error fetching tickets', error);
+        return of([]);
+      }),
+      finalize(() => {
+        this.loader.hideLoader();
+        this.cdr.detectChanges();
+      })
+    ).subscribe();
+  }
+
+  // filterTickets(tickets: any[]): any[] {
+  //   if (this.role === 'ADMIN') {
+  //     return tickets.filter(ticket => ticket.Client === this.Client);
+  //   }else if (this.role === 'CONSULTANT'){
+  //     return tickets.filter(ticket =>
+  //       ticket.Client === this.Client &&
+  //       ticket.reportedBy === this.loginData .userName
+  //     );
+  //   } else if (this.role === 'CUSTOMER') {
+  //     return tickets.filter(ticket =>
+  //       ticket.Client === this.Client &&
+  //       ticket.reportedBy === this.loginData .userName
+  //     );
+  //   } else {
+  //     return [];
+  //   }
+    
+  // }
+filterTickets(tickets: any[]): any[] {
+  console.log('Filtering tickets for Role:', this.Role);
+  console.log('Filtering by Client:', this.Client);
+
+  if (this.Role === 'ADMIN') {
+    // return tickets.filter(ticket => ticket.Client === this.Client);
+    return tickets;
+  } else if (this.Role === 'CONSULTANT' || this.Role === 'CUSTOMER') {
+    return tickets.filter(ticket =>
+      ticket.Client === this.Client &&
+      ticket.reportedBy === this.loggedInUser.userName
+    );
+  } else {
+    return [];
+  }
+}
+applySearchFilter(): void {
+  if (!Array.isArray(this.tickets)) return;
+
+  let filtered = [...this.filterTickets(this.tickets)];
+
+  if (this.searchText) {
+    const searchTextLower = this.searchText.toLowerCase();
+    filtered = filtered.filter(ticket =>
+      Object.values(ticket).some(val =>
+        String(val).toLowerCase().includes(searchTextLower)
+      )
+    );
+  }
+
+  this.filteredTickets = filtered;
+  this.generateSummary();
+  this.prepareCharts();
+}
+
+
+
+  // generateSummary() {
+  //   const stats = {
+  //     totalTickets: this.filteredTickets.length,
+  //     openTickets: this.filteredTickets.filter(t => t.status === 'Open').length,
+  //     inProgressTickets: this.filteredTickets.filter(t => t.status === 'In Progress').length,
+  //     closedTickets: this.filteredTickets.filter(t => t.status === 'Closed').length
+  //   };
+  //   this.summaryStats = stats;
+  // }
+  generateSummary() {
+  const openStatuses = ['New', 'Assigned', 'ReOpen']; // Considered open
+  const inProgressStatuses = ['InProcess', 'Hold-Cust', 'Hold-ILT', 'ClientAction', 'SoftwareChange', 'UAT', 'Rework'];
+  const closedStatuses = ['Resolved', 'Completed'];
+
+  const stats = {
+    totalTickets: this.filteredTickets.length,
+    openTickets: this.filteredTickets.filter(t => openStatuses.includes(t.status)).length,
+    inProgressTickets: this.filteredTickets.filter(t => inProgressStatuses.includes(t.status)).length,
+    closedTickets: this.filteredTickets.filter(t => closedStatuses.includes(t.status)).length
+  };
+
+  this.summaryStats = stats;
+}
+
+
+  // prepareCharts() {
+  //   this.barChartOptions = {
+  //     series: [
+  //       {
+  //         name: "Open",
+  //         data: this.getYearlyStatusCount("Open")
+  //       },
+  //       {
+  //         name: "Closed",
+  //         data: this.getYearlyStatusCount("Closed")
+  //       }
+  //     ],
+  //     chart: {
+  //       type: "bar",
+  //       height: 350
+  //     },
+  //     xaxis: {
+  //       categories: this.getYears()
+  //     },
+  //     yaxis: {
+  //       title: {
+  //         text: "Tickets"
+  //       }
+  //     },
+  //     plotOptions: {
+  //       bar: {
+  //         horizontal: false,
+  //         columnWidth: "55%"
+  //       }
+  //     },
+  //     colors: ["#f39c12", "#2ecc71"]
+  //   };
+
+  //   this.pieChartOptions = {
+  //     series: [
+  //       this.summaryStats.openTickets,
+  //       this.summaryStats.inProgressTickets,
+  //       this.summaryStats.closedTickets
+  //     ],
+  //     chart: {
+  //       type: "pie",
+  //       width: "450px",
+  //       height: "400px"
+  //     },
+  //     labels: ["Open", "In Progress", "Closed"],
+  //     colors: ["#f39c12", "#3498db", "#2ecc71"]
+  //   };
+  // }
+  prepareCharts() {
+  this.barChartOptions = {
     series: [
       {
         name: "Open",
-        data: [10, 20, 15, 25, 30] // 2020 to 2024
+        data: this.getYearlyStatusCount(["New", "Assigned", "ReOpen"])
+      },
+      {
+        name: "In Progress",
+        data: this.getYearlyStatusCount([
+          "InProcess", "Hold-Cust", "Hold-ILT", "ClientAction", "SoftwareChange", "UAT", "Rework"
+        ])
       },
       {
         name: "Closed",
-        data: [5, 15, 25, 20, 35]
+        data: this.getYearlyStatusCount(["Resolved", "Completed"])
       }
     ],
     chart: {
@@ -134,7 +331,7 @@ export class DefaultComponent implements OnInit {
       height: 350
     },
     xaxis: {
-      categories: ["2020", "2021", "2022", "2023", "2024"]
+      categories: this.getYears()
     },
     yaxis: {
       title: {
@@ -147,44 +344,51 @@ export class DefaultComponent implements OnInit {
         columnWidth: "55%"
       }
     },
-    colors: ["#f39c12", "#2ecc71"]
+    colors: ["#f39c12", "#3498db", "#2ecc71"]
   };
 
-  // Pie chart for current year ticket distribution
-  pieChartOptions: any = {
-    series: [40, 30, 50], // open, in-progress, closed
+  this.pieChartOptions = {
+    series: [
+      this.summaryStats.openTickets,
+      this.summaryStats.inProgressTickets,
+      this.summaryStats.closedTickets
+    ],
     chart: {
       type: "pie",
-       width: "550px", // 👈 reduce width here
-    height: "800px"
+      width: "450px",
+      height: "400px"
     },
     labels: ["Open", "In Progress", "Closed"],
     colors: ["#f39c12", "#3498db", "#2ecc71"]
   };
-
-  getTickets(): void {
-    this.loaderservice.showLoader();
-    this.service.GetTicketDetails().subscribe(
-      
-      (response: any) => {
-        console.log('Ticket data:', response);
-        this.ticketData = response.data;
-        this.loaderservice.hideLoader();
-      },
-      (error) => {
-        console.error('Error fetching tickets', error);
-        this.loaderservice.hideLoader();
-      }
-    );
-  }
-
-  resetView() {
-    // Reset logic if needed
-  }
-
-
 }
 
-function selectTicketLoading(state: object): boolean {
-  throw new Error('Function not implemented.');
+
+  getYears(): string[] {
+    const years = this.filteredTickets.map(t => new Date(t.createdAt).getFullYear());
+    return [...new Set(years)].sort().map(y => y.toString());
+  }
+
+  // getYearlyStatusCount(status: string): number[] {
+  //   const years = this.getYears();
+  //   return years.map(year =>
+  //     this.filteredTickets.filter(t =>
+  //       new Date(t.createdAt).getFullYear().toString() === year && t.status === status
+  //     ).length
+  //   );
+  // }
+  getYearlyStatusCount(statusList: string[]): number[] {
+  const years = this.getYears();
+  return years.map(year =>
+    this.filteredTickets.filter(t =>
+      new Date(t.createdAt).getFullYear().toString() === year &&
+      statusList.includes(t.status)
+    ).length
+  );
+}
+
+
+  resetView() {
+    this.getTickets();
+  }
 }
