@@ -169,8 +169,10 @@
                 <div class="col-md-4">
                     <label>Role<span class="text-danger">*</span></label>
                     <select class="form-control" formControlName="role">
+                        <option value="" disabled selected hidden>Select Role</option>
                         <option value="CUSTOMER">CUSTOMER</option>
-                        <option value="ADMIN">ADMIN</option>
+                         <option value="ADMIN-ILT">ADMIN-ILT</option>
+                        <option value="CLIENT-ADMIN">CLIENT-ADMIN</option>
                         <option value="CONSULTANT">CONSULTANT</option>
                     </select>
                     <div class="text-danger" *ngIf="submit && f['role'].errors">
@@ -178,18 +180,36 @@
                     </div>
                 </div>
 
-                 <div class="col-md-4">
-                    <label>Module<span class="text-danger">*</span></label>
-                    <select class="form-control" formControlName="module">
+                 <!-- <div class="col-md-4">
+                    <label>Technology<span class="text-danger">*</span></label>
+                    <select class="form-control" formControlName="technology">
                         <option value="SAP">SAP</option>
                         <option value="WEBAPPLICATION">WEB APPLICATION</option>
                         <option value="POWERBI">POWER BI</option>
                     </select>
-                    <div class="text-danger" *ngIf="submit && f['module'].errors">
-                        Module is required.
+                    <div class="text-danger" *ngIf="submit && f['technology'].errors">
+                        Technology is required.
+                    </div>
+                </div> -->
+                <div class="col-md-4">
+                    <label>Technology<span class="text-danger">*</span></label>
+                    <ng-select [items]="technologies" [multiple]="true" [closeOnSelect]="false"
+                                bindLabel="" formControlName="technology" placeholder="Select Technologies">
+                        <ng-template ng-option-tmp let-item="item" let-index="index">
+                        <div style="display: flex; align-items: center; padding: 4px 8px;">
+                            <input type="checkbox"
+                                [checked]="userCreationForm.get('technology')?.value?.includes(item)"
+                                style="margin-right: 10px; width: 16px; height: 16px;" />
+                            <span style="font-weight: normal;">{{ item }}</span>
+                        </div>
+                        </ng-template>
+                    </ng-select>
+                    <div class="text-danger" *ngIf="submit && f['technology'].errors">
+                        Technology is required.
                     </div>
                 </div>
-                 <div class="col-md-4">
+
+                 <!-- <div class="col-md-4">
                     <label>Client<span class="text-danger">*</span></label>
                     <select class="form-control" formControlName="client">
                         <option value="BAJ">BAJAJ</option>
@@ -200,7 +220,25 @@
                     <div class="text-danger" *ngIf="submit && f['client'].errors">
                         Client is required.
                     </div>
+                </div> -->
+                <div class="col-md-4">
+                    <label>Client<span class="text-danger">*</span></label>
+                    <ng-select [items]="clients" [multiple]="true" [closeOnSelect]="false"
+                                bindLabel="" formControlName="client" placeholder="Select Clients">
+                        <ng-template ng-option-tmp let-item="item" let-index="index">
+                        <div style="display: flex; align-items: center; padding: 4px 8px;">
+                            <input type="checkbox"
+                                [checked]="userCreationForm.get('client')?.value?.includes(item)"
+                                style="margin-right: 10px; width: 16px; height: 16px;" />
+                            <span style="font-weight: normal;">{{ item }}</span>
+                        </div>
+                        </ng-template>
+                    </ng-select>
+                    <div class="text-danger" *ngIf="submit && f['client'].errors">
+                        Client is required.
+                    </div>
                 </div>
+
 
                 <!-- Activity -->
 
@@ -359,26 +397,45 @@
                 <div class="col-md-4">
                     <label>Role<span class="text-danger">*</span></label>
                     <select class="form-control" formControlName="role">
+                        <option value="" disabled selected hidden>Select Role</option>
                         <option value="CUSTOMER">CUSTOMER</option>
-                        <option value="ADMIN">ADMIN</option>
+                        <option value="ADMIN-ILT">ADMIN-ILT</option>
+                        <option value="CLIENT-ADMIN">CLIENT-ADMIN</option>
                         <option value="CONSULTANT">CONSULTANT</option>
                     </select>
                     <!-- <div class="text-danger" *ngIf="submit && f['role'].errors">
                         Role is required.
                     </div> -->
                 </div>
-                 <div class="col-md-4">
-                    <label>Module<span class="text-danger">*</span></label>
-                    <select class="form-control" formControlName="module">
+                 <!-- <div class="col-md-4">
+                    <label>Technology<span class="text-danger">*</span></label>
+                    <select class="form-control" formControlName="technology">
                         <option value="SAP">SAP</option>
                         <option value="WEBAPPLICATION">WEB APPLICATION</option>
                         <option value="POWERBI">POWER BI</option>
                     </select>
-                    <!-- <div class="text-danger" *ngIf="submit && f['module'].errors">
+                    <div class="text-danger" *ngIf="submit && f['module'].errors">
                         Module is required.
+                    </div>
+                </div> -->
+                <div class="col-md-4">
+                    <label>Technology<span class="text-danger">*</span></label>
+                    <ng-select [items]="technologies" [multiple]="true" [closeOnSelect]="false"
+                                bindLabel="" formControlName="technology" placeholder="Select Technologies">
+                        <ng-template ng-option-tmp let-item="item" let-index="index">
+                        <div style="display: flex; align-items: center; padding: 4px 8px;">
+                            <input type="checkbox"
+                                [checked]="userCreationForm.get('technology')?.value?.includes(item)"
+                                style="margin-right: 10px; width: 16px; height: 16px;" />
+                            <span style="font-weight: normal;">{{ item }}</span>
+                        </div>
+                        </ng-template>
+                    </ng-select>
+                    <!-- <div class="text-danger" *ngIf="submit && f['technology'].errors">
+                        Technology is required.
                     </div> -->
                 </div>
-                 <div class="col-md-4">
+                 <!-- <div class="col-md-4">
                     <label>Client<span class="text-danger">*</span></label>
                     <select class="form-control" formControlName="client">
                         <option value="BAJ">BAJAJ</option>
@@ -386,6 +443,23 @@
                         <option value="QHO">QHOLDING</option>
                         <option value="SEU">SEUTIC PHARMA</option>
                     </select>
+                    <div class="text-danger" *ngIf="submit && f['client'].errors">
+                        Client is required.
+                    </div>
+                </div> -->
+                <div class="col-md-4">
+                    <label>Client<span class="text-danger">*</span></label>
+                    <ng-select [items]="clients" [multiple]="true" [closeOnSelect]="false"
+                                bindLabel="" formControlName="client" placeholder="Select Clients">
+                        <ng-template ng-option-tmp let-item="item" let-index="index">
+                        <div style="display: flex; align-items: center; padding: 4px 8px;">
+                            <input type="checkbox"
+                                [checked]="userCreationForm.get('client')?.value?.includes(item)"
+                                style="margin-right: 10px; width: 16px; height: 16px;" />
+                            <span style="font-weight: normal;">{{ item }}</span>
+                        </div>
+                        </ng-template>
+                    </ng-select>
                     <!-- <div class="text-danger" *ngIf="submit && f['client'].errors">
                         Client is required.
                     </div> -->
