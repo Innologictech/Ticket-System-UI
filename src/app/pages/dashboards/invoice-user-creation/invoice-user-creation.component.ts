@@ -42,6 +42,8 @@ confirmFieldTextType: boolean = false;
   editModalRef: any;
   
   activities: string[] = ['Dashboard', 'Ticket-Creation', 'Ticket-Management', 'User-Creation','consultant'];
+  clients = ['BAJAJ', 'MK AGRO', 'QHOLDING','SEUTIC PHARMA']; 
+technologies = ['SAP', 'WEB APPLICATION', 'POWER BI'];
   
  
 
@@ -77,8 +79,8 @@ confirmFieldTextType: boolean = false;
       email: ['', [Validators.required, Validators.email]],
       contact: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
       role: ['',Validators.required],
-      module: ['',Validators.required],
-      client: ['',Validators.required],
+      technology: [[],Validators.required],
+      client: [[],Validators.required],
       activity: [[]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required]] ,
@@ -97,8 +99,8 @@ confirmFieldTextType: boolean = false;
       email: ['', [Validators.required, Validators.email]],
       contact: ['', Validators.required],
        role: ['',Validators.required],
-       module: ['',Validators.required],
-       client: ['',Validators.required],
+       technology: [[],Validators.required],
+       client: [[],Validators.required],
       password: ['', Validators.required],
       confirmPassword: ['', Validators.required],
       activity: [[], Validators.required],
@@ -139,7 +141,7 @@ confirmFieldTextType: boolean = false;
       password: selectedUser.Password,
       confirmPassword: selectedUser.ConfirmPassword,
       role: selectedUser.Role,
-      module: selectedUser.Module,
+      technology: selectedUser.Technology,
       client: selectedUser.Client,
 activity: selectedUser.Activity || [],
       status: selectedUser.Status === 'Active' ? true : false
@@ -243,7 +245,7 @@ activity: selectedUser.Activity || [],
     email: '',
     contact: '',
     role: '',
-    module:'',
+    technology:'',
     client:'',
     activity: '',
     password: '',
@@ -437,13 +439,13 @@ activity: selectedUser.Activity || [],
   //   }
   delete(data): void {
     console.log("data",data.userRole)
-    const adminCount = this.userList.filter(user => user.userRole === 'ADMIN').length;
+    const adminCount = this.userList.filter(user => user.userRole === 'ADMIN-ILT').length;
     console.log("Admin Count:", adminCount);
     const accountsCount = this.userList.filter(user => user.userRole === 'ACCOUNTS').length;
     console.log("Admin Count:", adminCount);
 
     // If there is only one admin and we are trying to delete an admin, show error message
-    if (adminCount === 1 && data.userRole == 'ADMIN') {
+    if (adminCount === 1 && data.userRole == 'ADMIN-ILT') {
       Swal.fire({
         title: 'Cannot Delete!',
         text: "At least one Admin must remain. Please create another Admin before deleting.",
@@ -586,7 +588,7 @@ submitUserForm() {
     Password: formValues.password,
     ConfirmPassword: formValues.confirmPassword,
     Role: formValues.role ,
-    Module: formValues.module,
+    Technology: formValues.technology,
     Client: formValues.client,
   Status: formValues.status ? 'Active' : 'Inactive',
     Activity: formValues.activity
@@ -641,7 +643,7 @@ updateUserForm() {
     Password: formValues.password,
     ConfirmPassword: formValues.confirmPassword,
     Role: formValues.role,
-    Module: formValues.module,
+    Technology: formValues.technology,
     Client: formValues.client,
      Status: formValues.status ? 'Active' : 'Inactive',
     Activity: formValues.activity
