@@ -6,10 +6,10 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import { LoaderService } from 'src/app/core/services/loader.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { Ticket } from 'src/app/store/ticketSytem/ticket.model';
+import { Status, Ticket } from 'src/app/store/ticketSytem/ticket.model';
 import { Store } from '@ngrx/store';
 import * as TicketActions from 'src/app/store/ticketSytem/ticket.actions';
-import { selectAllTickets } from 'src/app/store/ticketSytem/ticket.selectors';
+import { selectAllStatus, selectAllTickets } from 'src/app/store/ticketSytem/ticket.selectors';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -30,6 +30,8 @@ isEditMode: boolean = false;
 
     tickets$: Observable<Ticket[]>;
   loading$: Observable<boolean>;
+   status$: Observable<Status[]>;
+    allStatus: any[]=[];
   ngOnInit(): void {
       this.bugTicketForm = this.fb.group({
         title: ['', Validators.required],
@@ -47,7 +49,14 @@ isEditMode: boolean = false;
             this.tickets$ = this.store.select(selectAllTickets);
             this.tickets$.subscribe((tickets:any) => {
     this.ticketData =  tickets?.data || []; // Ensure it's an array
-    console.log('this.ticketData',this.tickets$)  
+    console.log('this.ticketData',this.tickets$) 
+    
+     this.store.dispatch(TicketActions.loadStatus())
+        this.status$ = this.store.select(selectAllStatus);
+        this.status$.subscribe((status: any) => {
+          this.allStatus = status?.data || []; // Ensure it's an array
+          console.log(' this.allStatus', this.allStatus)
+        });
   });
                 // this.loading$ = this.store.select(selectTicketLoading);
       // this.getTickets();
@@ -64,28 +73,15 @@ isEditMode: boolean = false;
     this.selectedTicket = ticket; 
     const formattedDate = ticket.date ? ticket.date.split('T')[0] : '';
     
-    // Disable all fields
-     const environmentMap: any = {
-  QA: 'Quality',
-  Dev: 'Development',
-  Prod: 'Production'
-};
+    console.log("allowedNextStatuses",ticket.allowedNextStatuses)
 
-const statusMap: any = {
-  open: 'Open',
-  inprogress: 'In Progress',
-  hold: 'Hold',
-  uat: 'UAT',
-  resolved: 'Resolved',
-  closed: 'Closed',
-  reopen: 'Reopen'
-};
     this.bugTicketForm.patchValue({
       title: ticket.title,
       reportedBy: ticket.reportedBy,
       priority: ticket.priority,
-environment:  ticket.environment,
+      environment:  ticket.environment,
       ticketstatus:  ticket.status,
+      // ticketstatus: ticket.allowedNextStatuses?.[0]?.status || '',
       date: formattedDate,
       description: ticket.description,
       assignedTo: ticket.consultant || '',
@@ -166,7 +162,7 @@ get sortedTickets() {
   this.service.getAllUsers().subscribe({
     next: (res: any) => {
       // ✅ Filter only users with Role === 'User'
-      this.userList = (res?.data || []).filter(user => user.Role === 'USER');
+      this.userList = (res?.data || []).filter(user => user.Role === 'CONSULTANT');
       this.spinner.hide();
     },
     error: (err) => {
@@ -217,35 +213,23 @@ getAttachmentUrl(ticket: any): string {
     this.isEditMode = true;
     this.selectedTicket = ticket; 
     const formattedDate = ticket.date ? ticket.date.split('T')[0] : '';
-     const environmentMap: any = {
-  QA: 'Quality',
-  Dev: 'Development',
-  Prod: 'Production'
-};
+    console.log("ticketttttttttttttttttttttttttt",ticket);
 
-const statusMap: any = {
-  open: 'Open',
-  inprogress: 'In Progress',
-  hold: 'Hold',
-  uat: 'UAT',
-  resolved: 'Resolved',
-  closed: 'Closed',
-  reopen: 'Reopen'
-};
-   
+   this.allStatus= ticket.allowedNextStatuses || [];
     
     this.bugTicketForm.patchValue({
       title: ticket.title,
       reportedBy: ticket.reportedBy,
       priority: ticket.priority,
        environment: ticket.environment,
-      ticketstatus: ticket.status,
+      // ticketstatus: ticket.status,
+      ticketstatus: ticket.allowedNextStatuses?.[0]?.status || '',
       date: formattedDate,
       description: ticket.description,
       assignedTo: ticket.consultant || '',
       attachments: null
     });
-
+    
     this.EditmodalRef = this.modalService.open(templateRef, {
       backdrop: 'static',
       keyboard: false,
@@ -390,7 +374,7 @@ const statusMap: any = {
 //   );
 // }
 
-UpdateTicket(status: string = 'InProcess', reason?: string): void {
+UpdateTicket(): void {
   if (this.bugTicketForm.invalid || !this.selectedTicket) {
     this.bugTicketForm.markAllAsTouched();
     return;
@@ -404,18 +388,14 @@ UpdateTicket(status: string = 'InProcess', reason?: string): void {
     reportedBy: rawForm.reportedBy,
     priority: rawForm.priority,
     environment: rawForm.environment,
-    status: status,
+    status: rawForm.ticketstatus,
     consultant: rawForm.assignedTo,
     date: rawForm.date,
     description: rawForm.description,
     attachment: rawForm.attachments || ''
   };
   // ✅ Add assigned date & days only when assigning
-if (status === 'InProcess' && rawForm.assignedTo) {
-  payload.assignedDate = new Date();
-  payload.assignedDays = 0;
-}
-console.log("status",status)
+// y
 
   // if (status === 'Rejected' && reason) {
   //   payload.rejectionReason = reason;

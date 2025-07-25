@@ -201,12 +201,15 @@
                 <div class="col-md-6">
                     <label>Status</label>
                     <select class="form-control" formControlName="ticketstatus" >
+                           <option  [value]=""></option>
+                        <option *ngFor="let status of allStatus" [value]="status.status">{{status.label}}</option>
+                    
                         
-                        <option value="InProgress">In Progress</option>
+                        <!-- <option value="InProgress">In Progress</option>
                         <option value="hold">Hold</option>
                         <option value="UAT">UAT</option>
                         <option value="resolved">Resolved</option>
-                        <option value="Closed">Closed</option>
+                        <option value="Closed">Closed</option> -->
                     </select>
                 </div>
 

@@ -5,6 +5,13 @@ import { GeneralserviceService } from 'src/app/generalservice.service';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { CommonModule } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { selectAllStatus } from 'src/app/store/ticketSytem/ticket.selectors';
+import { Status } from 'src/app/store/ticketSytem/ticket.model';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import * as TicketActions from 'src/app/store/ticketSytem/ticket.actions';
+import Swal from 'sweetalert2';
+
 
 
 
@@ -27,9 +34,11 @@ export class UserComponent {
   isEditMode = false;
   userList = [];
   selectedTicket:any;
+  status$: Observable<Status[]>;
+    allStatus: any[]=[];
 
 
-  constructor(private modalService: NgbModal, private service: GeneralserviceService, private fb: FormBuilder, private loaderservice: LoaderService) {
+  constructor(private modalService: NgbModal, private service: GeneralserviceService, private fb: FormBuilder, private loaderservice: LoaderService, private store: Store) {
     this.bugTicketForm = this.fb.group({
       title: [''],
       reportedBy: [''],
@@ -44,7 +53,13 @@ export class UserComponent {
     });
   }
   ngOnInit(): void {
-    this.getTickets()
+    this.getTickets();
+    this.store.dispatch(TicketActions.loadStatus())
+        this.status$ = this.store.select(selectAllStatus);
+        this.status$.subscribe((status: any) => {
+          this.allStatus = status?.data || []; // Ensure it's an array
+          console.log(' this.allStatus', this.allStatus)
+        });
   }
 
 
@@ -85,6 +100,8 @@ export class UserComponent {
   return '';
 }
   openTicketModal(ticket: any, content: any) {
+
+      this.allStatus= ticket.allowedNextStatuses || [];
     this.selectedTicket=ticket;
     this.isEditMode = false;
     this.bugTicketForm.patchValue({
@@ -92,7 +109,7 @@ export class UserComponent {
       reportedBy: ticket.reportedBy,
       priority: ticket.priority,
       environment: ticket.environment,
-      ticketstatus: ticket.status,
+      ticketstatus: ticket.allowedNextStatuses?.[0]?.status || '',
       date: ticket.date.split('T')[0], // format date
       description: ticket.description,
       assignedTo: ticket.assignedTo
@@ -104,13 +121,62 @@ export class UserComponent {
     this.modalService.open(content, { size: 'lg', backdrop: 'static' });
   }
 
-  UpdateTicket() {
-    console.log('Updated Ticket:', this.bugTicketForm.value);
-  }
+//   UpdateTicket() {
+//    if (this.bugTicketForm.invalid || !this.selectedTicket) {
+//       this.bugTicketForm.markAllAsTouched();
+//       return;
+//     }
+
+//      const rawForm = this.bugTicketForm.value;
+
+//     const payload = {
+//       customerticketId: this.selectedTicket.customerticketId, // Required for update
+//       title: rawForm.title,
+//       reportedBy: rawForm.reportedBy,
+//       priority: rawForm.priority,
+//       environment: rawForm.environment,
+//       IssueType: rawForm.issueType,
+//       Client: this.client,
+//       status: rawForm.ticketstatus,
+//       date: rawForm.date,
+//       description: rawForm.description,
+//       attachment: this.selectedFileBase64,
+//       upload: this.selectedUploadBase64,
+//     };
+//     this.service.UpdateTicket(payload).subscribe(
+//          (response: any) => {
+//            console.log('Ticket updated:', response);
+   
+//            Swal.fire({
+//              icon: 'success',
+//              title: 'Ticket Updated',
+//              text: 'The ticket was updated successfully.',
+//              confirmButtonText: 'OK'
+//            }).then(() => {
+//              this.bugTicketForm.reset();
+//              this.selectedTicket = null;
+//              this.getTickets(); // refresh
+   
+//              if (this.EditmodalRef) {
+//                this.EditmodalRef.close();
+//              }
+//            });
+//          },
+//          (error) => {
+//            console.error('Update failed:', error);
+   
+//            Swal.fire({
+//              icon: 'error',
+//              title: 'Update Failed',
+//              text: 'Sorry, we could not update the ticket. Please try again.',
+//              confirmButtonText: 'OK'
+//            });
+//          }
+//        );
+// }
+
+
 }
-
-
-
 
 
 

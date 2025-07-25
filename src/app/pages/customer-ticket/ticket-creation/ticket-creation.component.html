@@ -49,6 +49,10 @@
                                         (click)="editTicketModel(ticket, createBugTicketTemplate)"></i>
                                 </td>
                             </tr>
+                            @if ((tickets$ | async)?.length ===0){
+                            <tr>
+                                <td colspan="6" class="text-center text-danger">Data not Available</td>
+                            </tr>}
                         </tbody>
                     </table>
                 </div>
@@ -149,12 +153,14 @@
                     <!-- Show dropdown in edit mode -->
                     <select *ngIf="isEditMode" class="form-control" formControlName="ticketstatus"
                         [disabled]="isViewMode">
-                        <option  [value]=""></option>
+                        <option [value]="">select</option>
+                        <!-- <option *ngFor="let status of allStatus" [value]="status.status">{{status.label}}</option> -->
                         <option *ngFor="let status of allStatus" [value]="status.status">{{status.label}}</option>
+
                     </select>
                     <!-- Show readonly input in create mode -->
                     <input *ngIf="!isEditMode" class="form-control" formControlName="ticketstatus" type="text" readonly
-                       [readonly]="isViewMode" />
+                        [readonly]="isViewMode" />
                 </div>
 
 
@@ -179,28 +185,10 @@
                 </div>
 
                 <!-- Attachment -->
-                <div *ngIf="!isEditMode" class="col-md-12">
-                    <label>Attachments</label>
-                    <input class="form-control" formControlName="attachments" type="file" [readonly]="isViewMode"
-                        (change)="onFileSelected($event,'attachments')" />
-                </div>
 
-                <!-- <div   class="col-md-12" *ngIf="isEditMode && selectedTicket?.attachment?.contentType?.startsWith('image/')">
-                    <label>Attachment</label><br>
-                    <img [src]="getAttachmentUrl(selectedTicket)" [alt]="selectedTicket?.attachment?.filename"
-                        style="max-width:50%; max-height:20%; object-fit:contain; border: 1px solid #ddd; padding: 5px;" />
-                </div> -->
 
-                <!-- <div class="col-md-12"
-                    *ngIf="isEditMode && selectedTicket?.attachment?.contentType?.startsWith('image/')">
-                    <label>Attachment</label><br>
-                    <img [src]="getAttachmentUrl(selectedTicket)" [alt]="selectedTicket?.attachment?.filename"
-                        style="max-width:80%; max-height:40%; object-fit:contain; border:1px solid #ddd; padding:5px; cursor:pointer;"
-                        (click)="viewFullImage(getAttachmentUrl(selectedTicket))" />
-                </div> -->
-
-                <div class="col-md-12" *ngIf="isEditMode">
-
+                <!-- <div class="col-md-12" *ngIf="isEditMode">
+                    
                     <label>Attachment</label><br>
                     <div class="image-container"
                         *ngIf="selectedTicket?.attachment?.startsWith('data:image'); else uploadNew">
@@ -213,13 +201,40 @@
 
 
 
-                    <!-- File Upload (Shown when no attachment) -->
+                   
                     <ng-template #uploadNew>
 
                         <input type="file" class="form-control" formControlName="attachments" [readonly]="isViewMode"
                             (change)="onFileSelected($event,'attachments')" />
                     </ng-template>
+                </div> -->
+
+                <div *ngIf="!isEditMode" class="col-md-12">
+                    <label>Attachments</label>
+                    <input class="form-control" formControlName="attachments" type="file" [readonly]="isViewMode"
+                        (change)="onFileSelected($event,'attachments')" />
                 </div>
+
+                <div class="col-md-12" *ngIf="isEditMode">
+                    <label>Attachment</label><br>
+
+                    <div class="image-container"
+                        *ngIf="selectedTicket?.attachment?.data && selectedTicket?.attachment?.contentType?.startsWith('image'); else uploadNew">
+
+                        <img [src]="'data:' + selectedTicket.attachment.contentType + ';base64,' + selectedTicket.attachment.data"
+                            alt="Attachment"
+                            (click)="viewFullImage('data:' + selectedTicket.attachment.contentType + ';base64,' + selectedTicket.attachment.data)" />
+
+                        <span class="remove-icon" (click)="removeAttachment()">&times;</span>
+                    </div>
+
+                    <!-- File Upload (Shown when no attachment) -->
+                    <ng-template #uploadNew>
+                        <input type="file" class="form-control" formControlName="attachments" [readonly]="isViewMode"
+                            (change)="onFileSelected($event, 'attachments')" />
+                    </ng-template>
+                </div>
+
 
 
                 <!-- Overlay -->

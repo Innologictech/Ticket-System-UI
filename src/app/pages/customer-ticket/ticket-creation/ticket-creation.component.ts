@@ -27,7 +27,7 @@ export class TicketCreationComponent {
   isViewMode = false;
   selectedFile: File | null = null;
   selectedTicket: any = null;
-  statusOptions = ['Open', 'In Progress', 'Hold', 'UAT', 'Resolved', 'Closed', 'Reopen'];
+  statusOptions = ['New', 'In Progress', 'Hold', 'UAT', 'Resolved', 'Closed', 'Reopen'];
   modalTitle: string = '';
   ticketData: any[] = [];
   currentUser: any;
@@ -39,6 +39,7 @@ export class TicketCreationComponent {
     tickets$: Observable<any[]>;
     status$: Observable<Status[]>;
   allStatus: any[]=[];
+  allowedNextStatuses: any[]=[];
 
 
   constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef, private modalService: NgbModal, private service: GeneralserviceService, private loaderService: LoaderService, private authService: AuthenticationService, private store: Store) { }
@@ -55,7 +56,7 @@ export class TicketCreationComponent {
       reportedBy: [this.currentUser?.userName || this.currentUser?.data?.userName || '', Validators.required],
       priority: ['', Validators.required],
       environment: ['Production', Validators.required],
-      ticketstatus: ['Open'],
+      ticketstatus: ['New'],
       issueType: [''],
       // date: ['', Validators.required],
       date: [this.formatDate(new Date()), Validators.required],
@@ -175,11 +176,12 @@ export class TicketCreationComponent {
       environment: rawForm.environment,
       Client: this.client,
       IssueType: rawForm.issueType,
-      status: rawForm.ticketstatus || "open",
+      status: rawForm.ticketstatus || "New",
       date: formattedDate,
       description: rawForm.description,
       attachment: this.selectedFileBase64,// Base64 string
-      upload: ''
+      upload: '',
+      assignedTo:''
     };
 
     this.service.CreateTicket(payload).subscribe(
@@ -230,7 +232,7 @@ export class TicketCreationComponent {
       environment: rawForm.environment,
       IssueType: rawForm.issueType,
       Client: this.client,
-      status: rawForm.ticketstatus || "Open",
+      status: rawForm.ticketstatus,
       date: rawForm.date,
       description: rawForm.description,
       attachment: this.selectedFileBase64,
@@ -278,29 +280,18 @@ export class TicketCreationComponent {
     this.resetModeFlags(); // Clear previous mode
     this.isEditMode = true;
     const formattedDate = ticket.date ? ticket.date.split('T')[0] : '';
-    const environmentMap: any = {
-      QA: 'Quality',
-      Dev: 'Development',
-      Prod: 'Production'
-    };
-
-    const statusMap: any = {
-      open: 'Open',
-      inprogress: 'In Progress',
-      hold: 'Hold',
-      uat: 'UAT',
-      resolved: 'Resolved',
-      closed: 'Closed',
-      reopen: 'Reopen'
-    };
-    // Patch form with selected ticket data
+    this.allStatus= ticket.allowedNextStatuses || [];
+    this.allowedNextStatuses=ticket.allowedNextStatuses|| [];
+    
+  
     this.bugTicketForm.patchValue({
       title: ticket.title,
       reportedBy: ticket.reportedBy,
       priority: ticket.priority,
       issueType: ticket.IssueType,
-      environment: environmentMap[ticket.environment] || ticket.environment,
-      ticketstatus: statusMap[ticket.status.toLowerCase()] || ticket.status,
+      environment: ticket.environment,
+      // ticketstatus:  ticket.allowedNextStatuses || '',
+       ticketstatus: ticket.allowedNextStatuses?.[0]?.status || '',
       date: formattedDate,
       description: ticket.description,
       attachments: ticket.attachment
@@ -308,7 +299,8 @@ export class TicketCreationComponent {
     console.log('Editing ticket:', ticket);
     console.log('Environment:', ticket.environment);
     console.log('Status:', ticket.status);
-    console.log("issuetype:", ticket.IssueType)
+    console.log("issuetype:", ticket.IssueType);
+    console.log("ticketstatus",ticket.allowedNextStatuses);
     // Open modal
     this.EditmodalRef = this.modalService.open(templateRef, {
       backdrop: 'static',
@@ -362,7 +354,7 @@ export class TicketCreationComponent {
     });
     this.bugTicketForm.patchValue({
       reportedBy: this.currentUser?.data?.userName || '', // Correct path
-      ticketstatus: 'Open',
+      ticketstatus: 'New',
       environment: 'Production',
       status: true
     });

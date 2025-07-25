@@ -58,7 +58,7 @@
                     </button>
 
                     <!-- Edit Button -->
-                    <button class="btn btn-sm btn-primary me-2"
+                    <button class="btn btn-sm btn-warning me-2"
                         (click)="editTicketModel(ticket, createBugTicketTemplate)">
                         Edit
                     </button>
@@ -136,9 +136,12 @@
     <label>Status</label>
     <!-- Show dropdown in edit mode -->
     <select *ngIf="isEditMode" class="form-control" formControlName="ticketstatus">
-        @for (status of statusOptions;track status){
+        <!-- @for (status of statusOptions;track status){
         <option  [value]="status">{{status}}</option>
-        }
+
+        } -->
+        <option  [value]=""></option>
+        <option *ngFor="let status of allStatus" [value]="status.status">{{status.label}}</option>
     </select>
     <!-- Show readonly input in create mode -->
     <input *ngIf="!isEditMode"class="form-control" formControlName="ticketstatus" type="text" readonly />
@@ -159,18 +162,7 @@
                         [readonly]="!isEditMode"></textarea>
                 </div>
 
-                <!-- Assigned To (Editable) -->
-                <!-- <div class="col-md-12">
-                    <label>Assigned To<span class="text-danger">*</span></label>
-                    <select class="form-control" formControlName="assignedTo">
-                        <option value="" disabled hidden>Select Assignee</option>
-                        <option value="consultant">consultant</option>
-                        <option value="Developer">Developer</option>
-                        <option value="Tester">Tester</option>
-                        <option value="Manager">Manager</option>
-                        <option value="Support"> </option>
-                    </select>
-                </div> -->
+                <!-- Assigned To  -->
                 <div class="col-md-12">
                     <label>Assigned To<span class="text-danger">*</span></label>
                     <select *ngIf="isEditMode" class="form-control" formControlName="assignedTo">
@@ -190,10 +182,44 @@
                     <input class="form-control" type="file" (change)="onFileSelected($event)" />
                 </div> -->
                 <!-- Image Display -->
-                <div class="col-md-12" *ngIf="selectedTicket?.attachment?.contentType?.startsWith('image/')">
+                <!-- <div class="col-md-12" *ngIf="selectedTicket?.attachment?.contentType?.startsWith('image/')">
                     <label>Attachment</label><br>
                     <img [src]="getAttachmentUrl(selectedTicket)" [alt]="selectedTicket?.attachment?.filename"
                         style="max-width:100%; max-height:200px; object-fit:contain; border: 1px solid #ddd; padding: 5px;" />
+                </div> -->
+
+                  <div class="col-md-12" *ngIf="isEditMode">
+                    <label>Attachment</label><br>
+
+                    <div class="image-container"
+                        *ngIf="selectedTicket?.attachment?.data && selectedTicket?.attachment?.contentType?.startsWith('image'); else uploadNew">
+
+                        <img [src]="'data:' + selectedTicket.attachment.contentType + ';base64,' + selectedTicket.attachment.data"
+                            alt="Attachment"
+                            (click)="viewFullImage('data:' + selectedTicket.attachment.contentType + ';base64,' + selectedTicket.attachment.data)" />
+
+                        <span class="remove-icon" (click)="removeAttachment()">&times;</span>
+                    </div>
+
+                    <!-- File Upload (Shown when no attachment) -->
+                    <ng-template #uploadNew>
+                        <input type="file" class="form-control" formControlName="attachments" [readonly]="isViewMode"
+                            (change)="onFileSelected($event, 'attachments')" />
+                    </ng-template>
+                </div>
+
+
+
+                <!-- Overlay -->
+                <div class="fullscreen-image" *ngIf="isImageFullScreen" (click)="closeFullImage()">
+                    <img [src]="selectedImageUrl" [alt]="selectedTicket?.attachment?.filename">
+                </div>
+
+
+                <div *ngIf="isEditMode" class="col-md-12">
+                    <label>Upload</label>
+                    <input class="form-control" formControlName="upload" type="file" [readonly]="isViewMode"
+                        (change)="onFileSelected($event,'upload')" />
                 </div>
 
 
