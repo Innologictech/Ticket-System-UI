@@ -48,25 +48,28 @@
         <!-- Bar Chart -->
         <div class="col-md-6 col-lg-6" id="leftBar">
           <h2 style="text-align: center;">Yearly Ticket Status (Bar Chart)</h2>
-          <apx-chart 
-            [series]="barChartOptions.series" 
-            [chart]="barChartOptions.chart"
-            [xaxis]="barChartOptions.xaxis"
-            [yaxis]="barChartOptions.yaxis"
-            [plotOptions]="barChartOptions.plotOptions"
-            [colors]="barChartOptions.colors">
-          </apx-chart>
+      <apx-chart 
+  *ngIf="barChartOptions?.series" 
+  [series]="barChartOptions?.series"
+  [chart]="barChartOptions?.chart"
+  [xaxis]="barChartOptions?.xaxis"
+  [yaxis]="barChartOptions?.yaxis"
+  [plotOptions]="barChartOptions?.plotOptions"
+  [colors]="barChartOptions?.colors">
+</apx-chart>
+
         </div>
 
         <!-- Pie Chart -->
         <div class="col-md-6 col-lg-6" id="rightBar" *ngIf="pieChartOptions.series?.length > 0">
           <h2 style="text-align: center;">Ticket Distribution - Current Year (Pie Chart)</h2>
           <apx-chart 
-            [series]="pieChartOptions.series" 
-            [chart]="pieChartOptions.chart"
-            [labels]="pieChartOptions.labels"
-            [colors]="pieChartOptions.colors">
-          </apx-chart>
+  *ngIf="pieChartOptions?.series" 
+  [series]="pieChartOptions?.series"
+  [chart]="pieChartOptions?.chart"
+  [labels]="pieChartOptions?.labels"
+  [colors]="pieChartOptions?.colors">
+</apx-chart>
         </div>
       </div>
     </div>
@@ -74,8 +77,11 @@
 
   <!-- Ticket Table Section -->
   <div class="card">
+    <div class="mb-3 d-flex justify-content-between">
+    <input type="text" class=" w-15" style="margin-top: 1rem;" placeholder="Search..." [(ngModel)]="searchText" (ngModelChange)="applySearchFilter()" />
+</div>
     <div class="card-body">
-      <h2 class="text-center">Ticket Assignments</h2>
+      
       <table class="table table-bordered">
         <thead class="thead-dark">
           <tr>
@@ -88,7 +94,7 @@
           </tr>
         </thead>
        <tbody>
-  <tr *ngFor="let item of (tickets$ | async)?.data">
+  <tr *ngFor="let item of filteredTickets">
     <td>{{ item.customerticketId }}</td>
     <td>{{ item.title }}</td>
     <td>{{ item.status }}</td>
