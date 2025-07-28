@@ -1347,45 +1347,65 @@ select:disabled {
 /*styles for blur for readonly  end */
 
 
-/*styles for upload images   start*/
+/*styles for upload pdfs   start*/
 
-.fullscreen-image {
+
+
+.pdf-preview {
+  cursor: pointer;
+  color: #d9534f;
+  display: inline-flex;
+  align-items: center;
+}
+
+.pdf-icon {
+  font-size: 20px;
+  margin-right: 5px;
+}
+
+.fullscreen-overlay {
   position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.9);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1050; /* above most things */
-  cursor: zoom-out;
-}
-.fullscreen-image img {
-  max-width: 95%;
-  max-height: 95%;
-  object-fit: contain;
-  border: 2px solid #fff;
-}
-
-
-.image-container {
-  width: full;   
-  height: 70px;   
-  border: 1px solid #ddd;
-  padding: 5px;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.image-container img {
-  width: 100%;
+  top: 0;
+  left: 4rem;
+  right: 4rem;
   height: 100%;
-  object-fit: contain; /* Ensures the image scales inside container without cropping */
+  background-color: rgba(0, 0, 0, 0.9);
+  z-index: 9999;
+  padding-top: 0; /* optional: remove vertical gap */
+
+  
 }
 
 
-/*styles for upload images   end*/
+.fullscreen-pdf {
+  position: relative;
+  width: 80%;
+  height: 90%;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.fullscreen-pdf iframe {
+  border: none;
+}
+
+.close-btn {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  background: #f44336;
+  color: white;
+  border: none;
+  font-size: 18px;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}
+
+
+/*styles for upload pdfs   end*/
 
 /*styles for upload files  cancel symbol   start*/
 

@@ -13,13 +13,11 @@
                         Create New Ticket
                     </button>
                 </div>
-                 
-    <div class="mb-3 d-flex justify-content-between">
-<input type="text" class="w-15" style="margin-top: 1rem;" placeholder="Search..." 
-       [(ngModel)]="searchText" 
-       (ngModelChange)="applySearchFilter()"
-       name="searchText" />
-    </div>
+
+                <div class="mb-3 d-flex justify-content-between">
+                    <input type="text" class="w-15" style="margin-top: 1rem;" placeholder="Search..."
+                        [(ngModel)]="searchText" (ngModelChange)="applySearchFilter()" name="searchText" />
+                </div>
 
                 <div class="table-responsive tableFixHead">
                     <table class="table table-bordered table-hover bg-white">
@@ -35,7 +33,8 @@
                         </thead>
                         <tbody>
                             <!-- <tr *ngFor="let ticket of tickets$ | async" class="align-middle"> -->
-<tr *ngFor="let ticket of ticketList | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }">
+                            <tr
+                                *ngFor="let ticket of ticketList | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }">
 
                                 <td>{{ ticket.customerticketId }}</td>
                                 <td>{{ ticket.title }}</td>
@@ -66,8 +65,9 @@
                     </table>
                 </div>
                 <div class="d-flex justify-content-end mt-3">
-    <pagination-controls (pageChange)="currentPage = $event" class="pagination justify-content-end"></pagination-controls>
-</div>
+                    <pagination-controls (pageChange)="currentPage = $event"
+                        class="pagination justify-content-end"></pagination-controls>
+                </div>
 
 
 
@@ -101,7 +101,7 @@
                 <div class="col-md-6">
                     <label>Issue Short Description<span class="text-danger">*</span></label>
                     <input class="form-control" formControlName="title" type="text" placeholder="Enter Title"
-                        [readonly]="isViewMode || isEditMode" />  <!-- Added isEditMode condition -->
+                        [readonly]="isViewMode || isEditMode" /> <!-- Added isEditMode condition -->
                     <div class="text-danger" *ngIf="submit && f['title'].errors?.['required']">
                         Issue short Description is required.
                     </div>
@@ -197,8 +197,8 @@
 
                     </select>
                     <!-- Show readonly input in create mode -->
-                    <input *ngIf="!isEditMode" class="form-control" formControlName="ticketstatus" type="text" readonly
-                         />
+                    <input *ngIf="!isEditMode" class="form-control" formControlName="ticketstatus" type="text"
+                        readonly />
                 </div>
 
 
@@ -215,7 +215,7 @@
                     <label>Date&Time<span class="text-danger">*</span></label>
                     <!-- <input class="form-control" formControlName="date" type="datetime-local" 
                         readonly />   -->
-                        <input class="form-control" formControlName="date" type="datetime-local" [readonly]="true" />
+                    <input class="form-control" formControlName="date" type="datetime-local" [readonly]="true" />
                     <div class="text-danger" *ngIf="submit && f['date'].errors?.['required']">
                         Date and time is required.
                     </div>
@@ -233,57 +233,20 @@
 
                 <!-- Attachment -->
 
-
-                <!-- <div class="col-md-12" *ngIf="isEditMode">
-                    
-                    <label>Attachment</label><br>
-                    <div class="image-container"
-                        *ngIf="selectedTicket?.attachment?.startsWith('data:image'); else uploadNew">
-
-                        <img [src]="selectedTicket.attachment" alt="Attachment"
-                            (click)="viewFullImage(selectedTicket.attachment)" />
-
-                        <span class="remove-icon" (click)="removeAttachment()">&times;</span>
-                    </div>
-
-
-
-                   
-                    <ng-template #uploadNew>
-
-                        <input type="file" class="form-control" formControlName="attachments" [readonly]="isViewMode"
-                            (change)="onFileSelected($event,'attachments')" />
-                    </ng-template>
-                </div> -->
-
                 <div *ngIf="!isEditMode" class="col-md-12">
                     <label>Attachments</label>
-                    <input class="form-control" formControlName="attachments" type="file" [readonly]="isViewMode" accept=".pdf"
-                        (change)="onFileSelected($event,'attachments')" />
+                    <input class="form-control" formControlName="attachments" type="file" [readonly]="isViewMode"
+                        accept=".pdf" (change)="onFileSelected($event,'attachments')" />
                 </div>
 
-                <!-- <div class="col-md-12" *ngIf="isEditMode">
-                    <label>Attachment</label><br>
 
-                    <div class="image-container"
-                        *ngIf="selectedTicket?.attachment?.data && selectedTicket?.attachment?.contentType?.startsWith('image'); else uploadNew">
-
-                        <img [src]="'data:' + selectedTicket.attachment.contentType + ';base64,' + selectedTicket.attachment.data"
-                            alt="Attachment"
-                            (click)="viewFullImage('data:' + selectedTicket.attachment.contentType + ';base64,' + selectedTicket.attachment.data)" />
-
-                        <span class="remove-icon" (click)="removeAttachment()">&times;</span>
-                    </div>
-
-                    <ng-template #uploadNew>
-                        <input type="file" class="form-control" formControlName="attachments" [readonly]="isViewMode"
-                            (change)="onFileSelected($event, 'attachments')" />
-                    </ng-template>
-                </div> -->
+                <!-- Attachment (Edit mode only) -->
                 <div class="col-md-12" *ngIf="isEditMode">
                     <label>Attachment</label><br>
-                    
-                    <div *ngIf="selectedTicket?.attachment?.contentType === 'application/pdf'; else uploadNew">
+
+                    <!-- Show existing PDF preview if available and not removed -->
+                    <div
+                        *ngIf="selectedTicket?.attachment?.contentType === 'application/pdf' && !attachmentRemoved; else uploadNew">
                         <div class="pdf-preview" (click)="viewPdf(selectedTicket.attachment)">
                             <i class="fa fa-file-pdf-o pdf-icon"></i>
                             <span>{{ selectedTicket.attachment.filename }}</span>
@@ -291,26 +254,29 @@
                         <span class="remove-icon" (click)="removeAttachment()">&times;</span>
                     </div>
 
+                    <!-- File input for uploading a new attachment (shown after removing) -->
                     <ng-template #uploadNew>
-                        <input type="file" class="form-control" formControlName="attachments" 
-                            [readonly]="isViewMode" accept=".pdf"
-                            (change)="onFileSelected($event, 'attachments')" />
+                        <input type="file" class="form-control" formControlName="attachments" [readonly]="isViewMode"
+                            accept=".pdf" (change)="onFileSelected($event, 'attachments')" />
                     </ng-template>
                 </div>
 
+               <!-- PDF Fullscreen Viewer -->
+<div class="fullscreen-overlay" *ngIf="isPdfFullScreen" (click)="closeFullPdf()">
+  <div class="fullscreen-pdf" (click)="$event.stopPropagation()">
+    <iframe [src]="selectedPdfUrl" width="100%" height="100%"></iframe>
+    <button class="close-btn" (click)="closeFullPdf()">✖</button>
+  </div>
+</div>
 
 
                 <!-- Overlay -->
-                <div class="fullscreen-image" *ngIf="isImageFullScreen" (click)="closeFullImage()">
+                <!-- <div class="fullscreen-image" *ngIf="isImageFullScreen" (click)="closeFullImage()">
                     <img [src]="selectedImageUrl" [alt]="selectedTicket?.attachment?.filename">
-                </div>
+                </div> -->
 
 
-                <div *ngIf="isEditMode" class="col-md-12">
-                    <label>Upload</label>
-                    <input class="form-control" formControlName="upload" type="file"  accept=".pdf"[readonly]="isViewMode"
-                        (change)="onFileSelected($event,'upload')" />
-                </div>
+
 
             </div>
         </form>

@@ -13,6 +13,7 @@ import * as TicketActions from 'src/app/store/ticketSytem/ticket.actions';
 import { selectAllStatus } from 'src/app/store/ticketSytem/ticket.selectors';
 import { Status } from 'src/app/store/ticketSytem/ticket.model';
 import {  selectAllTickets } from 'src/app/store/ticketSytem/ticket.selectors';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-ticket-creation',
@@ -49,7 +50,7 @@ itemsPerPage: number = 10;
   searchText: string = '';
  ticketList: any[] = []; // ✅ Safe default
 
-  constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef, private modalService: NgbModal, private service: GeneralserviceService, private loaderService: LoaderService, private authService: AuthenticationService, private store: Store) { }
+  constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef, private modalService: NgbModal, private service: GeneralserviceService, private loaderService: LoaderService, private authService: AuthenticationService, private store: Store,private sanitizer: DomSanitizer) { }
 
 
   ngOnInit(): void {
@@ -259,15 +260,15 @@ get paginatedTickets() {
 }
 
 // Add this new method to view PDF
-viewPdf(attachment: any): void {
-  if (!attachment) return;
+// viewPdf(attachment: any): void {
+//   if (!attachment) return;
 
-  // Create the PDF data URL
-  const pdfUrl = `data:${attachment.contentType};base64,${attachment.data}`;
+//   // Create the PDF data URL
+//   const pdfUrl = `data:${attachment.contentType};base64,${attachment.data}`;
   
-  // Open in new tab
-  window.open(pdfUrl, '_blank');
-}
+//   // Open in new tab
+//   window.open(pdfUrl, '_blank');
+// }
 
 // Modify the removeAttachment method
 removeAttachment(): void {
@@ -568,17 +569,47 @@ formatDateForInput(dateString: string): string {
     return '';
   }
 
-  isImageFullScreen = false;
-  selectedImageUrl = '';
+  // isImageFullScreen = false;
+  // selectedImageUrl = '';
 
-  viewFullImage(url: string): void {
-    this.selectedImageUrl = url;
-    this.isImageFullScreen = true;
+  // viewFullImage(url: string): void {
+  //   this.selectedImageUrl = url;
+  //   this.isImageFullScreen = true;
+  // }
+
+  // closeFullImage(): void {
+  //   this.isImageFullScreen = false;
+  // }
+isPdfFullScreen = false;
+selectedPdfUrl: SafeResourceUrl | null = null;
+
+viewPdf(attachment: any): void {
+  if (!attachment?.data?.data || !attachment?.contentType) {
+    console.error('Invalid attachment');
+    return;
   }
 
-  closeFullImage(): void {
-    this.isImageFullScreen = false;
+  const byteArray = new Uint8Array(attachment.data.data);
+  const blob = new Blob([byteArray], { type: attachment.contentType });
+  const blobUrl = URL.createObjectURL(blob);
+
+  // Option 1: open in a new tab
+  // window.open(blobUrl);
+
+  // Option 2: fullscreen overlay — if you already added it
+// ✅ Sanitize the blob URL
+  this.selectedPdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
+  this.isPdfFullScreen = true;
+}
+
+closeFullPdf(): void {
+  if (this.selectedPdfUrl) {
+    URL.revokeObjectURL((this.selectedPdfUrl as any).changingThisBreaksApplicationSecurity);
+    this.selectedPdfUrl = null;
   }
+  this.isPdfFullScreen = false;
+}
+
 
   // removeAttachment() {
   //   this.selectedTicket.attachment = null;  // Remove the existing image
