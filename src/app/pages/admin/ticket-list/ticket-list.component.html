@@ -102,25 +102,25 @@
                 <!-- Priority (Read-only) -->
                 <div class="col-md-6">
                     <label>Priority</label>
-                    <select *ngIf="isEditMode" class="form-control" formControlName="priority" >
+                    <!-- <select *ngIf="isEditMode" class="form-control" formControlName="priority" >
                         <option value="Low">Low</option>
                         <option value="Medium">Medium</option>
                         <option value="High">High</option>
                         <option value="Critical">Critical</option>
-                    </select>
-                    <input *ngIf="!isEditMode"class="form-control" formControlName="priority" type="text" readonly />
+                    </select> -->
+                    <input class="form-control" formControlName="priority" type="text" readonly />
 
                 </div>
 
                 <!-- Environment (Read-only) -->
                 <div class="col-md-6">
                     <label>Environment</label>
-                    <select *ngIf="isEditMode" class="form-control" formControlName="environment">
+                    <!-- <select *ngIf="isEditMode" class="form-control" formControlName="environment">
                         <option value="Development">Development</option>
                         <option value="Quality">Quality</option>
                         <option value="Production">Production</option>
-                    </select>
-                    <input *ngIf="!isEditMode"class="form-control" formControlName="environment" type="text" readonly />
+                    </select> -->
+                    <input class="form-control" formControlName="environment" type="text" readonly />
 
                 </div>
 
@@ -159,7 +159,7 @@
                 <div class="col-md-12">
                     <label>Description</label>
                     <textarea class="form-control" formControlName="description" rows="4"
-                        [readonly]="!isEditMode"></textarea>
+                       readonly ></textarea>
                 </div>
 
                 <!-- Assigned To  -->

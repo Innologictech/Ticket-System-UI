@@ -72,7 +72,7 @@ export class UserComponent {
 
         // Group tickets based on status (case-insensitive)
 
-        this.inProgressTickets = this.ticketData.filter(ticket => ticket.status.toLowerCase() === 'inprogress');
+        this.inProgressTickets = this.ticketData.filter(ticket => ticket.status.toLowerCase() === 'inprocess');
         this.holdTickets = this.ticketData.filter(ticket => ticket.status.toLowerCase() === 'hold');
         this.uatTickets = this.ticketData.filter(ticket => ticket.status.toLowerCase() === 'uat');
         this.resolvedTickets = this.ticketData.filter(ticket => ticket.status.toLowerCase() === 'resolved');

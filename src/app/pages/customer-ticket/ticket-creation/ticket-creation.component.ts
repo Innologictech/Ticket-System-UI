@@ -124,21 +124,32 @@ applySearchFilter(): void {
 
 }
 
+  // formatDate(date: Date): string {
+   
+  //   const istOffset = 5.5 * 60 * 60 * 1000; 
+  //   const istDate = new Date(date.getTime() + istOffset);
+
+  //   const year = istDate.getFullYear();
+  //   const month = (istDate.getMonth() + 1).toString().padStart(2, '0');
+  //   const day = istDate.getDate().toString().padStart(2, '0');
+  //   const hours = istDate.getHours().toString().padStart(2, '0');
+  //   const minutes = istDate.getMinutes().toString().padStart(2, '0');
+  //   const seconds = istDate.getSeconds().toString().padStart(2, '0');
+
+  //   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+   
+  // }
   formatDate(date: Date): string {
-    // Convert to IST (UTC+5:30)
-    const istOffset = 5.5 * 60 * 60 * 1000; // IST offset in milliseconds
-    const istDate = new Date(date.getTime() + istOffset);
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  const seconds = date.getSeconds().toString().padStart(2, '0');
 
-    const year = istDate.getFullYear();
-    const month = (istDate.getMonth() + 1).toString().padStart(2, '0');
-    const day = istDate.getDate().toString().padStart(2, '0');
-    const hours = istDate.getHours().toString().padStart(2, '0');
-    const minutes = istDate.getMinutes().toString().padStart(2, '0');
-    const seconds = istDate.getSeconds().toString().padStart(2, '0');
+  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+}
 
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-    // Example: "2025-07-25 16:32:45"
-  }
 
 
 
@@ -417,7 +428,9 @@ removeAttachment(): void {
     this.submit = false;
     this.resetModeFlags(); // Clear previous mode
     this.isEditMode = true;
-    const formattedDate = ticket.date ? ticket.date.split('T')[0] : '';
+    // const formattedDate = ticket.date ? ticket.date.split('T')[0] : '';
+    const formattedDate = ticket.date ? this.formatDateForInput(ticket.date) : '';
+
     this.allStatus = ticket.allowedNextStatuses || [];
     this.allowedNextStatuses = ticket.allowedNextStatuses || [];
 
@@ -446,6 +459,17 @@ removeAttachment(): void {
       size: 'lg'
     });
   }
+formatDateForInput(dateString: string): string {
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+
+  // For <input type="datetime-local">
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+}
 
 
   viewTicket(ticket: any, templateRef: any): void {

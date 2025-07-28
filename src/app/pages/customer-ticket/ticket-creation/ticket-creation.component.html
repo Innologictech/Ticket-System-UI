@@ -14,12 +14,12 @@
                     </button>
                 </div>
                  
-    <!-- <div class="mb-3 d-flex justify-content-between">
+    <div class="mb-3 d-flex justify-content-between">
 <input type="text" class="w-15" style="margin-top: 1rem;" placeholder="Search..." 
        [(ngModel)]="searchText" 
        (ngModelChange)="applySearchFilter()"
        name="searchText" />
-    </div> -->
+    </div>
 
                 <div class="table-responsive tableFixHead">
                     <table class="table table-bordered table-hover bg-white">
@@ -116,14 +116,23 @@
                         Reported By is required.
                     </div>
                 </div> -->
+                <!-- <div class="col-md-6">
+                    <label>Reported By<span class="text-danger">*</span></label>
+                    <input class="form-control" formControlName="reportedBy" type="text"
+                        placeholder="Enter Reporter Name" readonly [readonly]="isViewMode || isEditMode" />  
+                    <div class="text-danger" *ngIf="submit && f['reportedBy'].errors?.['required']">
+                        Reported By is required.
+                    </div>
+                </div> -->
                 <div class="col-md-6">
                     <label>Reported By<span class="text-danger">*</span></label>
                     <input class="form-control" formControlName="reportedBy" type="text"
-                        placeholder="Enter Reporter Name" readonly [readonly]="isViewMode || isEditMode" />  <!-- Added isEditMode condition -->
+                        placeholder="Enter Reporter Name" readonly />
                     <div class="text-danger" *ngIf="submit && f['reportedBy'].errors?.['required']">
                         Reported By is required.
                     </div>
                 </div>
+
 
                 <!-- Priority -->
                 <div class="col-md-6">
@@ -189,7 +198,7 @@
                     </select>
                     <!-- Show readonly input in create mode -->
                     <input *ngIf="!isEditMode" class="form-control" formControlName="ticketstatus" type="text" readonly
-                        [readonly]="isViewMode" />
+                         />
                 </div>
 
 
@@ -204,10 +213,11 @@
                 </div> -->
                 <div class="col-md-6">
                     <label>Date&Time<span class="text-danger">*</span></label>
-                    <input class="form-control" formControlName="date" type="date" 
-                        [readonly]="isViewMode || isEditMode" />  <!-- Added isEditMode condition -->
+                    <!-- <input class="form-control" formControlName="date" type="datetime-local" 
+                        readonly />   -->
+                        <input class="form-control" formControlName="date" type="datetime-local" [readonly]="true" />
                     <div class="text-danger" *ngIf="submit && f['date'].errors?.['required']">
-                        Date is required.
+                        Date and time is required.
                     </div>
                 </div>
 
