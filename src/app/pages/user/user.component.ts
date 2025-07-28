@@ -1,5 +1,5 @@
 import { Component, NgModule, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
 import { LoaderService } from 'src/app/core/services/loader.service';
 import { GeneralserviceService } from 'src/app/generalservice.service';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -33,10 +33,12 @@ export class UserComponent {
   bugTicketForm: FormGroup;
   isEditMode = false;
   userList = [];
+    selectedFileBase64: string | null = null;
+  selectedUploadBase64: string | null = null;
   selectedTicket:any;
   status$: Observable<Status[]>;
     allStatus: any[]=[];
-
+EditmodalRef: any;
 
   constructor(private modalService: NgbModal, private service: GeneralserviceService, private fb: FormBuilder, private loaderservice: LoaderService, private store: Store) {
     this.bugTicketForm = this.fb.group({
@@ -49,7 +51,7 @@ export class UserComponent {
       description: [''],
       assignedTo: [''],
       remarks: [''],
-      attachment: [''],
+      attachments: [''],
     });
   }
   ngOnInit(): void {
@@ -62,7 +64,64 @@ export class UserComponent {
         });
   }
 
+    validateFileType(control: AbstractControl): ValidationErrors | null {
+    const file = control.value;
+    if (file) {
+      if (file instanceof File) {
+        if (file.type !== 'application/pdf') {
+          return { invalidFileType: true };
+        }
+      }
+    }
+    return null;
+  }
+    onFileSelected(event: any, type: 'attachments' | 'upload'): void {
+    const file: File = event.target.files[0];
+    
+    // Check if file is PDF
+    if (file && file.type !== 'application/pdf') {
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid File',
+        text: 'Please upload only PDF files',
+        confirmButtonText: 'OK'
+      });
+      event.target.value = ''; // Clear the file input
+      return;
+    }
+  
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64 = reader.result as string;
+        console.log(`Base64 [${type}]:`, base64);
+  
+        if (type === 'attachments') {
+          this.selectedFileBase64 = base64;
+        } else if (type === 'upload') {
+          this.selectedUploadBase64 = base64;
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+  // Add this new method to view PDF
+viewPdf(attachment: any): void {
+  if (!attachment) return;
 
+  // Create the PDF data URL
+  const pdfUrl = `data:${attachment.contentType};base64,${attachment.data}`;
+  
+  // Open in new tab
+  window.open(pdfUrl, '_blank');
+}
+
+// Modify the removeAttachment method
+removeAttachment(): void {
+  this.selectedTicket.attachment = null;
+  this.selectedFileBase64 = null;
+  this.bugTicketForm.get('attachments')?.reset();
+}
   getTickets(): void {
     this.loaderservice.showLoader();
     this.service.GetTicketDetails().subscribe(
@@ -174,6 +233,65 @@ export class UserComponent {
 //          }
 //        );
 // }
+UpdateTicket(): void {
+  if (this.bugTicketForm.invalid || !this.selectedTicket) {
+    this.bugTicketForm.markAllAsTouched();
+    return;
+  }
+
+  const rawForm = this.bugTicketForm.value;
+
+  const payload: any = {
+    customerticketId: this.selectedTicket.customerticketId,
+    title: rawForm.title,
+    reportedBy: rawForm.reportedBy,
+    priority: rawForm.priority,
+    environment: rawForm.environment,
+    status: rawForm.ticketstatus,
+    consultant: rawForm.assignedTo,
+    date: rawForm.date,
+    description: rawForm.description,
+    attachment: rawForm.attachments || ''
+  };
+  // ✅ Add assigned date & days only when assigning
+// y
+
+  // if (status === 'Rejected' && reason) {
+  //   payload.rejectionReason = reason;
+  // }
+
+  this.service.UpdateTicket(payload).subscribe(
+    (response: any) => {
+      const assignedToName = rawForm.assignedTo || 'consultant';
+
+      Swal.fire({
+        icon: 'success',
+        title: `Ticket ${status} Successfully`,
+        text: `Ticket has been assigned to ${assignedToName}`,
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'OK'
+      });
+
+      this.bugTicketForm.reset();
+      this.selectedTicket = null;
+      this.getTickets();
+
+      if (this.EditmodalRef) {
+        this.EditmodalRef.close();
+      }
+    },
+    (error) => {
+      console.error('Update failed:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Failed',
+        text: `Failed to ${status.toLowerCase()} ticket.`,
+        confirmButtonColor: '#d33',
+        confirmButtonText: 'OK'
+      });
+    }
+  );
+}
 
 
 }

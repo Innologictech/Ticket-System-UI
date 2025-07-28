@@ -230,7 +230,7 @@ applySearchFilter(): void {
 
   this.filteredTickets = filtered;
   this.generateSummary();
-  this.prepareCharts();
+  // this.prepareCharts();
 }
 
 
