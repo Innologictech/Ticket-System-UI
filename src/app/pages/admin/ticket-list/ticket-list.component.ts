@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GeneralserviceService } from 'src/app/generalservice.service';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators,ReactiveFormsModule,FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators,ReactiveFormsModule,FormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import { LoaderService } from 'src/app/core/services/loader.service';
@@ -27,7 +27,8 @@ userList: any[] = [];
 isEditMode: boolean = false;
   ticketData: any[] = [];
   EditmodalRef: any;
-
+  selectedFileBase64: string | null = null;
+  selectedUploadBase64: string | null = null;
     tickets$: Observable<Ticket[]>;
   loading$: Observable<boolean>;
    status$: Observable<Status[]>;
@@ -43,7 +44,8 @@ isEditMode: boolean = false;
         description: ['', Validators.required],
         attachments: [null],
         status:[''],
-        assignedTo:['']
+        assignedTo:[''],
+         upload: [''],
       });
         this.store.dispatch(TicketActions.loadTickets())
             this.tickets$ = this.store.select(selectAllTickets);
@@ -67,6 +69,64 @@ isEditMode: boolean = false;
   constructor(private service: GeneralserviceService,private spinner:NgxSpinnerService, private modalService: NgbModal,private fb: FormBuilder,private loaderservice:LoaderService,private store: Store) {
 
   }
+    validateFileType(control: AbstractControl): ValidationErrors | null {
+    const file = control.value;
+    if (file) {
+      if (file instanceof File) {
+        if (file.type !== 'application/pdf') {
+          return { invalidFileType: true };
+        }
+      }
+    }
+    return null;
+  }
+    onFileSelected(event: any, type: 'attachments' | 'upload'): void {
+    const file: File = event.target.files[0];
+    
+    // Check if file is PDF
+    if (file && file.type !== 'application/pdf') {
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid File',
+        text: 'Please upload only PDF files',
+        confirmButtonText: 'OK'
+      });
+      event.target.value = ''; // Clear the file input
+      return;
+    }
+  
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64 = reader.result as string;
+        console.log(`Base64 [${type}]:`, base64);
+  
+        if (type === 'attachments') {
+          this.selectedFileBase64 = base64;
+        } else if (type === 'upload') {
+          this.selectedUploadBase64 = base64;
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+  // Add this new method to view PDF
+viewPdf(attachment: any): void {
+  if (!attachment) return;
+
+  // Create the PDF data URL
+  const pdfUrl = `data:${attachment.contentType};base64,${attachment.data}`;
+  
+  // Open in new tab
+  window.open(pdfUrl, '_blank');
+}
+
+// Modify the removeAttachment method
+removeAttachment(): void {
+  this.selectedTicket.attachment = null;
+  this.selectedFileBase64 = null;
+  this.bugTicketForm.get('attachments')?.reset();
+}
   viewTicketModel(ticket: any, templateRef: any): void {
     console.log('ticket',ticket)
     this.isEditMode = false;
@@ -85,7 +145,8 @@ isEditMode: boolean = false;
       date: formattedDate,
       description: ticket.description,
       assignedTo: ticket.consultant || '',
-      attachments: ticket.attachment
+      attachments: ticket.attachment,
+       
     });
  
     this.EditmodalRef = this.modalService.open(templateRef, {

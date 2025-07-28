@@ -308,7 +308,7 @@
 
                 <div *ngIf="isEditMode" class="col-md-12">
                     <label>Upload</label>
-                    <input class="form-control" formControlName="upload" type="file" [readonly]="isViewMode"
+                    <input class="form-control" formControlName="upload" type="file"  accept=".pdf"[readonly]="isViewMode"
                         (change)="onFileSelected($event,'upload')" />
                 </div>
 

@@ -344,7 +344,7 @@ applySearchFilter(): void {
         columnWidth: "55%"
       }
     },
-    colors: ["#f39c12", "#3498db", "#2ecc71"]
+    colors: ["#ebc07aff", "#89c5edff", "#80ebacff"]
   };
 
   this.pieChartOptions = {
@@ -359,7 +359,7 @@ applySearchFilter(): void {
       height: "400px"
     },
     labels: ["Open", "In Progress", "Closed"],
-    colors: ["#f39c12", "#3498db", "#2ecc71"]
+    colors: ["#efc98dff", "#7fc6f6ff", "#90ebb6ff"]
   };
 }
 
