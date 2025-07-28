@@ -49,7 +49,7 @@ import { CustomerTicketModule } from './customer-ticket/customer-ticket.module';
                 declarations: [
                         //     TicketCreationComponent
 
-                        TicketCreationComponent,
+                        // TicketCreationComponent,
                        
                 ],
                 imports: [CommonModule,

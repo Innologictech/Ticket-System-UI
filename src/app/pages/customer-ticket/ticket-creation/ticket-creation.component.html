@@ -13,6 +13,13 @@
                         Create New Ticket
                     </button>
                 </div>
+                 
+    <!-- <div class="mb-3 d-flex justify-content-between">
+<input type="text" class="w-15" style="margin-top: 1rem;" placeholder="Search..." 
+       [(ngModel)]="searchText" 
+       (ngModelChange)="applySearchFilter()"
+       name="searchText" />
+    </div> -->
 
                 <div class="table-responsive tableFixHead">
                     <table class="table table-bordered table-hover bg-white">
@@ -27,7 +34,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let ticket of tickets$ | async" class="align-middle">
+                            <!-- <tr *ngFor="let ticket of tickets$ | async" class="align-middle"> -->
+<tr *ngFor="let ticket of ticketList | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }">
+
                                 <td>{{ ticket.customerticketId }}</td>
                                 <td>{{ ticket.title }}</td>
                                 <td>
@@ -56,6 +65,10 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="d-flex justify-content-end mt-3">
+    <pagination-controls (pageChange)="currentPage = $event" class="pagination justify-content-end"></pagination-controls>
+</div>
+
 
 
             </div>
@@ -77,20 +90,36 @@
             <div class="row">
 
                 <!-- Title -->
-                <div class="col-md-6">
+                <!-- <div class="col-md-6">
                     <label>Issue Short Description<span class="text-danger">*</span></label>
                     <input class="form-control" formControlName="title" type="text" placeholder="Enter Title"
                         [readonly]="isViewMode" />
                     <div class="text-danger" *ngIf="submit && f['title'].errors?.['required']">
                         Issue short Description is required.
                     </div>
+                </div> -->
+                <div class="col-md-6">
+                    <label>Issue Short Description<span class="text-danger">*</span></label>
+                    <input class="form-control" formControlName="title" type="text" placeholder="Enter Title"
+                        [readonly]="isViewMode || isEditMode" />  <!-- Added isEditMode condition -->
+                    <div class="text-danger" *ngIf="submit && f['title'].errors?.['required']">
+                        Issue short Description is required.
+                    </div>
                 </div>
 
                 <!-- Reported By -->
-                <div class="col-md-6">
+                <!-- <div class="col-md-6">
                     <label>Reported By<span class="text-danger">*</span></label>
                     <input class="form-control" formControlName="reportedBy" type="text"
                         placeholder="Enter Reporter Name" readonly [readonly]="isViewMode" />
+                    <div class="text-danger" *ngIf="submit && f['reportedBy'].errors?.['required']">
+                        Reported By is required.
+                    </div>
+                </div> -->
+                <div class="col-md-6">
+                    <label>Reported By<span class="text-danger">*</span></label>
+                    <input class="form-control" formControlName="reportedBy" type="text"
+                        placeholder="Enter Reporter Name" readonly [readonly]="isViewMode || isEditMode" />  <!-- Added isEditMode condition -->
                     <div class="text-danger" *ngIf="submit && f['reportedBy'].errors?.['required']">
                         Reported By is required.
                     </div>
@@ -166,9 +195,17 @@
 
 
                 <!-- Date -->
-                <div class="col-md-6">
+                <!-- <div class="col-md-6">
                     <label>Date&Time<span class="text-danger">*</span></label>
                     <input class="form-control" formControlName="date" type="date" [readonly]="isViewMode" />
+                    <div class="text-danger" *ngIf="submit && f['date'].errors?.['required']">
+                        Date is required.
+                    </div>
+                </div> -->
+                <div class="col-md-6">
+                    <label>Date&Time<span class="text-danger">*</span></label>
+                    <input class="form-control" formControlName="date" type="date" 
+                        [readonly]="isViewMode || isEditMode" />  <!-- Added isEditMode condition -->
                     <div class="text-danger" *ngIf="submit && f['date'].errors?.['required']">
                         Date is required.
                     </div>
@@ -211,11 +248,11 @@
 
                 <div *ngIf="!isEditMode" class="col-md-12">
                     <label>Attachments</label>
-                    <input class="form-control" formControlName="attachments" type="file" [readonly]="isViewMode"
+                    <input class="form-control" formControlName="attachments" type="file" [readonly]="isViewMode" accept=".pdf"
                         (change)="onFileSelected($event,'attachments')" />
                 </div>
 
-                <div class="col-md-12" *ngIf="isEditMode">
+                <!-- <div class="col-md-12" *ngIf="isEditMode">
                     <label>Attachment</label><br>
 
                     <div class="image-container"
@@ -228,9 +265,25 @@
                         <span class="remove-icon" (click)="removeAttachment()">&times;</span>
                     </div>
 
-                    <!-- File Upload (Shown when no attachment) -->
                     <ng-template #uploadNew>
                         <input type="file" class="form-control" formControlName="attachments" [readonly]="isViewMode"
+                            (change)="onFileSelected($event, 'attachments')" />
+                    </ng-template>
+                </div> -->
+                <div class="col-md-12" *ngIf="isEditMode">
+                    <label>Attachment</label><br>
+                    
+                    <div *ngIf="selectedTicket?.attachment?.contentType === 'application/pdf'; else uploadNew">
+                        <div class="pdf-preview" (click)="viewPdf(selectedTicket.attachment)">
+                            <i class="fa fa-file-pdf-o pdf-icon"></i>
+                            <span>{{ selectedTicket.attachment.filename }}</span>
+                        </div>
+                        <span class="remove-icon" (click)="removeAttachment()">&times;</span>
+                    </div>
+
+                    <ng-template #uploadNew>
+                        <input type="file" class="form-control" formControlName="attachments" 
+                            [readonly]="isViewMode" accept=".pdf"
                             (change)="onFileSelected($event, 'attachments')" />
                     </ng-template>
                 </div>

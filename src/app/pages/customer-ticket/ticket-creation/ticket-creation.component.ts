@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators,  AbstractControl, 
+  ValidationErrors  } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GeneralserviceService } from 'src/app/generalservice.service';
 import Swal from 'sweetalert2';
@@ -11,6 +12,7 @@ import { Store } from '@ngrx/store';
 import * as TicketActions from 'src/app/store/ticketSytem/ticket.actions';
 import { selectAllStatus } from 'src/app/store/ticketSytem/ticket.selectors';
 import { Status } from 'src/app/store/ticketSytem/ticket.model';
+import {  selectAllTickets } from 'src/app/store/ticketSytem/ticket.selectors';
 
 @Component({
   selector: 'app-ticket-creation',
@@ -41,6 +43,11 @@ export class TicketCreationComponent {
   allStatus: any[] = [];
   allowedNextStatuses: any[] = [];
 
+  //pagination//
+  currentPage: number = 1;
+itemsPerPage: number = 10;
+  searchText: string = '';
+ ticketList: any[] = []; // ✅ Safe default
 
   constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef, private modalService: NgbModal, private service: GeneralserviceService, private loaderService: LoaderService, private authService: AuthenticationService, private store: Store) { }
 
@@ -62,17 +69,35 @@ export class TicketCreationComponent {
       date: [this.formatDate(new Date()), Validators.required],
       // Client:[this.currentUser?.Client || this.currentUser?.data?.Client || '',],
       description: ['', Validators.required],
-      attachments: [''],
+      attachments: ['',[this.validateFileType.bind(this)]],
       upload: [''],
     });
     this.getTickets();
-    this.store.dispatch(TicketActions.loadStatus())
-    this.status$ = this.store.select(selectAllStatus);
-    this.status$.subscribe((status: any) => {
-      this.allStatus = status?.data || []; // Ensure it's an array
-      console.log(' this.allStatus', this.allStatus)
-    });
+      this.store.dispatch(TicketActions.loadTickets())
+                  this.tickets$ = this.store.select(selectAllTickets);
+                  this.tickets$.subscribe((tickets:any) => {
+          this.ticketData =  tickets?.data || []; // Ensure it's an array
+          console.log('this.ticketData',this.tickets$) 
+          
+           this.store.dispatch(TicketActions.loadStatus())
+              this.status$ = this.store.select(selectAllStatus);
+              this.status$.subscribe((status: any) => {
+                this.allStatus = status?.data || []; // Ensure it's an array
+                console.log(' this.allStatus', this.allStatus)
+              });
+        });
   }
+  validateFileType(control: AbstractControl): ValidationErrors | null {
+  const file = control.value;
+  if (file) {
+    if (file instanceof File) {
+      if (file.type !== 'application/pdf') {
+        return { invalidFileType: true };
+      }
+    }
+  }
+  return null;
+}
 
   // formatDate(date: Date): string {
   //   const year = date.getFullYear();
@@ -80,7 +105,24 @@ export class TicketCreationComponent {
   //   const day = date.getDate().toString().padStart(2, '0');
   //   return `${year}-${month}-${day}`; // Example: "2025-07-22"
   // }
+applySearchFilter(): void {
+  if (!this.ticketData || !Array.isArray(this.ticketData)) return;
 
+  let filtered = [...this.filterTickets(this.ticketData)];
+
+  if (this.searchText) {
+    const searchTextLower = this.searchText.toLowerCase();
+    filtered = filtered.filter(ticket =>
+      Object.values(ticket).some(val =>
+        val && String(val).toLowerCase().includes(searchTextLower)
+      )
+    );
+  }
+
+  this.ticketList = filtered;
+  // If you need to maintain filteredTickets for other purposes
+
+}
 
   formatDate(date: Date): string {
     // Convert to IST (UTC+5:30)
@@ -100,23 +142,48 @@ export class TicketCreationComponent {
 
 
 
+  // getTickets(): void {
+  //   this.loaderService.showLoader();
+  //   // this.tickets$ = this.service.GetTicketDetails().pipe(
+  //     this.service.GetTicketDetails().pipe(
+  //     map((response: any) => {
+  //       // const tickets = response?.data ?? (Array.isArray(response) ? response : []);
+  //          this.ticketData = response?.data || [];
+  //     this.applySearchFilter(); 
+  //       // return this.filterTickets(tickets);
+  //     }),
+  //     catchError(error => {
+  //       console.error('Error fetching tickets', error);
+  //       return of([]);
+  //     }),
+  //     finalize(() => {
+  //       this.loaderService.hideLoader();
+  //       this.cdr.detectChanges();
+  //     })
+  //   );
+  // }
   getTickets(): void {
-    this.loaderService.showLoader();
-    this.tickets$ = this.service.GetTicketDetails().pipe(
-      map((response: any) => {
-        const tickets = response?.data ?? (Array.isArray(response) ? response : []);
-        return this.filterTickets(tickets);
-      }),
-      catchError(error => {
-        console.error('Error fetching tickets', error);
-        return of([]);
-      }),
-      finalize(() => {
-        this.loaderService.hideLoader();
-        this.cdr.detectChanges();
-      })
-    );
-  }
+  this.loaderService.showLoader();
+  this.service.GetTicketDetails().pipe(
+    map((response: any) => {
+      this.ticketData = response?.data || [];
+      this.applySearchFilter(); 
+    }),
+    catchError(error => {
+      console.error('Error fetching tickets', error);
+      return of([]);
+    }),
+    finalize(() => {
+      this.loaderService.hideLoader();
+      this.cdr.detectChanges();
+    })
+  ).subscribe(); // 🔥 Required to trigger the pipe!
+}
+get paginatedTickets() {
+  const start = (this.currentPage - 1) * this.itemsPerPage;
+  return this.ticketList.slice(start, start + this.itemsPerPage);
+}
+
 
   filterTickets(tickets: any[]): any[] {
     // Get the username consistently
@@ -149,27 +216,75 @@ export class TicketCreationComponent {
   //     reader.readAsDataURL(file); // Convert to Base64
   //   }
   // }
-
   onFileSelected(event: any, type: 'attachments' | 'upload'): void {
-    const file: File = event.target.files[0];
-
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const base64 = reader.result as string;
-        console.log(`Base64 [${type}]:`, base64);
-
-        if (type === 'attachments') {
-          this.selectedFileBase64 = base64;
-          // handle non-edit mode attachment logic
-        } else if (type === 'upload') {
-          this.selectedUploadBase64 = base64;
-          // handle edit mode upload logic
-        }
-      };
-      reader.readAsDataURL(file);
-    }
+  const file: File = event.target.files[0];
+  
+  // Check if file is PDF
+  if (file && file.type !== 'application/pdf') {
+    Swal.fire({
+      icon: 'error',
+      title: 'Invalid File',
+      text: 'Please upload only PDF files',
+      confirmButtonText: 'OK'
+    });
+    event.target.value = ''; // Clear the file input
+    return;
   }
+
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64 = reader.result as string;
+      console.log(`Base64 [${type}]:`, base64);
+
+      if (type === 'attachments') {
+        this.selectedFileBase64 = base64;
+      } else if (type === 'upload') {
+        this.selectedUploadBase64 = base64;
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+// Add this new method to view PDF
+viewPdf(attachment: any): void {
+  if (!attachment) return;
+
+  // Create the PDF data URL
+  const pdfUrl = `data:${attachment.contentType};base64,${attachment.data}`;
+  
+  // Open in new tab
+  window.open(pdfUrl, '_blank');
+}
+
+// Modify the removeAttachment method
+removeAttachment(): void {
+  this.selectedTicket.attachment = null;
+  this.selectedFileBase64 = null;
+  this.bugTicketForm.get('attachments')?.reset();
+}
+
+  // onFileSelected(event: any, type: 'attachments' | 'upload'): void {
+  //   const file: File = event.target.files[0];
+
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onload = () => {
+  //       const base64 = reader.result as string;
+  //       console.log(`Base64 [${type}]:`, base64);
+
+  //       if (type === 'attachments') {
+  //         this.selectedFileBase64 = base64;
+  //         // handle non-edit mode attachment logic
+  //       } else if (type === 'upload') {
+  //         this.selectedUploadBase64 = base64;
+  //         // handle edit mode upload logic
+  //       }
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // }
 
 
 
@@ -441,9 +556,9 @@ export class TicketCreationComponent {
     this.isImageFullScreen = false;
   }
 
-  removeAttachment() {
-    this.selectedTicket.attachment = null;  // Remove the existing image
-  }
+  // removeAttachment() {
+  //   this.selectedTicket.attachment = null;  // Remove the existing image
+  // }
 
 
   closeModal(reason: any) {
