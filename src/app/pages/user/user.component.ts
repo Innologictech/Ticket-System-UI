@@ -57,6 +57,7 @@ export class UserComponent {
       remarks: [''],
       attachments: [''],
       upload: [''],
+      upload2: ['']
     });
   }
   ngOnInit(): void {
@@ -147,9 +148,9 @@ export class UserComponent {
 
   // Modify the removeAttachment method
   removeAttachment(): void {
-    this.selectedTicket.attachment = null;
-    this.selectedFileBase64 = null;
-    this.bugTicketForm.get('attachments')?.reset();
+    this.selectedTicket.upload2 = null;
+    this.selectedUpload2Base64 = null;
+    this.bugTicketForm.get('upload2')?.reset();
   }
   getTickets(): void {
     this.loaderservice.showLoader();
@@ -161,7 +162,11 @@ export class UserComponent {
         // Group tickets based on status (case-insensitive)
         this.assignedTickets = this.ticketData.filter(ticket => ticket.status.toLowerCase() === 'assigned');
         this.inProgressTickets = this.ticketData.filter(ticket => ticket.status.toLowerCase() === 'inprocess');
-        this.holdTickets = this.ticketData.filter(ticket => ticket.status.toLowerCase() === 'hold');
+        // this.holdTickets = this.ticketData.filter(ticket => ticket.status.toLowerCase() === 'hold-cust'||'hold-ilt'||'clientaction'||'softwarechange'||'thirdparty');
+        this.holdTickets = this.ticketData.filter(ticket =>
+          ['hold-cust', 'hold-ilt', 'clientaction', 'softwarechange', 'thirdparty'].includes(ticket.status.toLowerCase())
+        );
+
         this.uatTickets = this.ticketData.filter(ticket => ticket.status.toLowerCase() === 'uat');
         this.resolvedTickets = this.ticketData.filter(ticket => ticket.status.toLowerCase() === 'resolved');
         this.completedTickets = this.ticketData.filter(ticket => ticket.status.toLowerCase() === 'completed');
@@ -192,6 +197,7 @@ export class UserComponent {
 
     this.allStatus = ticket.allowedNextStatuses || [];
     this.selectedTicket = ticket;
+    console.log("selected ticket in consulatnt", this.selectedTicket);
     this.isEditMode = false;
     // ✅ If attachment exists from DB (Buffer form), convert it to Base64
     if (ticket.attachment && ticket.attachment.data && ticket.attachment.data.data) {
@@ -235,7 +241,7 @@ export class UserComponent {
     this.bugTicketForm.get('priority')?.disable();
     this.bugTicketForm.get('environment')?.disable();
 
-    this.modalService.open(content, { size: 'lg', backdrop: 'static' });
+    this.EditmodalRef = this.modalService.open(content, { size: 'lg', backdrop: 'static' });
   }
 
   //   UpdateTicket() {

@@ -65,6 +65,14 @@ export class TicketListComponent implements OnInit {
     // this.loading$ = this.store.select(selectTicketLoading);
     // this.getTickets();
     this.getAllUserList();
+
+     this.bugTicketForm.get('assignedTo')?.valueChanges.subscribe((assignedUser) => {
+    if (assignedUser) {
+      this.bugTicketForm.patchValue({
+        ticketstatus: 'Assigned'
+      });
+    }
+  });
   }
   statusOptions = ['Open', 'In Progress', 'Hold', 'UAT', 'Resolved', 'Closed', 'Reopen'];
 

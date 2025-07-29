@@ -14,7 +14,8 @@
 
 
 .table-bordered {
-  border: $table-border-width solid $table-border-color;
+  // border: $table-border-width solid $table-border-color;
+  border-radius: 16px;
 }
 
 .table-nowrap {
