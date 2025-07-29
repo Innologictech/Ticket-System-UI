@@ -31,6 +31,8 @@ export class UserComponent {
   uatTickets: any[] = [];
   inProgressTickets: any[] = [];
   resolvedTickets: any[] = [];
+  assignedTickets: any[] = [];
+  completedTickets: any[] = [];
   bugTicketForm: FormGroup;
   isEditMode = false;
   userList = [];
@@ -157,11 +159,12 @@ export class UserComponent {
         this.ticketData = response.data;
 
         // Group tickets based on status (case-insensitive)
-
+        this.assignedTickets = this.ticketData.filter(ticket => ticket.status.toLowerCase() === 'assigned');
         this.inProgressTickets = this.ticketData.filter(ticket => ticket.status.toLowerCase() === 'inprocess');
         this.holdTickets = this.ticketData.filter(ticket => ticket.status.toLowerCase() === 'hold');
         this.uatTickets = this.ticketData.filter(ticket => ticket.status.toLowerCase() === 'uat');
         this.resolvedTickets = this.ticketData.filter(ticket => ticket.status.toLowerCase() === 'resolved');
+        this.completedTickets = this.ticketData.filter(ticket => ticket.status.toLowerCase() === 'completed');
 
         this.loaderservice.hideLoader();
       },
@@ -225,7 +228,7 @@ export class UserComponent {
       assignedTo: ticket.assignedTo,
       attachments: ticket.attachment,
       upload: ticket.upload,
-      remarks:ticket.remarks
+      remarks: ticket.remarks
 
     });
     // Disable Priority and Environment
@@ -309,7 +312,7 @@ export class UserComponent {
       attachment: this.selectedFileBase64 || '',
       upload: this.selectedUploadBase64 || '',
       upload2: this.selectedUpload2Base64 || '',
-      remarks:rawForm.remarks
+      remarks: rawForm.remarks
       // upload:
     };
     // ✅ Add assigned date & days only when assigning
