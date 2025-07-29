@@ -131,23 +131,24 @@
                 </div> -->
                 <!-- ... (previous HTML remains the same until the Status field) -->
 
-<!-- Status Field - Different display based on mode -->
-<div class="col-md-6">
-    <label>Status</label>
-    <!-- Show dropdown in edit mode -->
-    <select *ngIf="isEditMode" class="form-control" formControlName="ticketstatus">
-        <!-- @for (status of statusOptions;track status){
+                <!-- Status Field - Different display based on mode -->
+                <div class="col-md-6">
+                    <label>Status</label>
+                    <!-- Show dropdown in edit mode -->
+                    <select *ngIf="isEditMode" class="form-control" formControlName="ticketstatus">
+                        <!-- @for (status of statusOptions;track status){
         <option  [value]="status">{{status}}</option>
 
         } -->
-        <option  [value]=""></option>
-        <option *ngFor="let status of allStatus" [value]="status.status">{{status.label}}</option>
-    </select>
-    <!-- Show readonly input in create mode -->
-    <input *ngIf="!isEditMode"class="form-control" formControlName="ticketstatus" type="text" readonly />
-</div>
+                        <option [value]=""></option>
+                        <option *ngFor="let status of allStatus" [value]="status.status">{{status.label}}</option>
+                    </select>
+                    <!-- Show readonly input in create mode -->
+                    <input *ngIf="!isEditMode" class="form-control" formControlName="ticketstatus" type="text"
+                        readonly />
+                </div>
 
-<!-- ... (rest of the HTML remains the same) -->
+                <!-- ... (rest of the HTML remains the same) -->
 
                 <!-- Date (Read-only) -->
                 <div class="col-md-6">
@@ -158,8 +159,7 @@
                 <!-- Description (Read-only) -->
                 <div class="col-md-12">
                     <label>Description</label>
-                    <textarea class="form-control" formControlName="description" rows="4"
-                       readonly ></textarea>
+                    <textarea class="form-control" formControlName="description" rows="4" readonly></textarea>
                 </div>
 
                 <!-- Assigned To  -->
@@ -171,65 +171,28 @@
                             {{ user.userName }}
                         </option>
                     </select>
-                    <input *ngIf="!isEditMode"class="form-control" formControlName="assignedTo" type="text" readonly />
+                    <input *ngIf="!isEditMode" class="form-control" formControlName="assignedTo" type="text" readonly />
 
                 </div>
+
 
 
                 <!-- Attachment -->
-                <!-- <div class="col-md-12">
+
+                <div *ngIf="!isEditMode" class="col-md-12">
                     <label>Attachments</label>
-                    <input class="form-control" type="file" (change)="onFileSelected($event)" />
-                </div> -->
-                <!-- Image Display -->
-                <!-- <div class="col-md-12" *ngIf="selectedTicket?.attachment?.contentType?.startsWith('image/')">
-                    <label>Attachment</label><br>
-                    <img [src]="getAttachmentUrl(selectedTicket)" [alt]="selectedTicket?.attachment?.filename"
-                        style="max-width:100%; max-height:200px; object-fit:contain; border: 1px solid #ddd; padding: 5px;" />
-                </div> -->
-
-                  <!-- <div class="col-md-12" *ngIf="isEditMode">
-                    <label>Attachment</label><br>
-
-                    <div class="image-container"
-                        *ngIf="selectedTicket?.attachment?.data && selectedTicket?.attachment?.contentType?.startsWith('image'); else uploadNew">
-
-                        <img [src]="'data:' + selectedTicket.attachment.contentType + ';base64,' + selectedTicket.attachment.data"
-                            alt="Attachment"
-                            (click)="viewFullImage('data:' + selectedTicket.attachment.contentType + ';base64,' + selectedTicket.attachment.data)" />
-
-                        <span class="remove-icon" (click)="removeAttachment()">&times;</span>
-                    </div>
-
-                    <ng-template #uploadNew>
-                        <input type="file" class="form-control" formControlName="attachments" [readonly]="isViewMode"
-                            (change)="onFileSelected($event, 'attachments')" />
-                    </ng-template>
-                </div> -->
-
-
-
-                <!-- Overlay -->
-                <!-- <div class="fullscreen-image" *ngIf="isImageFullScreen" (click)="closeFullImage()">
-                    <img [src]="selectedImageUrl" [alt]="selectedTicket?.attachment?.filename">
+                    <input class="form-control" formControlName="attachments" type="file" [readonly]="isViewMode"
+                        accept=".pdf" (change)="onFileSelected($event,'attachments')" />
                 </div>
 
 
-                <div *ngIf="isEditMode" class="col-md-12">
-                    <label>Upload</label>
-                    <input class="form-control" formControlName="upload" type="file" [readonly]="isViewMode"
-                        (change)="onFileSelected($event,'upload')" />
-                </div> -->
-                 <div *ngIf="!isEditMode" class="col-md-12">
-                    <label>Attachments</label>
-                    <input class="form-control" formControlName="attachments" type="file" [readonly]="isViewMode" accept=".pdf"
-                        (change)="onFileSelected($event,'attachments')" />
-                </div> 
-
-<div class="col-md-12" *ngIf="isEditMode">
+                <!-- Attachment (Edit mode only) -->
+                <div class="col-md-12" *ngIf="isEditMode">
                     <label>Attachment</label><br>
-                    
-                    <div *ngIf="selectedTicket?.attachment?.contentType === 'application/pdf'; else uploadNew">
+
+                    <!-- Show existing PDF preview if available and not removed -->
+                    <div
+                        *ngIf="selectedTicket?.attachment?.contentType === 'application/pdf' && !attachmentRemoved; else uploadNew">
                         <div class="pdf-preview" (click)="viewPdf(selectedTicket.attachment)">
                             <i class="fa fa-file-pdf-o pdf-icon"></i>
                             <span>{{ selectedTicket.attachment.filename }}</span>
@@ -237,25 +200,29 @@
                         <span class="remove-icon" (click)="removeAttachment()">&times;</span>
                     </div>
 
+                    <!-- File input for uploading a new attachment (shown after removing) -->
                     <ng-template #uploadNew>
-                        <input type="file" class="form-control" formControlName="attachments" 
-                            [readonly]="isViewMode" accept=".pdf"
-                            (change)="onFileSelected($event, 'attachments')" />
+                        <input type="file" class="form-control" formControlName="attachments" [readonly]="isViewMode"
+                            accept=".pdf" (change)="onFileSelected($event, 'attachments')" />
                     </ng-template>
                 </div>
 
-
-
-                <!-- Overlay -->
-                <div class="fullscreen-image" *ngIf="isImageFullScreen" (click)="closeFullImage()">
-                    <img [src]="selectedImageUrl" [alt]="selectedTicket?.attachment?.filename">
+                <!-- PDF Fullscreen Viewer -->
+                <div class="fullscreen-overlay" *ngIf="isPdfFullScreen" (click)="closeFullPdf()">
+                    <div class="fullscreen-pdf" (click)="$event.stopPropagation()">
+                        <iframe [src]="selectedPdfUrl" width="100%" height="100%"></iframe>
+                        <button class="close-btn" (click)="closeFullPdf()">✖</button>
+                    </div>
                 </div>
 
 
+
+               
+
                 <div *ngIf="isEditMode" class="col-md-12">
                     <label>Upload</label>
-                    <input class="form-control" formControlName="upload" type="file" accept=".pdf" [readonly]="isViewMode"
-                        (change)="onFileSelected($event,'upload')" />
+                    <input class="form-control" formControlName="upload" type="file" accept=".pdf"
+                        [readonly]="isViewMode" (change)="onFileSelected($event,'upload')" />
                 </div>
 
 

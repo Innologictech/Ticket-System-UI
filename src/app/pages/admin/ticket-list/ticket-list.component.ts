@@ -11,6 +11,7 @@ import { Store } from '@ngrx/store';
 import * as TicketActions from 'src/app/store/ticketSytem/ticket.actions';
 import { selectAllStatus, selectAllTickets } from 'src/app/store/ticketSytem/ticket.selectors';
 import { Observable } from 'rxjs';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-ticket-list',
@@ -66,7 +67,7 @@ isEditMode: boolean = false;
     }
    statusOptions = ['Open', 'In Progress', 'Hold', 'UAT', 'Resolved', 'Closed', 'Reopen'];
 
-  constructor(private service: GeneralserviceService,private spinner:NgxSpinnerService, private modalService: NgbModal,private fb: FormBuilder,private loaderservice:LoaderService,private store: Store) {
+  constructor(private service: GeneralserviceService,private spinner:NgxSpinnerService, private modalService: NgbModal,private fb: FormBuilder,private loaderservice:LoaderService,private store: Store,private sanitizer: DomSanitizer) {
 
   }
     validateFileType(control: AbstractControl): ValidationErrors | null {
@@ -110,23 +111,9 @@ isEditMode: boolean = false;
       reader.readAsDataURL(file);
     }
   }
-  // Add this new method to view PDF
-viewPdf(attachment: any): void {
-  if (!attachment) return;
 
-  // Create the PDF data URL
-  const pdfUrl = `data:${attachment.contentType};base64,${attachment.data}`;
-  
-  // Open in new tab
-  window.open(pdfUrl, '_blank');
-}
 
-// Modify the removeAttachment method
-removeAttachment(): void {
-  this.selectedTicket.attachment = null;
-  this.selectedFileBase64 = null;
-  this.bugTicketForm.get('attachments')?.reset();
-}
+
   viewTicketModel(ticket: any, templateRef: any): void {
     console.log('ticket',ticket)
     this.isEditMode = false;
@@ -288,7 +275,8 @@ getAttachmentUrl(ticket: any): string {
       date: formattedDate,
       description: ticket.description,
       assignedTo: ticket.consultant || '',
-      attachments: null
+      // attachments: null
+       attachments: ticket.attachment
     });
     
     this.EditmodalRef = this.modalService.open(templateRef, {
@@ -453,7 +441,9 @@ UpdateTicket(): void {
     consultant: rawForm.assignedTo,
     date: rawForm.date,
     description: rawForm.description,
-    attachment: rawForm.attachments || ''
+     attachment: this.selectedFileBase64,
+     upload:this.selectedUploadBase64
+    // attachment: rawForm.attachments || ''
   };
   // ✅ Add assigned date & days only when assigning
 // y
@@ -537,6 +527,50 @@ UpdateTicket(): void {
 //     }
 //   });
 // }
+
+isPdfFullScreen = false;
+selectedPdfUrl: SafeResourceUrl | null = null;
+
+viewPdf(attachment: any): void {
+  if (!attachment?.data?.data || !attachment?.contentType) {
+    console.error('Invalid attachment');
+    return;
+  }
+
+  const byteArray = new Uint8Array(attachment.data.data);
+  const blob = new Blob([byteArray], { type: attachment.contentType });
+  const blobUrl = URL.createObjectURL(blob);
+
+  // Option 1: open in a new tab
+  // window.open(blobUrl);
+
+  // Option 2: fullscreen overlay — if you already added it
+// ✅ Sanitize the blob URL
+  this.selectedPdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
+  this.isPdfFullScreen = true;
+}
+
+closeFullPdf(): void {
+  if (this.selectedPdfUrl) {
+    URL.revokeObjectURL((this.selectedPdfUrl as any).changingThisBreaksApplicationSecurity);
+    this.selectedPdfUrl = null;
+  }
+  this.isPdfFullScreen = false;
+}
+
+removeAttachment(): void {
+  //debugger;
+  
+  // Clone the selectedTicket to avoid direct mutation
+  this.selectedTicket = {
+    ...this.selectedTicket,
+    attachment: null
+  };
+
+  this.selectedFileBase64 = null;
+  this.bugTicketForm.get('attachments')?.reset();
+}
+
 
 
 

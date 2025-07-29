@@ -99,7 +99,7 @@
                             [ngStyle]="{ color: ticket.priority === 'High' ? 'red' : ticket.priority === 'Medium' ? 'orange' : 'green' }">{{ticket.priority}}
                         </small></h5>
                     <p class="card-text">assigned:{{ ticket.description }}</p>
-                     <p class="card-text">assigned:{{ ticket.assignedDays }}</p>
+                    <p class="card-text">assigned:{{ ticket.assignedDays }}</p>
                     <div class="ticket-footer">
                         <span class="badge badge-hold">Hold</span>
                         <a href="javascript:void(0)" class="view-link"
@@ -179,7 +179,7 @@
 
                 <div class="col-md-6">
                     <label>Priority</label>
-                    <select class="form-control" formControlName="priority"  [disabled]="true">
+                    <select class="form-control" formControlName="priority" [disabled]="true">
                         <option value="Low">Low</option>
                         <option value="Medium">Medium</option>
                         <option value="High">High</option>
@@ -200,11 +200,11 @@
 
                 <div class="col-md-6">
                     <label>Status</label>
-                    <select class="form-control" formControlName="ticketstatus" >
-                           <option  [value]=""></option>
+                    <select class="form-control" formControlName="ticketstatus">
+                        <option [value]=""></option>
                         <option *ngFor="let status of allStatus" [value]="status.status">{{status.label}}</option>
-                    
-                        
+
+
                         <!-- <option value="InProgress">In Progress</option>
                         <option value="hold">Hold</option>
                         <option value="UAT">UAT</option>
@@ -222,17 +222,15 @@
 
                 <div class="col-md-12">
                     <label>Description</label>
-                    <textarea class="form-control" formControlName="description" rows="4"
-                        [readonly]="true"></textarea>
+                    <textarea class="form-control" formControlName="description" rows="4" [readonly]="true"></textarea>
                 </div>
 
                 <div class="col-md-12">
                     <label>Remarks</label>
-                    <textarea class="form-control" formControlName="remarks" rows="4"
-                        ></textarea>
+                    <textarea class="form-control" formControlName="remarks" rows="4"></textarea>
                 </div>
 
-<!-- 
+                <!-- 
                 <div class="col-md-12">
                     <label>Assigned To<span class="text-danger">*</span></label>
                     <select class="form-control" formControlName="assignedTo">
@@ -243,46 +241,82 @@
                     </select>
                 </div> -->
 
-                       <div *ngIf="!isEditMode" class="col-md-12">
-                    <label>Attachments</label>
-                    <input class="form-control" formControlName="attachments" type="file" [readonly]="isViewMode" accept=".pdf"
-                        (change)="onFileSelected($event,'attachments')" />
-                </div> 
+               
 
-<div class="col-md-12" *ngIf="isEditMode">
+
+                <!-- Attachment (Edit mode only) -->
+                <div class="col-md-12" *ngIf="!isEditMode">
                     <label>Attachment</label><br>
-                    
-                    <div *ngIf="selectedTicket?.attachment?.contentType === 'application/pdf'; else uploadNew">
+
+                    <!-- Show existing PDF preview if available and not removed -->
+                    <div
+                        *ngIf="selectedTicket?.attachment?.contentType === 'application/pdf' && !attachmentRemoved; else uploadNew">
                         <div class="pdf-preview" (click)="viewPdf(selectedTicket.attachment)">
                             <i class="fa fa-file-pdf-o pdf-icon"></i>
                             <span>{{ selectedTicket.attachment.filename }}</span>
                         </div>
-                        <span class="remove-icon" (click)="removeAttachment()">&times;</span>
+                        <!-- <span class="remove-icon" (click)="removeAttachment()">&times;</span> -->
                     </div>
 
+                    <!-- File input for uploading a new attachment (shown after removing) -->
                     <ng-template #uploadNew>
-                        <input type="file" class="form-control" formControlName="attachments" 
-                            [readonly]="isViewMode" accept=".pdf"
-                            (change)="onFileSelected($event, 'attachments')" />
+                        <input type="file" class="form-control" formControlName="attachments" [readonly]="isViewMode"
+                            accept=".pdf" (change)="onFileSelected($event, 'attachments')" />
                     </ng-template>
                 </div>
 
+                <!-- PDF Fullscreen Viewer -->
+                <div class="fullscreen-overlay" *ngIf="isPdfFullScreen" (click)="closeFullPdf()">
+                    <div class="fullscreen-pdf" (click)="$event.stopPropagation()">
+                        <iframe [src]="selectedPdfUrl" width="100%" height="100%"></iframe>
+                        <button class="close-btn" (click)="closeFullPdf()">✖</button>
+                    </div>
+                </div>
 
+                <!-- Upload (Edit mode only) -->
+                <div class="col-md-12" *ngIf="!isEditMode">
+                    <label>Upload</label><br>
 
-                <!-- Overlay -->
-                <div class="fullscreen-image" *ngIf="isImageFullScreen" (click)="closeFullImage()">
-                    <img [src]="selectedImageUrl" [alt]="selectedTicket?.attachment?.filename">
+                    <!-- Show existing PDF preview if available and not removed -->
+                    <div
+                        *ngIf="selectedTicket?.upload?.contentType === 'application/pdf' && !attachmentRemoved; else uploadNew">
+                        <div class="pdf-preview" (click)="viewPdf(selectedTicket.upload)">
+                            <i class="fa fa-file-pdf-o pdf-icon"></i>
+                            <span>{{ selectedTicket.upload.filename }}</span>
+                        </div>
+                        <!-- <span class="remove-icon" (click)="removeAttachment()">&times;</span> -->
+                    </div>
+
+                    <!-- File input for uploading a new attachment (shown after removing) -->
+                    <ng-template #uploadNew>
+                        <input type="file" class="form-control" formControlName="upload" [readonly]="isViewMode"
+                            accept=".pdf" (change)="onFileSelected($event, 'upload')" />
+                    </ng-template>
+                </div>
+
+                 <!-- PDF Fullscreen Viewer -->
+                <div class="fullscreen-overlay" *ngIf="isPdfFullScreen" (click)="closeFullPdf()">
+                    <div class="fullscreen-pdf" (click)="$event.stopPropagation()">
+                        <iframe [src]="selectedPdfUrl" width="100%" height="100%"></iframe>
+                        <button class="close-btn" (click)="closeFullPdf()">✖</button>
+                    </div>
+                </div>
+
+                
+                <div *ngIf="!isEditMode" class="col-md-12">
+                    <label>upload2</label>
+                    <input class="form-control" formControlName="upload2" type="file" [readonly]="isViewMode"
+                        accept=".pdf" (change)="onFileSelected($event,'upload2')" />
                 </div>
 
 
-              
 
             </div>
         </form>
     </div>
 
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary" (click)="UpdateTicket()" >Update</button>
+        <button type="button" class="btn btn-primary" (click)="UpdateTicket()">Update</button>
         <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
     </div>
 </ng-template>

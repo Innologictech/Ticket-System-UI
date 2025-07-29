@@ -261,23 +261,13 @@
                     </ng-template>
                 </div>
 
-               <!-- PDF Fullscreen Viewer -->
-<div class="fullscreen-overlay" *ngIf="isPdfFullScreen" (click)="closeFullPdf()">
-  <div class="fullscreen-pdf" (click)="$event.stopPropagation()">
-    <iframe [src]="selectedPdfUrl" width="100%" height="100%"></iframe>
-    <button class="close-btn" (click)="closeFullPdf()">✖</button>
-  </div>
-</div>
-
-
-                <!-- Overlay -->
-                <!-- <div class="fullscreen-image" *ngIf="isImageFullScreen" (click)="closeFullImage()">
-                    <img [src]="selectedImageUrl" [alt]="selectedTicket?.attachment?.filename">
-                </div> -->
-
-
-
-
+                <!-- PDF Fullscreen Viewer -->
+                <div class="fullscreen-overlay" *ngIf="isPdfFullScreen" (click)="closeFullPdf()">
+                    <div class="fullscreen-pdf" (click)="$event.stopPropagation()">
+                        <iframe [src]="selectedPdfUrl" width="100%" height="100%"></iframe>
+                        <button class="close-btn" (click)="closeFullPdf()">✖</button>
+                    </div>
+                </div>
             </div>
         </form>
     </div>

@@ -259,16 +259,6 @@ get paginatedTickets() {
   }
 }
 
-// Add this new method to view PDF
-// viewPdf(attachment: any): void {
-//   if (!attachment) return;
-
-//   // Create the PDF data URL
-//   const pdfUrl = `data:${attachment.contentType};base64,${attachment.data}`;
-  
-//   // Open in new tab
-//   window.open(pdfUrl, '_blank');
-// }
 
 // Modify the removeAttachment method
 removeAttachment(): void {
@@ -277,27 +267,7 @@ removeAttachment(): void {
   this.bugTicketForm.get('attachments')?.reset();
 }
 
-  // onFileSelected(event: any, type: 'attachments' | 'upload'): void {
-  //   const file: File = event.target.files[0];
-
-  //   if (file) {
-  //     const reader = new FileReader();
-  //     reader.onload = () => {
-  //       const base64 = reader.result as string;
-  //       console.log(`Base64 [${type}]:`, base64);
-
-  //       if (type === 'attachments') {
-  //         this.selectedFileBase64 = base64;
-  //         // handle non-edit mode attachment logic
-  //       } else if (type === 'upload') {
-  //         this.selectedUploadBase64 = base64;
-  //         // handle edit mode upload logic
-  //       }
-  //     };
-  //     reader.readAsDataURL(file);
-  //   }
-  // }
-
+ 
 
 
 
@@ -331,6 +301,7 @@ removeAttachment(): void {
       description: rawForm.description,
       attachment: this.selectedFileBase64,// Base64 string
       upload: '',
+      upload2:'',
       assignedTo: ''
     };
 

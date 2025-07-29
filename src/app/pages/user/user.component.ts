@@ -11,6 +11,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import * as TicketActions from 'src/app/store/ticketSytem/ticket.actions';
 import Swal from 'sweetalert2';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 
 
@@ -35,12 +36,13 @@ export class UserComponent {
   userList = [];
     selectedFileBase64: string | null = null;
   selectedUploadBase64: string | null = null;
+   selectedUpload2Base64: string | null = null;
   selectedTicket:any;
   status$: Observable<Status[]>;
     allStatus: any[]=[];
 EditmodalRef: any;
 
-  constructor(private modalService: NgbModal, private service: GeneralserviceService, private fb: FormBuilder, private loaderservice: LoaderService, private store: Store) {
+  constructor(private modalService: NgbModal, private service: GeneralserviceService, private fb: FormBuilder, private loaderservice: LoaderService, private store: Store,private sanitizer: DomSanitizer) {
     this.bugTicketForm = this.fb.group({
       title: [''],
       reportedBy: [''],
@@ -52,6 +54,7 @@ EditmodalRef: any;
       assignedTo: [''],
       remarks: [''],
       attachments: [''],
+      upload: [''],
     });
   }
   ngOnInit(): void {
@@ -101,20 +104,44 @@ EditmodalRef: any;
         } else if (type === 'upload') {
           this.selectedUploadBase64 = base64;
         }
+        else{
+          this.selectedUpload2Base64 = base64;
+        }
       };
       reader.readAsDataURL(file);
     }
   }
-  // Add this new method to view PDF
-viewPdf(attachment: any): void {
-  if (!attachment) return;
 
-  // Create the PDF data URL
-  const pdfUrl = `data:${attachment.contentType};base64,${attachment.data}`;
+  isPdfFullScreen = false;
+selectedPdfUrl: SafeResourceUrl | null = null;
   
-  // Open in new tab
-  window.open(pdfUrl, '_blank');
+viewPdf(attachment: any): void {
+  if (!attachment?.data?.data || !attachment?.contentType) {
+    console.error('Invalid attachment');
+    return;
+  }
+
+  const byteArray = new Uint8Array(attachment.data.data);
+  const blob = new Blob([byteArray], { type: attachment.contentType });
+  const blobUrl = URL.createObjectURL(blob);
+
+  // Option 1: open in a new tab
+  // window.open(blobUrl);
+
+  // Option 2: fullscreen overlay — if you already added it
+// ✅ Sanitize the blob URL
+  this.selectedPdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
+  this.isPdfFullScreen = true;
 }
+
+closeFullPdf(): void {
+  if (this.selectedPdfUrl) {
+    URL.revokeObjectURL((this.selectedPdfUrl as any).changingThisBreaksApplicationSecurity);
+    this.selectedPdfUrl = null;
+  }
+  this.isPdfFullScreen = false;
+}
+
 
 // Modify the removeAttachment method
 removeAttachment(): void {
@@ -171,7 +198,10 @@ removeAttachment(): void {
       ticketstatus: ticket.allowedNextStatuses?.[0]?.status || '',
       date: ticket.date.split('T')[0], // format date
       description: ticket.description,
-      assignedTo: ticket.assignedTo
+      assignedTo: ticket.assignedTo,
+      attachments:ticket.attachment,
+      upload:ticket.upload,
+     
     });
     // Disable Priority and Environment
     this.bugTicketForm.get('priority')?.disable();
@@ -251,7 +281,10 @@ UpdateTicket(): void {
     consultant: rawForm.assignedTo,
     date: rawForm.date,
     description: rawForm.description,
-    attachment: rawForm.attachments || ''
+    attachment: rawForm.attachments || '',
+    upload:rawForm.upload,
+    upload2:this.selectedUpload2Base64||'',
+    // upload:
   };
   // ✅ Add assigned date & days only when assigning
 // y
