@@ -4,6 +4,7 @@
 
 .card-body {
   padding: 1rem;
+      box-shadow: 0 10px 10px 10px rgb(124 10 10 / 10%);
 }
 
 .custom-line {
@@ -37,10 +38,22 @@
   color: #0d6efd;
 }
 
-.card-text {
+/* .card-text {
   font-size: 0.9rem;
   color: #6c757d;
+  overflow: hidden;
+} */
+
+.card-text {
+  max-height: 4.5em; /* Around 3 lines */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;  /* Limits to 3 lines */
+  -webkit-box-orient: vertical;
+  white-space: normal;
 }
+
 
 /* Section Titles */
 .section-title {
@@ -102,6 +115,7 @@
 .card1 {
   background-color: #e7ebef;
   padding: 1rem;
+  border-radius: 16px;
 }
 
 
@@ -123,4 +137,8 @@
 .col-md-3 {
   flex: 0 0 auto;
   width: 23%;
+}
+
+.mb-3{
+  margin-top: 1rem;
 }

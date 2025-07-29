@@ -291,11 +291,41 @@
                 </div>
 
                 
-                <div *ngIf="!isEditMode" class="col-md-12">
+                <!-- <div *ngIf="!isEditMode" class="col-md-12">
                     <label>upload2</label>
                     <input class="form-control" formControlName="upload2" type="file" [readonly]="isViewMode"
                         accept=".pdf" (change)="onFileSelected($event,'upload2')" />
+                </div> -->
+
+                 <!-- Upload2 (Edit mode only) -->
+                <div class="col-md-12" *ngIf="!isEditMode">
+                    <label>Upload2</label><br>
+
+                    <!-- Show existing PDF preview if available and not removed -->
+                    <div
+                        *ngIf="selectedTicket?.upload2?.contentType === 'application/pdf' && selectedTicket?.upload2?.data; else uploadNew">
+                        <div class="pdf-preview" (click)="viewPdf(selectedTicket.upload2)">
+                            <i class="fa fa-file-pdf-o pdf-icon"></i>
+                            <span>{{ selectedTicket.upload2.filename }}</span>
+                        </div>
+                        <span class="remove-icon" (click)="removeAttachment()">&times;</span>
+                    </div>
+
+                    <!-- File input for uploading a new attachment (shown after removing) -->
+                    <ng-template #uploadNew>
+                        <input type="file" class="form-control" formControlName="upload2"
+                            accept=".pdf" (change)="onFileSelected($event, 'upload2')" />
+                    </ng-template>
                 </div>
+
+                <!-- PDF Fullscreen Viewer -->
+                <div class="fullscreen-overlay" *ngIf="isPdfFullScreen" (click)="closeFullPdf()">
+                    <div class="fullscreen-pdf" (click)="$event.stopPropagation()">
+                        <iframe [src]="selectedPdfUrl" width="100%" height="100%"></iframe>
+                        <button class="close-btn" (click)="closeFullPdf()">✖</button>
+                    </div>
+                </div>
+
 
 
 
