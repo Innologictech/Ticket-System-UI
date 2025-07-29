@@ -33,13 +33,14 @@ export class Login2Component implements OnInit {
     // 'assets/images/worldMapImage.png',
     // 'assets/images/AircraftFlight.png',
 
-    'assets/images/Sap_image.png',
+    // 'assets/images/Sap_image.png',
+    'assets/images/flight.png',
 
-    'assets/images/Sap_image2.png',
-    'https://www.innologictechnologies.com/assets/template/images/img/slide_02.jpg',
+    // 'assets/images/Sap_image2.png',
+    // 'https://www.innologictechnologies.com/assets/template/images/img/slide_02.jpg',
     // 'assets/images/Innologiclogo.webp',
     // 'assets/images/pic5.jpg',
-    'assets/images/pic3.jpg',
+    // 'assets/images/pic3.jpg',
 
     //  'assets/images/pic.jpg',
 
