@@ -156,6 +156,8 @@
                 </div>
             </div>
         </div>
+
+        
     </div>
 </div>
 
@@ -258,11 +260,7 @@
                         <!-- <span class="remove-icon" (click)="removeAttachment()">&times;</span> -->
                     </div>
 
-                    <!-- File input for uploading a new attachment (shown after removing) -->
-                    <ng-template #uploadNew>
-                        <input type="file" class="form-control" formControlName="attachments" [readonly]="isViewMode"
-                            accept=".pdf" (change)="onFileSelected($event, 'attachments')" />
-                    </ng-template>
+                   
                 </div>
 
                 <!-- PDF Fullscreen Viewer -->
@@ -279,7 +277,7 @@
 
                     <!-- Show existing PDF preview if available and not removed -->
                     <div
-                        *ngIf="selectedTicket?.upload?.contentType === 'application/pdf' && !attachmentRemoved; else uploadNew">
+                        *ngIf="selectedTicket?.upload?.contentType === 'application/pdf' && !attachmentRemoved">
                         <div class="pdf-preview" (click)="viewPdf(selectedTicket.upload)">
                             <i class="fa fa-file-pdf-o pdf-icon"></i>
                             <span>{{ selectedTicket.upload.filename }}</span>
@@ -287,11 +285,7 @@
                         <!-- <span class="remove-icon" (click)="removeAttachment()">&times;</span> -->
                     </div>
 
-                    <!-- File input for uploading a new attachment (shown after removing) -->
-                    <ng-template #uploadNew>
-                        <input type="file" class="form-control" formControlName="upload" [readonly]="isViewMode"
-                            accept=".pdf" (change)="onFileSelected($event, 'upload')" />
-                    </ng-template>
+                    
                 </div>
 
                  <!-- PDF Fullscreen Viewer -->

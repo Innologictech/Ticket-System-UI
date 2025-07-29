@@ -302,7 +302,8 @@ removeAttachment(): void {
       attachment: this.selectedFileBase64,// Base64 string
       upload: '',
       upload2:'',
-      assignedTo: ''
+      assignedTo: '',
+      remarks:''
     };
 
     this.service.CreateTicket(payload).subscribe(
