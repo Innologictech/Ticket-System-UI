@@ -308,7 +308,7 @@ applySearchFilter(): void {
   //     colors: ["#f39c12", "#3498db", "#2ecc71"]
   //   };
   // }
-  prepareCharts() {
+ prepareCharts() {
   this.barChartOptions = {
     series: [
       {
@@ -344,7 +344,7 @@ applySearchFilter(): void {
         columnWidth: "55%"
       }
     },
-    colors: ["#ebc07aff", "#89c5edff", "#80ebacff"]
+    colors: ["#e4c79aff", "#abcbe0ff", "#b6dcc5ff"]
   };
 
   this.pieChartOptions = {
@@ -359,7 +359,7 @@ applySearchFilter(): void {
       height: "400px"
     },
     labels: ["Open", "In Progress", "Closed"],
-    colors: ["#efc98dff", "#7fc6f6ff", "#90ebb6ff"]
+    colors: ["#e4c79aff", "#abcbe0ff", "#b6dcc5ff"]
   };
 }
 

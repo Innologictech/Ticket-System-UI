@@ -233,7 +233,7 @@ button {
 
 .search-box {
   padding: 8px;
-  border: 1px solid #ccc;
+  border: 1px solid #080808;
   border-radius: 4px;
 }
 
@@ -686,7 +686,7 @@ label {
 input {
   width: 100%;
   padding: 8px;
-  border: 1px solid #ccc;
+  border: 1px solid #070707;
   border-radius: 4px;
   font-size: 14px;
 }
@@ -856,11 +856,11 @@ input:focus {
     padding: 12px;
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color:white;
     border: 2px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
     // background: url(/assets/images/bg4.jpg) no-repeat center center / cover !important;
-    border-bottom: 2px solid blue;
+    // border-bottom: 2px solid blue;
     text-align: left;
 }
 // .card-body{
@@ -978,6 +978,7 @@ input:focus {
   margin-top: 5px;
 
 }
+
 
 
 
