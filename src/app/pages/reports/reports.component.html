@@ -1,0 +1,76 @@
+<div class="card-header">
+    My Reports
+</div>
+
+<div class="mb-3 d-flex justify-content-between">
+    <input type="text" class=" w-15" style="margin-top: 1rem;" placeholder="Search..." [(ngModel)]="searchText" />
+</div>
+
+<div class="table-responsive tableFixHead">
+  <table class="table table-bordered table-hover bg-white">
+    <thead class="table-dark text-center">
+      <tr>
+        <th>Ticket No</th>
+        <th>Issue Short Description</th>
+        <th>Status</th>
+        <th>Priority</th>
+        <th>Time in New</th>
+        <th>Time in Assigned</th>
+        <th>Time in InProcess</th>
+        <th>Time in Hold - Customer</th>
+        <th>Time in Hold - ILT</th>
+        <th>Time in Client Action</th>
+        <th>Time in Software Change</th>
+        <th>Time in Rework</th>
+        <th>Time in UAT</th>
+        <th>Time in Resolved</th>
+        <th>Time inCompleted</th>
+        <th>Time in Reopen</th>
+        <th>Time in Third Party</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let ticket of ticketData | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage } ">
+        <td>{{ ticket.customerticketId }}</td>
+        <td>{{ ticket.title }}</td>
+         <td>{{ ticket.status }}</td>
+        <td>
+          <span *ngIf="ticket.priority === 'High'">
+            {{ticket.priority}} <i class="fas fa-arrow-up text-danger"></i>
+          </span>
+          <span *ngIf="ticket.priority === 'Medium'">
+            {{ticket.priority}} <i class="fas fa-minus text-warning"></i>
+          </span>
+          <span *ngIf="ticket.priority === 'Low'">
+            {{ticket.priority}} <i class="fas fa-arrow-down text-success"></i>
+          </span>
+        </td>
+        <td>{{ ticket.newTime }}</td>
+        <td>{{ ticket.timeAssigned }}</td>
+        <td>{{ ticket.timeInProcess }}</td>
+        <td>{{ ticket.holdCustomer }}</td>
+        <td>{{ ticket.holdILT }}</td>
+        <td>{{ ticket.clientAction }}</td>
+        <td>{{ ticket.softwareChange }}</td>
+        <td>{{ ticket.rework }}</td>
+        <td>{{ ticket.uat }}</td>
+        <td>{{ ticket.resolved }}</td>
+        <td>{{ ticket.completed }}</td>
+        <td>{{ ticket.reopen }}</td>
+        <td>{{ ticket.thirdParty }}</td>
+        <td class="text-center">
+          <button class="btn btn-sm btn-info me-2" (click)="viewTicket(ticket)">View</button>
+          <button class="btn btn-sm btn-warning" (click)="editTicket(ticket)">Edit</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Pagination -->
+<div class="d-flex justify-content-end mt-3">
+    <pagination-controls (pageChange)="currentPage = $event"
+        class="pagination justify-content-end"></pagination-controls>
+</div>
+

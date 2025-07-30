@@ -41,7 +41,7 @@ confirmFieldTextType: boolean = false;
   c: any;
   editModalRef: any;
   
-  activities: string[] = ['Dashboard', 'Ticket-Creation', 'Ticket-Management', 'User-Creation','consultant'];
+  activities: string[] = ['Dashboard', 'Ticket-Creation', 'Ticket-Management', 'User-Creation','consultant','reports'];
   clients = ['BAJAJ', 'MK AGRO', 'QHOLDING','SEUTIC PHARMA']; 
 technologies = ['SAP', 'WEB APPLICATION', 'POWER BI'];
   
