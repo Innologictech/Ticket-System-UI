@@ -308,7 +308,7 @@ applySearchFilter(): void {
   //     colors: ["#f39c12", "#3498db", "#2ecc71"]
   //   };
   // }
- prepareCharts() {
+  prepareCharts() {
   this.barChartOptions = {
     series: [
       {
@@ -328,7 +328,14 @@ applySearchFilter(): void {
     ],
     chart: {
       type: "bar",
-      height: 350
+      height: 350,
+      events: {
+        dataPointSelection: (event, chartContext, config) => {
+          const yearIndex = config.dataPointIndex;   // click chesina bar index
+          const selectedYear = this.getYears()[yearIndex];
+          this.updatePieAndTable(selectedYear);     // pie + table ni update cheyyali
+        }
+      }
     },
     xaxis: {
       categories: this.getYears()
@@ -344,30 +351,124 @@ applySearchFilter(): void {
         columnWidth: "55%"
       }
     },
-    colors: ["#e4c79aff", "#abcbe0ff", "#b6dcc5ff"]
+    colors: ["#fff4b5", "#ffd6a5", "#caffbf"]
   };
 
+  // Pie Chart initial (overall data)
+  this.updatePieAndTable(null);
+}
+
+
+// ✅ pie + table update cheyadaniki helper method
+updatePieAndTable(selectedYear: string | null) {
+   let open = 0, inProgress = 0, closed = 0;
+
+  if (selectedYear) {
+    // Specific year ki count
+    open = this.getStatusCountForYear(["New", "Assigned", "ReOpen"], selectedYear);
+    inProgress = this.getStatusCountForYear(
+      ["InProcess", "Hold-Cust", "Hold-ILT", "ClientAction", "SoftwareChange", "UAT", "Rework"],
+      selectedYear
+    );
+    closed = this.getStatusCountForYear(["Resolved", "Completed"], selectedYear);
+
+    this.filteredTickets = this.tickets.filter(
+      t => new Date(t.date).getFullYear().toString() === selectedYear
+    );
+  } else {
+    // Overall data
+    open = this.summaryStats.openTickets;
+    inProgress = this.summaryStats.inProgressTickets;
+    closed = this.summaryStats.closedTickets;
+
+    this.filteredTickets = [...this.tickets]; // anni tickets show cheyyali
+  }
+
+  // Pie Chart update
   this.pieChartOptions = {
-    series: [
-      this.summaryStats.openTickets,
-      this.summaryStats.inProgressTickets,
-      this.summaryStats.closedTickets
-    ],
+    series: [open, inProgress, closed],
     chart: {
       type: "pie",
       width: "450px",
       height: "400px"
     },
     labels: ["Open", "In Progress", "Closed"],
-    colors: ["#e4c79aff", "#abcbe0ff", "#b6dcc5ff"]
+    colors: ["#fff4b5", "#ffd6a5", "#caffbf"]
   };
 }
 
 
+
+// ✅ Reset Button Function
+// resetView() {
+//   this.updatePieAndTable(null);   // overall data reset
+// }
+
+//  prepareCharts() {
+//   this.barChartOptions = {
+//     series: [
+//       {
+//         name: "Open",
+//         data: this.getYearlyStatusCount(["New", "Assigned", "ReOpen"])
+//       },
+//       {
+//         name: "In Progress",
+//         data: this.getYearlyStatusCount([
+//           "InProcess", "Hold-Cust", "Hold-ILT", "ClientAction", "SoftwareChange", "UAT", "Rework"
+//         ])
+//       },
+//       {
+//         name: "Closed",
+//         data: this.getYearlyStatusCount(["Resolved", "Completed"])
+//       }
+//     ],
+//     chart: {
+//       type: "bar",
+//       height: 350
+//     },
+//     xaxis: {
+//       categories: this.getYears()
+//     },
+//     yaxis: {
+//       title: {
+//         text: "Tickets"
+//       }
+//     },
+//     plotOptions: {
+//       bar: {
+//         horizontal: false,
+//         columnWidth: "55%"
+//       }
+//     },
+// colors: ["#fff4b5", "#ffd6a5", "#caffbf"]
+//    };
+
+//   this.pieChartOptions = {
+//     series: [
+//       this.summaryStats.openTickets,
+//       this.summaryStats.inProgressTickets,
+//       this.summaryStats.closedTickets
+//     ],
+//     chart: {
+//       type: "pie",
+//       width: "450px",
+//       height: "400px"
+//     },
+//     labels: ["Open", "In Progress", "Closed"],
+// colors: ["#fff4b5", "#ffd6a5", "#caffbf"]
+//   };
+// }
+
+
+  // getYears(): string[] {
+  //   const years = this.filteredTickets.map(t => new Date(t.createdAt).getFullYear());
+  //   return [...new Set(years)].sort().map(y => y.toString());
+  // }
+
   getYears(): string[] {
-    const years = this.filteredTickets.map(t => new Date(t.createdAt).getFullYear());
-    return [...new Set(years)].sort().map(y => y.toString());
-  }
+  const years = this.tickets.map(t => new Date(t.date).getFullYear());
+  return [...new Set(years)].sort().map(y => y.toString());
+}
 
   // getYearlyStatusCount(status: string): number[] {
   //   const years = this.getYears();
@@ -377,18 +478,43 @@ applySearchFilter(): void {
   //     ).length
   //   );
   // }
-  getYearlyStatusCount(statusList: string[]): number[] {
-  const years = this.getYears();
-  return years.map(year =>
-    this.filteredTickets.filter(t =>
-      new Date(t.createdAt).getFullYear().toString() === year &&
-      statusList.includes(t.status)
-    ).length
-  );
+ // Returns yearly counts (array form, for bar chart)
+ 
+getYearlyStatusCount(statuses: string[]): number[] {
+  const counts: number[] = [];
+  this.getYears().forEach(y => {
+    const yearTickets = this.tickets.filter(
+      t => new Date(t.date).getFullYear().toString() === y
+    );
+    const count = yearTickets.filter(t => statuses.includes(t.status)).length;
+    console.log("Year:", y, "Statuses:", statuses, "Count:", count, "Tickets:", yearTickets.map(t => t.status));
+    counts.push(count);
+  });
+  return counts;
 }
+
+
+// Returns count for only one year
+getStatusCountForYear(statuses: string[], year: string): number {
+  return this.tickets.filter(
+    t => statuses.includes(t.status) && new Date(t.date).getFullYear().toString() === year
+  ).length;
+}
+
+
+//   getYearlyStatusCount(statusList: string[]): number[] {
+//   const years = this.getYears();
+//   return years.map(year =>
+//     this.filteredTickets.filter(t =>
+//       new Date(t.createdAt).getFullYear().toString() === year &&
+//       statusList.includes(t.status)
+//     ).length
+//   );
+// }
 
 
   resetView() {
     this.getTickets();
+     this.updatePieAndTable(null);
   }
 }

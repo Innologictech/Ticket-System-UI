@@ -57,6 +57,17 @@ export const MENU: MenuItem[] = [
         isTitle: false
 
     },
+     {
+
+        id: 4,
+        label: 'reports',
+        link: '/reports',
+        parentId: 2,
+        icon: 'bx bx-bar-chart-alt', 
+        color: '#97729eff',        
+        isTitle: false
+
+    },
     
 
     
