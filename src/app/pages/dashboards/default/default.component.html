@@ -126,7 +126,7 @@
             <th>Title</th>
             <th>Status</th>
             <th>Priority</th>
-            <th>Created Date</th>
+            <th>Date</th>
       
           </tr>
         </thead>
@@ -136,7 +136,7 @@
     <td>{{ item.title }}</td>
     <td>{{ item.status }}</td>
     <td>{{ item.priority }}</td>
-    <td>{{ item.createdAt | date: 'dd-MM-yyyy' }}</td>
+    <td>{{ item.date | date: 'dd-MM-yyyy' }}</td>
   </tr>
 </tbody>
 
