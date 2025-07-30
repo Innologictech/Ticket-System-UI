@@ -43,6 +43,7 @@ export class UserComponent {
   status$: Observable<Status[]>;
   allStatus: any[] = [];
   EditmodalRef: any;
+  isUATViewMode: boolean = false;
 
   constructor(private modalService: NgbModal, private service: GeneralserviceService, private fb: FormBuilder, private loaderservice: LoaderService, private store: Store, private sanitizer: DomSanitizer) {
     this.bugTicketForm = this.fb.group({
@@ -199,6 +200,7 @@ export class UserComponent {
     this.selectedTicket = ticket;
     console.log("selected ticket in consulatnt", this.selectedTicket);
     this.isEditMode = false;
+      this.isUATViewMode = ticket.status === 'UAT'; // assume ticket.type is 'UAT' for UAT tickets
     // ✅ If attachment exists from DB (Buffer form), convert it to Base64
     if (ticket.attachment && ticket.attachment.data && ticket.attachment.data.data) {
       const byteArray = new Uint8Array(ticket.attachment.data.data);
