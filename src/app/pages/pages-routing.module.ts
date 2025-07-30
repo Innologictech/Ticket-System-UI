@@ -6,6 +6,7 @@ import { ChatComponent } from './chat/chat.component';
 import { DefaultComponent } from './dashboards/default/default.component';
 import { FilemanagerComponent } from './filemanager/filemanager.component';
 import { UserComponent } from './user/user.component';
+import { ReportsComponent } from './reports/reports.component';
 
 
 const routes: Routes = [
@@ -20,6 +21,7 @@ const routes: Routes = [
   { path: 'chat', component: ChatComponent },
   { path: 'filemanager', component: FilemanagerComponent },
   { path: 'user', component:UserComponent},
+  {path:'reports',component:ReportsComponent},
   { path: 'Employee-ticket', loadChildren: () => import('./customer-ticket/customer-ticket.module').then(m =>m.CustomerTicketModule) },
   {path:'admin', loadChildren: () => import('./admin/admin.module').then(m =>m.AdminModule)},
   { path: 'dashboards', loadChildren: () => import('./dashboards/dashboards.module').then(m => m.DashboardsModule) },
