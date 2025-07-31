@@ -389,12 +389,33 @@ updatePieAndTable(selectedYear: string | null) {
     series: [open, inProgress, closed],
     chart: {
       type: "pie",
-      width: "450px",
+      width: "100%",
       height: "400px"
     },
     labels: ["Open", "In Progress", "Closed"],
-    colors: ["#fff4b5", "#ffd6a5", "#caffbf"]
-  };
+    colors: ["#fff4b5", "#ffd6a5", "#caffbf"],
+  legend: {
+    position: "right",  // desktop lo right
+    horizontalAlign: "center",
+    fontSize: "14px",
+    labels: {
+      colors: "#333"
+    }
+  },
+  responsive: [
+    {
+      breakpoint: 768, // mobile view
+      options: {
+        chart: {
+          width: "100%"  // adjust to screen
+        },
+        legend: {
+          position: "bottom"   // mobile lo kinda labels
+        }
+      }
+    }
+  ]
+};
 }
 
 

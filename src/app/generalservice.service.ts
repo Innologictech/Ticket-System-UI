@@ -112,10 +112,10 @@ getLoginResponse(){
 
 
   }
-  resetpassword(obj){
-    return this.http.post(environment.baseUrl+'invoice/resetPassword',obj);
+  // resetpassword(obj){
+  //   return this.http.post(environment.baseUrl+'invoice/resetPassword',obj);
  
-  }
+  // }
  
   verifyedAndUpdated(obj){
     return this.http.post(environment.baseUrl+'invoice/verifyedAndUpdated',obj);
@@ -308,6 +308,13 @@ updateUser(payload: any) {
 }
   DeteleGlobal(obj){
     return this.http.post(environment.baseUrl+'/ticket/deteleGlobal',obj);
+ 
+  }
+  getStatusTimes(){
+  return this.http.get(environment.baseUrl+'/ticket/status-times');
+}
+   Resetpassword(obj){
+    return this.http.post(environment.baseUrl+'/ticket/resetPassword',obj);
  
   }
 
