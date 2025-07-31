@@ -80,9 +80,9 @@ getLoginResponse(){
   invoiceApprovedOrRejected(obj){
     return this.http.post(environment.baseUrl+'invoice/invoiceApprovedOrRejected',obj);
   }
-  forgotPassword(obj){
-    return this.http.post(environment.baseUrl+'invoice/forgotPassword',obj);
-  }
+  // forgotPassword(obj){
+  //   return this.http.post(environment.baseUrl+'invoice/forgotPassword',obj);
+  // }
   getAllCustomerList(){
     return this.http.get(environment.baseUrl+'invoice/getAllCustomerList');
   }
@@ -316,6 +316,9 @@ updateUser(payload: any) {
    Resetpassword(obj){
     return this.http.post(environment.baseUrl+'/ticket/resetPassword',obj);
  
+  }
+   ForgotPassword(obj){
+    return this.http.post(environment.baseUrl+'/ticket/forgotPassword',obj);
   }
 
 }
