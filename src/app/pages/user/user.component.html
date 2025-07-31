@@ -175,20 +175,20 @@
 
 
                 <div class="col-md-6">
-                    <label>Title</label>
-                    <input class="form-control" formControlName="title" type="text" readonly [readonly]="isUATViewMode" />
+                    <label>Issue Short Description</label>
+                    <input class="form-control" formControlName="title" type="text"  readonly/>
                 </div>
 
 
                 <div class="col-md-6">
                     <label>Reported By</label>
-                    <input class="form-control" formControlName="reportedBy" type="text" readonly  [readonly]="isUATViewMode"/>
+                    <input class="form-control" formControlName="reportedBy" type="text" readonly  />
                 </div>
 
 
                 <div class="col-md-6">
                     <label>Priority</label>
-                    <select class="form-control" formControlName="priority" [disabled]="true" [disabled]="isUATViewMode">
+                    <select class="form-control" formControlName="priority" [disabled]="true" >
                         <option value="Low">Low</option>
                         <option value="Medium">Medium</option>
                         <option value="High">High</option>
@@ -199,7 +199,7 @@
 
                 <div class="col-md-6">
                     <label>Environment</label>
-                    <select class="form-control" formControlName="environment" [disabled]="true" [disabled]="isUATViewMode">
+                    <select class="form-control" formControlName="environment" [disabled]="true" >
                         <option value="Development">Development</option>
                         <option value="Quality">Quality</option>
                         <option value="Production">Production</option>
@@ -209,7 +209,7 @@
 
                 <div class="col-md-6">
                     <label>Status</label>
-                    <select class="form-control" formControlName="ticketstatus" [disabled]="isUATViewMode">
+                    <select class="form-control" formControlName="ticketstatus" >
                         <option [value]=""></option>
                         <option *ngFor="let status of allStatus" [value]="status.status">{{status.label}}</option>
 
@@ -225,18 +225,18 @@
 
                 <div class="col-md-6">
                     <label>Date</label>
-                    <input class="form-control" formControlName="date" type="date" readonly [readonly]="isUATViewMode" />
+                    <input class="form-control" formControlName="date" type="date" readonly  />
                 </div>
 
 
                 <div class="col-md-12">
                     <label>Description</label>
-                    <textarea class="form-control" formControlName="description" rows="4" [readonly]="true" [readonly]="isUATViewMode"></textarea>
+                    <textarea class="form-control" formControlName="description" rows="4" readonly ></textarea>
                 </div>
 
                 <div class="col-md-12">
                     <label>Remarks</label>
-                    <textarea class="form-control" formControlName="remarks" rows="4" [readonly]="isUATViewMode"></textarea>
+                    <textarea class="form-control" formControlName="remarks" rows="4" ></textarea>
                 </div>
 
                 <!-- 
