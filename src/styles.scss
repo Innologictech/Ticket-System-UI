@@ -862,6 +862,7 @@ input:focus {
     // background: url(/assets/images/bg4.jpg) no-repeat center center / cover !important;
     // border-bottom: 2px solid blue;
     text-align: left;
+    border-bottom: 5px solid #586291;
 }
 // .card-body{
 //   padding: 10px !important;
@@ -1430,8 +1431,14 @@ select:disabled {
 
 /*styles  for upload files cancel symbol     end*/
 
+/*styles for export to excel button start*/
+ .export-btn {
+    background-color: #717ba3;
+    color: white;
+    font-size: 14px;
+}
 
-
+/*styles for export to excel button end*/
 
 
 
