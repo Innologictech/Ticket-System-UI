@@ -318,7 +318,7 @@ closeResetPasswordModal() {
       confirmPassword:this.resetPassword.value.confirmPassword
     };
   
-    this.service.resetpassword(Payload).subscribe(
+    this.service.Resetpassword(Payload).subscribe(
       (res: any) => {
         const response = res;
   
