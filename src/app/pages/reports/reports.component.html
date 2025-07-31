@@ -31,8 +31,8 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let ticket of ticketData | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage } ">
-        <td>{{ ticket.customerticketId }}</td>
+      <tr *ngFor="let ticket of statusTimes | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage } ">
+        <td>{{ ticket.ticketId }}</td>
         <td>{{ ticket.title }}</td>
          <td>{{ ticket.status }}</td>
         <td>
@@ -46,12 +46,12 @@
             {{ticket.priority}} <i class="fas fa-arrow-down text-success"></i>
           </span>
         </td>
-        <td>{{ ticket.newTime }}</td>
-        <td>{{ ticket.assignedTime }}</td>
-        <td>{{ ticket.inProcessTime }}</td>
+        <td>{{ ticket.durations?.New || '-' }}</td>
+  <td>{{ ticket.durations?.Assigned || '-' }}</td>
+        <td>{{ ticket.InProcess }}</td>
         <td>{{ ticket.holdCustTime }}</td>
         <td>{{ ticket.holdILTTime }}</td>
-        <td>{{ ticket.clientActionTime }}</td>
+        <td>{{ ticket.ClientAction }}</td>
         <td>{{ ticket.softwareChangeTime }}</td>
         <td>{{ ticket.reworkTime }}</td>
         <td>{{ ticket.uatTime }}</td>

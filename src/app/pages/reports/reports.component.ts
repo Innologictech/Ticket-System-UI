@@ -9,6 +9,8 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgxPaginationModule } from 'ngx-pagination';
 
+import { GeneralserviceService } from 'src/app/generalservice.service';
+
 @Component({
   selector: 'app-reports',
   standalone: true,
@@ -20,7 +22,10 @@ export class ReportsComponent  implements OnInit{
 
   tickets$: Observable<Ticket[]>;
   ticketData: any[] = [];
+  statusTimes: any[] = [];
   ngOnInit(): void {
+
+    this.fetchStatusTimes();
     this.store.dispatch(TicketActions.loadTickets())
         this.tickets$ = this.store.select(selectAllTickets);
         this.tickets$.subscribe((tickets: any) => {
@@ -28,7 +33,7 @@ export class ReportsComponent  implements OnInit{
           console.log('this.ticketData', this.ticketData)
         })
   }
-  constructor(private store: Store){
+  constructor(private store: Store,private service:GeneralserviceService){
 
   }
 
@@ -75,6 +80,21 @@ export class ReportsComponent  implements OnInit{
       this.sortKey = key;
       this.reverse = false;
     }
+  }
+
+  
+  fetchStatusTimes(): void {
+    this.service.getStatusTimes().subscribe({
+      next: (response:any) => {
+
+       this.statusTimes=response.data;
+        console.log('Status times:', this.statusTimes);
+        // You can assign this response to a variable if needed
+      },
+      error: (error) => {
+        console.error('Error fetching status times:', error);
+      }
+    });
   }
 
 }
