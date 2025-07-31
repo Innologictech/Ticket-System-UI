@@ -16,17 +16,65 @@
   gap: 20px;
   margin: 20px 0;
 }
-.card {
+// .card {
+//   display: flex;
+//   gap: 0px;             /* Icon & details madhya gap */
+//   background: #fff;
+//   border-radius: 9px;
+  
+//   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+// }
+/* Summary cards ki maatrame apply avvadaniki */
+.summary-cards .card {
   display: flex;
-  gap: 0px;             /* Icon & details madhya gap */
+  align-items: center;        /* vertical middle */
+  justify-content: flex-start !important;    /* horizontal middle */
+  // gap: 15px;
   background: #fff;
   border-radius: 9px;
-  
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  padding: 15px 20px;
+  height: 120px;              /* fixed height */
+  text-align: left;
+  // text-align: center;
 }
+.summary-cards .icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;        /* circle */
+  display: flex;
+  align-items: center;       /* icon center in circle */
+  justify-content: center;
+  font-size: 22px;
+             /* circle shrink avvakunda hold chestundi */
+  color: #fff;
+   margin-right: 264px;
+    flex-shrink: 1;
+    margin-bottom: -53px;
+}
+
+
+.summary-cards .details {
+  display: flex;
+  flex-direction: column;
+ align-items: flex-start;       /* text horizontal middle */
+  justify-content: center;    /* text vertical middle */
+}
+.summary-cards .details .value {
+  font-size: 22px;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.summary-cards .details .label {
+  font-size: 14px;
+  color: #7f8c8d;
+}
+
 .card-table{
    // background: #ffffff;
   border-radius: 10px;
+  margin-top: 25px;
   // padding: 8px;
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
   background-color: white;
@@ -36,6 +84,11 @@
   // background: url("/assets/images/bg3.jpg") no-repeat center center / cover !important;
 
 }
+/* Charts Section card ki bottom gap */
+.dashboard-container > .card {
+  margin-bottom: 25px;   /* adjust as needed */
+}
+
 
 
 .card-head {
@@ -105,22 +158,22 @@
 // .icon.blue   { background: #3498db; }
 // .icon.orange { background: #e67e22; }
 // .icon.pink   { background: #e84393; }
-.details {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;  /* Text middle lo align */
-}
-.details .value {
-  font-size: 22px;
-  font-weight: 600;
-  color: #2c3e50;
-}
+// .details {
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: center;  /* Text middle lo align */
+// }
+// .details .value {
+//   font-size: 22px;
+//   font-weight: 600;
+//   color: #2c3e50;
+// }
 
-.details .label {
-  font-size: 14px;
-  color: #7f8c8d;
+// .details .label {
+//   font-size: 14px;
+//   color: #7f8c8d;
 
-}
+// }
 
 .card h3 {
   color:rgb(11, 11, 11);

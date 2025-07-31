@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 import { Ticket,Status} from './store/ticketSytem/ticket.model';
@@ -299,7 +299,12 @@ updateUser(payload: any) {
 
 
   submitLogin(payload: any) {
-  return this.http.post('http://localhost:3000/api/ticket/authenticationLogin', payload);
+      const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+      // Add more headers if needed
+      // 'Authorization': 'Bearer your-token'
+    });
+  return this.http.post(environment.baseUrl+'/ticket/authenticationLogin', payload, { headers: headers });
 }
   DeteleGlobal(obj){
     return this.http.post(environment.baseUrl+'/ticket/deteleGlobal',obj);

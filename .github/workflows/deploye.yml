@@ -22,7 +22,7 @@ jobs:
         run: npm install
 
       - name: Build Angular App
-        run: npm run build -- --configuration production --base-href=/Ticket-System-UI/
+        run: npm run build -- --configuration production --base-href /Ticket-System-UI/
 
       - name: Deploy to GitHub Pages
         run: |
