@@ -11,6 +11,10 @@ import { NgxPaginationModule } from 'ngx-pagination';
 
 import { GeneralserviceService } from 'src/app/generalservice.service';
 
+import * as XLSX from 'xlsx';
+import * as FileSaver from 'file-saver';
+
+
 @Component({
   selector: 'app-reports',
   standalone: true,
@@ -45,10 +49,10 @@ export class ReportsComponent  implements OnInit{
   currentPage: number = 1;
   itemsPerPage: number = 10;
 
-  get sortedTickets() {
-    if (!Array.isArray(this.ticketData)) return [];
+  get statusesTimes() {
+    if (!Array.isArray(this.statusTimes)) return [];
 
-    let filtered = [...this.ticketData]; // create a shallow copy to avoid mutation
+    let filtered = [...this.statusTimes]; // create a shallow copy to avoid mutation
 
     // Search filter
     if (this.searchText) {
@@ -96,5 +100,35 @@ export class ReportsComponent  implements OnInit{
       }
     });
   }
+
+  exportToExcel(): void {
+  const worksheet = XLSX.utils.json_to_sheet(
+    this.statusesTimes.map(ticket => ({
+      'Ticket No': ticket.ticketId,
+      'Issue Short Description': ticket.title,
+      'Status': ticket.status,
+      'Priority': ticket.priority,
+      'Time in New': ticket.durations?.New || 'NA',
+      'Time in Assigned': ticket.durations?.Assigned || 'NA',
+      'Time in InProcess': ticket.durations?.InProcess || 'NA',
+      'Time in Hold - Customer': ticket.durations?.['Hold-Cust'] ||'NA',
+      'Time in Hold - ILT': ticket.durations?.['Hold-ILT'] || 'NA',
+      'Time in Client Action': ticket.durations?.ClientAction || 'NA',
+      'Time in Software Change': ticket.durations?.SoftwareChange || 'NA',
+      'Time in Rework': ticket.durations?.Rework || 'NA',
+      'Time in UAT': ticket.durations?.UAT || 'NA',
+      'Time in Resolved': ticket.durations?.Resolved || 'NA',
+      'Time in Closed': ticket.durations?.Closed ||'NA',
+      'Time in ReOpen': ticket.durations?.ReOpen || 'NA',
+      'Time in Third Party': ticket.durations?.ThirdParty || 'NA',
+    }))
+  );
+
+  const workbook = { Sheets: { 'Tickets': worksheet }, SheetNames: ['Tickets'] };
+  const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+  const data: Blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+  FileSaver.saveAs(data, `Tickets_Report_${new Date().getTime()}.xlsx`);
+}
+
 
 }
