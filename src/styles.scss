@@ -1007,6 +1007,9 @@ input:focus {
   color: black;
   font-size: 14px;
   font-weight: bold;
+  white-space: nowrap;       
+    overflow: hidden;          
+    text-overflow: ellipsis;  
 
   // margin-top: 20px;
 }
@@ -1100,6 +1103,7 @@ input:focus {
 
   /* Smart Scroll - Hide scrollbar when not scrolling */
   transition: max-height 0.3s ease-in-out;
+      border-radius: 19px;
 }
 
 /* For WebKit Browsers (Chrome, Safari) */

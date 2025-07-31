@@ -47,22 +47,19 @@
           </span>
         </td>
         <td>{{ ticket.newTime }}</td>
-        <td>{{ ticket.timeAssigned }}</td>
-        <td>{{ ticket.timeInProcess }}</td>
-        <td>{{ ticket.holdCustomer }}</td>
-        <td>{{ ticket.holdILT }}</td>
-        <td>{{ ticket.clientAction }}</td>
-        <td>{{ ticket.softwareChange }}</td>
-        <td>{{ ticket.rework }}</td>
-        <td>{{ ticket.uat }}</td>
-        <td>{{ ticket.resolved }}</td>
-        <td>{{ ticket.completed }}</td>
-        <td>{{ ticket.reopen }}</td>
-        <td>{{ ticket.thirdParty }}</td>
-        <td class="text-center">
-          <button class="btn btn-sm btn-info me-2" (click)="viewTicket(ticket)">View</button>
-          <button class="btn btn-sm btn-warning" (click)="editTicket(ticket)">Edit</button>
-        </td>
+        <td>{{ ticket.assignedTime }}</td>
+        <td>{{ ticket.inProcessTime }}</td>
+        <td>{{ ticket.holdCustTime }}</td>
+        <td>{{ ticket.holdILTTime }}</td>
+        <td>{{ ticket.clientActionTime }}</td>
+        <td>{{ ticket.softwareChangeTime }}</td>
+        <td>{{ ticket.reworkTime }}</td>
+        <td>{{ ticket.uatTime }}</td>
+        <td>{{ ticket.resolvedTime }}</td>
+        <td>{{ ticket.closedTime }}</td>
+        <td>{{ ticket.reOpenTime }}</td>
+        <td>{{ ticket.thirdPartyTime }}</td>
+       
       </tr>
     </tbody>
   </table>
