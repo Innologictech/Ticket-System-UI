@@ -49,7 +49,8 @@ export class TicketCreationComponent {
 itemsPerPage: number = 10;
   searchText: string = '';
  ticketList: any[] = []; // ✅ Safe default
-
+ reverse: boolean = false;
+sortKey: string = 'customerticketId';
   constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef, private modalService: NgbModal, private service: GeneralserviceService, private loaderService: LoaderService, private authService: AuthenticationService, private store: Store,private sanitizer: DomSanitizer) { }
 
 
@@ -195,6 +196,15 @@ get paginatedTickets() {
   const start = (this.currentPage - 1) * this.itemsPerPage;
   return this.ticketList.slice(start, start + this.itemsPerPage);
 }
+
+setSort(key: string) {
+    if (this.sortKey === key) {
+      this.reverse = !this.reverse;
+    } else {
+      this.sortKey = key;
+      this.reverse = false;
+    }
+  }
 
 
   filterTickets(tickets: any[]): any[] {

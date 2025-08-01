@@ -1,36 +1,36 @@
 <div class="card-header">
-    My Reports
+  My Reports
 </div>
 
 <div class="mb-3 d-flex justify-content-between">
-    <input type="text" class=" w-15" style="margin-top: 1rem;" placeholder="Search..." [(ngModel)]="searchText" />
+  <input type="text" class=" w-15" style="margin-top: 1rem;" placeholder="Search..." [(ngModel)]="searchText" />
 
-<button class="export-btn  mt-2" (click)="exportToExcel()">
-  Export to Excel
-</button>
+  <button class="export-btn  mt-2" (click)="exportToExcel()">
+    Export to Excel
+  </button>
 </div>
 
 <div class="table-responsive tableFixHead">
   <table class="table table-bordered table-hover bg-white">
     <thead class="table-dark text-center">
       <tr>
-        <th>Ticket No</th>
-        <th>Issue Short Description</th>
-        <th>Status</th>
-        <th>Priority</th>
-        <th>Time in New(hrs)</th>
-        <th>Time in Assigned</th>
-        <th>Time in InProcess</th>
-        <th>Time in Hold-Customer</th>
-        <th>Time in Hold-ILT</th>
-        <th>Time in Client Action</th>
-        <th>Time in Software Change</th>
-        <th>Time in Rework</th>
-        <th>Time in UAT</th>
-        <th>Time in Resolved</th>
-        <th>Time inCompleted</th>
-        <th>Time in Reopen</th>
-        <th>Time in Third Party</th>
+        <th (click)="setSort('ticketId')">Ticket No</th>
+        <th (click)="setSort('title')">Issue Short Description</th>
+        <th (click)="setSort('status')">Status</th>
+        <th (click)="setSort('priority')">Priority</th>
+        <th (click)="setSort('New')">Time in New(hrs)</th>
+        <th (click)="setSort('Assigned')">Time in Assigned</th>
+        <th (click)="setSort('  ticket.durations?.InProcess')">Time in InProcess</th>
+        <th (click)="setSort(' ticket.durations?.Hold-Cust')">Time in Hold-Customer</th>
+        <th (click)="setSort('ticket.durations?.Hold-ILT ')">Time in Hold-ILT</th>
+        <th (click)="setSort('ticket.durations?.ClientAction ')">Time in Client Action</th>
+        <th (click)="setSort('ticket.durations?.SoftwareChange ')">Time in Software Change</th>
+        <th (click)="setSort('ticket.durations?.ReWork ')">Time in Rework</th>
+        <th (click)="setSort('ticket.durations?.UAT ')">Time in UAT</th>
+        <th (click)="setSort('ticket.durations?.Resolved')">Time in Resolved</th>
+        <th (click)="setSort('ticket.durations?.Closed ')">Time inCompleted</th>
+        <th (click)="setSort(' ticket.durations?.ReOpen ')">Time in Reopen</th>
+        <th (click)="setSort(' ticket.durations?.ThirdParty ')">Time in Third Party</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -38,7 +38,7 @@
       <tr *ngFor="let ticket of statusesTimes | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage } ">
         <td>{{ ticket.ticketId }}</td>
         <td>{{ ticket.title }}</td>
-         <td>{{ ticket.status }}</td>
+        <td>{{ ticket.status }}</td>
         <td>
           <span *ngIf="ticket.priority === 'High'">
             {{ticket.priority}} <i class="fas fa-arrow-up text-danger"></i>
@@ -51,11 +51,11 @@
           </span>
         </td>
         <td>{{ ticket.durations?.New || '-' }}</td>
-      <td>{{ ticket.durations?.Assigned || '-' }}</td>
+        <td>{{ ticket.durations?.Assigned || '-' }}</td>
         <td>{{ ticket.durations?.InProcess|| '-' }}</td>
         <td>{{ ticket.durations?.Hold-Cust || '-' }}</td>
         <td>{{ ticket.durations?.Hold-ILT || '-'}}</td>
-        <td>{{ ticket.durations?.ClientAction  || '-'}}</td>
+        <td>{{ ticket.durations?.ClientAction || '-'}}</td>
         <td>{{ ticket.durations?.SoftwareChange || '-'}}</td>
         <td>{{ ticket.durations?.ReWork || '-'}}</td>
         <td>{{ ticket.durations?.UAT || '-'}}</td>
@@ -63,7 +63,7 @@
         <td>{{ ticket.durations?.Closed || '-'}}</td>
         <td>{{ ticket.durations?.ReOpen || '-'}}</td>
         <td>{{ ticket.durations?.ThirdParty || '-' }}</td>
-       
+
       </tr>
     </tbody>
   </table>
@@ -71,7 +71,5 @@
 
 <!-- Pagination -->
 <div class="d-flex justify-content-end mt-3">
-    <pagination-controls (pageChange)="currentPage = $event"
-        class="pagination justify-content-end"></pagination-controls>
+  <pagination-controls (pageChange)="currentPage = $event" class="pagination justify-content-end"></pagination-controls>
 </div>
-

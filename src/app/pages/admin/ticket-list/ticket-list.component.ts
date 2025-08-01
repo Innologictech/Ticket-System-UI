@@ -66,15 +66,20 @@ export class TicketListComponent implements OnInit {
     // this.getTickets();
     this.getAllUserList();
 
-     this.bugTicketForm.get('assignedTo')?.valueChanges.subscribe((assignedUser) => {
-    if (assignedUser) {
-      this.bugTicketForm.patchValue({
-        ticketstatus: 'Assigned'
-      });
-    }
-  });
+    this.bugTicketForm.get('assignedTo')?.valueChanges.subscribe((assignedUser) => {
+  const currentStatus = this.bugTicketForm.get('ticketstatus')?.value;
+
+  // Only auto-update if current status is "New"
+  if (assignedUser && currentStatus === 'New') {
+    this.bugTicketForm.patchValue({
+      ticketstatus: 'Assigned'
+    });
   }
-  statusOptions = ['Open', 'In Progress', 'Hold', 'UAT', 'Resolved', 'Closed', 'Reopen'];
+});
+
+  
+  }
+  // statusOptions = ['Open', 'In Progress', 'Hold', 'UAT', 'Resolved', 'Closed', 'Reopen'];
 
   constructor(private service: GeneralserviceService, private spinner: NgxSpinnerService, private modalService: NgbModal, private fb: FormBuilder, private loaderservice: LoaderService, private store: Store, private sanitizer: DomSanitizer) {
 
