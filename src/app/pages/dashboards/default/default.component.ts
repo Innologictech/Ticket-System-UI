@@ -211,7 +211,7 @@ console.log('Filtered Tickets:', this.filteredTickets); // Check what passes fil
   else if (this.Role === 'CONSULTANT') {
     // ✅ Consultant only sees tickets reported by them
     return tickets.filter(ticket =>
-      ticket.reportedBy?.toLowerCase() === this.loggedInUser.userName?.toLowerCase()
+      ticket.consultant?.toLowerCase() === this.loggedInUser.userName?.toLowerCase()
     );
   } 
   else if (this.Role === 'CUSTOMER') {
