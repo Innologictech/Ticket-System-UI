@@ -4,6 +4,10 @@
 
 <div class="mb-3 d-flex justify-content-between">
     <input type="text" class=" w-15" style="margin-top: 1rem;" placeholder="Search..." [(ngModel)]="searchText" />
+
+<button class="export-btn  mt-2" (click)="exportToExcel()">
+  Export to Excel
+</button>
 </div>
 
 <div class="table-responsive tableFixHead">
@@ -14,11 +18,11 @@
         <th>Issue Short Description</th>
         <th>Status</th>
         <th>Priority</th>
-        <th>Time in New</th>
+        <th>Time in New(hrs)</th>
         <th>Time in Assigned</th>
         <th>Time in InProcess</th>
-        <th>Time in Hold - Customer</th>
-        <th>Time in Hold - ILT</th>
+        <th>Time in Hold-Customer</th>
+        <th>Time in Hold-ILT</th>
         <th>Time in Client Action</th>
         <th>Time in Software Change</th>
         <th>Time in Rework</th>
@@ -31,7 +35,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let ticket of statusTimes | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage } ">
+      <tr *ngFor="let ticket of statusesTimes | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage } ">
         <td>{{ ticket.ticketId }}</td>
         <td>{{ ticket.title }}</td>
          <td>{{ ticket.status }}</td>
@@ -47,18 +51,18 @@
           </span>
         </td>
         <td>{{ ticket.durations?.New || '-' }}</td>
-  <td>{{ ticket.durations?.Assigned || '-' }}</td>
-        <td>{{ ticket.InProcess }}</td>
-        <td>{{ ticket.holdCustTime }}</td>
-        <td>{{ ticket.holdILTTime }}</td>
-        <td>{{ ticket.ClientAction }}</td>
-        <td>{{ ticket.softwareChangeTime }}</td>
-        <td>{{ ticket.reworkTime }}</td>
-        <td>{{ ticket.uatTime }}</td>
-        <td>{{ ticket.resolvedTime }}</td>
-        <td>{{ ticket.closedTime }}</td>
-        <td>{{ ticket.reOpenTime }}</td>
-        <td>{{ ticket.thirdPartyTime }}</td>
+      <td>{{ ticket.durations?.Assigned || '-' }}</td>
+        <td>{{ ticket.durations?.InProcess|| '-' }}</td>
+        <td>{{ ticket.durations?.Hold-Cust || '-' }}</td>
+        <td>{{ ticket.durations?.Hold-ILT || '-'}}</td>
+        <td>{{ ticket.durations?.ClientAction  || '-'}}</td>
+        <td>{{ ticket.durations?.SoftwareChange || '-'}}</td>
+        <td>{{ ticket.durations?.ReWork || '-'}}</td>
+        <td>{{ ticket.durations?.UAT || '-'}}</td>
+        <td>{{ ticket.durations?.Resolved || '-' }}</td>
+        <td>{{ ticket.durations?.Closed || '-'}}</td>
+        <td>{{ ticket.durations?.ReOpen || '-'}}</td>
+        <td>{{ ticket.durations?.ThirdParty || '-' }}</td>
        
       </tr>
     </tbody>

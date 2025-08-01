@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { AuthenticationService } from '../../../core/services/auth.service';
 import { AuthfakeauthenticationService } from '../../../core/services/authfake.service';
@@ -54,7 +54,7 @@ export class Login2Component implements OnInit {
   successMessage: string;
   errorMessage: string;
   constructor(private formBuilder: UntypedFormBuilder, private route: ActivatedRoute, private router: Router, private authenticationService: AuthenticationService,
-    private authFackservice: AuthfakeauthenticationService, public store: Store, private service: GeneralserviceService, private toaster: ToastrService, private spinner: NgxSpinnerService) { }
+    private authFackservice: AuthfakeauthenticationService, public store: Store, private service: GeneralserviceService, private toaster: ToastrService, private spinner: NgxSpinnerService,private cdRef: ChangeDetectorRef,) { }
   loginForm: FormGroup;
   forgotPasswordForm: FormGroup;
   submitted = false;
@@ -147,7 +147,7 @@ export class Login2Component implements OnInit {
       userEmail: this.forgotPasswordForm.value.email
     };
 
-    this.service.forgotPassword(payload).subscribe((res: any) => {
+    this.service.ForgotPassword(payload).subscribe((res: any) => {
       const response = res
       console.log("this.response", response)
       // if (this.response.MSGTXT) {
@@ -341,8 +341,9 @@ export class Login2Component implements OnInit {
 
 
   onSubmit() {
-    this.submitted = true;
-
+ 
+ this.submitted = true;
+  this.cdRef.detectChanges(); 
     if (this.loginForm.invalid) {
       return;
     }
