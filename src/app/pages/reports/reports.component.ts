@@ -30,6 +30,10 @@ export class ReportsComponent  implements OnInit{
   ngOnInit(): void {
 
     this.fetchStatusTimes();
+
+    //  setInterval(() => {
+    //   this.fetchStatusTimes();
+    // }, 1000);
     this.store.dispatch(TicketActions.loadTickets())
         this.tickets$ = this.store.select(selectAllTickets);
         this.tickets$.subscribe((tickets: any) => {

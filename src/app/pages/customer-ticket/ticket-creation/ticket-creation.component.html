@@ -23,11 +23,11 @@
                     <table class="table table-bordered table-hover bg-white">
                         <thead class="table-dark text-center">
                             <tr>
-                                <th>Ticket Id</th>
-                                <th>Issue Short Description</th>
-                                <th>Priority</th>
-                                <th>Status</th>
-                                <th>Created Date</th>
+                                <th (click)="setSort('customerticketId')">Ticket Id</th>
+                                <th (click)="setSort('title')">Issue Short Description</th>
+                                <th (click)="setSort('priority')">Priority</th>
+                                <th (click)="setSort('status')">Status</th>
+                                <th (click)="setSort('date')">Created Date</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -212,7 +212,7 @@
                     </div>
                 </div> -->
                 <div class="col-md-6">
-                    <label>Date&Time<span class="text-danger">*</span></label>
+                    <label>Date&Time(IST)<span class="text-danger">*</span></label>
                     <!-- <input class="form-control" formControlName="date" type="datetime-local" 
                         readonly />   -->
                     <input class="form-control" formControlName="date" type="datetime-local" [readonly]="true" />
