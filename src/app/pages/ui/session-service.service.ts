@@ -39,28 +39,52 @@ export class SessionServiceService implements OnDestroy {
     }, this.timeoutDuration);
   }
  
-  private handleSessionExpiry() {
-    // alert('Session expired due to inactivity. Redirecting to login.');
-    // this.router.navigate(['/login']); // Redirect to login page
-     localStorage.clear();
+  // private handleSessionExpiry() {
+  //   // alert('Session expired due to inactivity. Redirecting to login.');
+  //   // this.router.navigate(['/login']); // Redirect to login page
+  //    localStorage.clear();
    
-        Swal.fire({
-          title: 'Session Expired',
-          text: 'Redirecting to login Page.',
-          icon: 'warning',
-          confirmButtonText: 'OK'
-        }).then(() => {
-          //development HBL
-        //   window.location.href = environment.URL;
-          //Production
-          // window.location.href = 'https://ims.hbl.in/';
-          this.router.navigate(['/auth/login-2'],);
-        });
+  //       Swal.fire({
+  //         title: 'Session Expired',
+  //         text: 'Redirecting to login Page.',
+  //         icon: 'warning',
+  //         confirmButtonText: 'OK'
+  //       }).then(() => {
+  //         //development HBL
+  //       //   window.location.href = environment.URL;
+  //         //Production
+  //         // window.location.href = 'https://ims.hbl.in/';
+  //         this.router.navigate(['/auth/login-2'],);
+  //       });
+  // }
+   private handleSessionExpiry() {
+    // ❌ no alert or swal
+    localStorage.clear();
+    this.router.navigate(['/auth/login-2']); // 👈 redirect directly to login page
   }
  
   ngOnDestroy(): void {
     clearTimeout(this.sessionTimeout);
     this.activitySubject.complete();
   }
+  private storageKey = 'app_session';
+
+  startSession(tabId: string) {
+    const data = {
+      tabId,
+      startTime: new Date().toISOString()
+    };
+    localStorage.setItem(this.storageKey, JSON.stringify(data));
+  }
+
+  getSession() {
+    const session = localStorage.getItem(this.storageKey);
+    return session ? JSON.parse(session) : null;
+  }
+
+  clearSession() {
+    localStorage.removeItem(this.storageKey);
+  }
+
 }
  

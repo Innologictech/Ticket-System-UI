@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -21,15 +21,41 @@ export class AppComponent implements OnInit {
  
   data: any[] = []
   someProperty: boolean;
-  constructor(private sessionService:SessionServiceService,private loaderService: LoaderService, private notificationService: NotificationService,private service:GeneralserviceService,public loaderservice:LoaderService) {
+  constructor(private sessionService:SessionServiceService,private loaderService: LoaderService, private router: Router, private notificationService: NotificationService,private service:GeneralserviceService,public loaderservice:LoaderService) {
     this.isLoading$ = this.loaderService.isLoading$;
   }
-  ngOnInit() {
-    
 
-  
-  
+    
+ngOnInit() {
+  const tabId = Math.random().toString(36).substring(2, 7);
+    const existing = this.sessionService.getSession();
+
+    if (existing) {
+      // Old tab exists → expire it
+      localStorage.setItem('expire_tab', existing.tabId);
+
+      // Replace with new session
+      this.sessionService.startSession(tabId);
+    } else {
+      // First time → start new session
+      this.sessionService.startSession(tabId);
+    }
+
+    // Listen for expiry signal
+    window.addEventListener('storage', (event) => {
+      if (event.key === 'expire_tab') {
+        const expiredTabId = event.newValue;
+        const mySession = this.sessionService.getSession();
+
+        if (mySession && mySession.tabId === expiredTabId) {
+          // ❌ No alert → just logout + redirect
+          this.sessionService.clearSession();
+          this.router.navigate(['/auth/login-2']);  // 👈 login route
+        }
+      }
+    });
   }
+
   ngAfterViewInit() {
     this.someProperty = true; // This can cause the error
   }
