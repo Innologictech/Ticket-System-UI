@@ -25,9 +25,9 @@ export class TicketCreationComponent {
 
   bugTicketForm!: FormGroup;
   submit: boolean = false;
-  submitted = false;
-  isEditMode = false;
-  isViewMode = false;
+  submitted:boolean = false;
+  isEditMode:boolean= false;
+  isViewMode :boolean= false;
   selectedFile: File | null = null;
   selectedTicket: any = null;
   statusOptions = ['New', 'In Progress', 'Hold', 'UAT', 'Resolved', 'Closed', 'Reopen'];
@@ -490,10 +490,6 @@ formatDateForInput(dateString: string): string {
     this.modalTitle = 'Raise New Ticket';
     this.isEditMode = false;
     this.submit = false
-    // this.bugTicketForm.reset({
-
-    // });
-
     this.bugTicketForm.reset({
       date: this.formatDate(new Date())  // set current date
     });

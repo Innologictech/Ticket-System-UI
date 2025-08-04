@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { LoaderService } from 'src/app/core/services/loader.service';
 
 import { GeneralserviceService } from 'src/app/generalservice.service';
 
@@ -41,7 +42,7 @@ export class ReportsComponent  implements OnInit{
           console.log('this.ticketData', this.ticketData)
         })
   }
-  constructor(private store: Store,private service:GeneralserviceService){
+  constructor(private store: Store,private service:GeneralserviceService,private loaderservice:LoaderService){
 
   }
 
@@ -92,14 +93,19 @@ export class ReportsComponent  implements OnInit{
 
   
   fetchStatusTimes(): void {
+    this.loaderservice.showLoader();
     this.service.getStatusTimes().subscribe({
+      
       next: (response:any) => {
 
        this.statusTimes=response.data;
+       this.loaderservice.hideLoader()
         console.log('Status times:', this.statusTimes);
         // You can assign this response to a variable if needed
       },
       error: (error) => {
+      this.loaderservice.hideLoader()
+
         console.error('Error fetching status times:', error);
       }
     });

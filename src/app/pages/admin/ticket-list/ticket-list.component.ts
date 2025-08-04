@@ -35,6 +35,7 @@ export class TicketListComponent implements OnInit {
   status$: Observable<Status[]>;
   allStatus: any[] = [];
   ngOnInit(): void {
+    this.loaderservice.showLoader();
     this.bugTicketForm = this.fb.group({
       title: ['', Validators.required],
       reportedBy: ['', Validators.required],
@@ -49,10 +50,12 @@ export class TicketListComponent implements OnInit {
       upload: [''],
       remarks:[''],
     });
+    
     this.store.dispatch(TicketActions.loadTickets())
     this.tickets$ = this.store.select(selectAllTickets);
     this.tickets$.subscribe((tickets: any) => {
       this.ticketData = tickets?.data || []; // Ensure it's an array
+      this.loaderservice.hideLoader();
       console.log('this.ticketData', this.tickets$)
 
       this.store.dispatch(TicketActions.loadStatus())
