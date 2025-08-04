@@ -14,3 +14,9 @@ export const selectAllStatus = createSelector(
   selectStatusState,
   (state: StatusState) => state.status
 );
+
+//  selector for loading flag
+export const selectTicketLoading = createSelector(
+  selectTicketState,
+  (state: TicketState) => state.loading
+);

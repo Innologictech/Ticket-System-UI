@@ -65,8 +65,8 @@ sortKey: string = 'customerticketId';
       reportedBy: [this.currentUser?.userName || this.currentUser?.data?.userName || '', Validators.required],
       priority: ['', Validators.required],
       environment: ['Production', Validators.required],
-      ticketstatus: ['New'],
-      issueType: [''],
+      ticketstatus: ['New', Validators.required],
+      issueType: ['', Validators.required],
       // date: ['', Validators.required],
       date: [this.formatDate(new Date()), Validators.required],
       // Client:[this.currentUser?.Client || this.currentUser?.data?.Client || '',],
@@ -487,6 +487,7 @@ formatDateForInput(dateString: string): string {
 
 
   TicketCreationModel(createBugTicketTemplate: any): void {
+    console.log("bugticket form",this.bugTicketForm)
     this.modalTitle = 'Raise New Ticket';
     this.isEditMode = false;
     this.submit = false
