@@ -5,9 +5,9 @@ import Swal from 'sweetalert2';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { MENU } from 'src/app/layouts/sidebar/menu';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { LoaderService } from 'src/app/core/services/loader.service';
 @Component({
   selector: 'app-invoice-user-creation',
   templateUrl: './invoice-user-creation.component.html',
@@ -50,7 +50,7 @@ technologies = ['SAP', 'WEB APPLICATION', 'POWER BI'];
   constructor(
     private modalService: NgbModal,
     private fb: FormBuilder,
-    private service: GeneralserviceService,private toastr: ToastrService,private spinner:NgxSpinnerService
+    private service: GeneralserviceService,private toastr: ToastrService,private loaderservice:LoaderService
   ) {}
 
   ngOnInit(): void {
@@ -477,7 +477,7 @@ activity: selectedUser.Activity || [],
         timer:10000 
       }).then((result) => {
         if (result.isConfirmed) {
-          this.spinner.show();
+          this.loaderservice.showLoader()
           console.log('Deleting Customer with ID:', data, this.userId);
           this.userId = data.userId;
           let deletePayload = {
@@ -488,7 +488,7 @@ activity: selectedUser.Activity || [],
           console.log("Delete payload:", deletePayload);
           this.service.DeteleGlobal(deletePayload).subscribe((res: any) => {
             console.log("deleteGlobal response:", res);
-            this.spinner.hide();
+           this.loaderservice.hideLoader()
             if (res.status === 200) {
               this.getAllUserList()
               Swal.fire({
@@ -506,7 +506,7 @@ activity: selectedUser.Activity || [],
               this.toastr.error(res.message);
             }
           }, (error) => {
-            this.spinner.hide();
+            this.loaderservice.hideLoader()
             console.error("Error deleting customer:", error);
             this.toastr.error("Failed to delete customer");
           });
@@ -522,13 +522,13 @@ activity: selectedUser.Activity || [],
   
   getAllUserList(){
     this.userList = [];
-    this.spinner.show()
+    this.loaderservice.showLoader()
     this.service.getAllUsers().subscribe((res:any)=>{
       this.userList = res.data
-      this.spinner.hide()
+      this.loaderservice.hideLoader()
       console.log("this.userList",this.userList)
     },error =>{
-      this.spinner.hide()
+      this.loaderservice.hideLoader()
     console.log("error",error)
     })
   }

@@ -9,7 +9,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { Status, Ticket } from 'src/app/store/ticketSytem/ticket.model';
 import { Store } from '@ngrx/store';
 import * as TicketActions from 'src/app/store/ticketSytem/ticket.actions';
-import { selectAllStatus, selectAllTickets } from 'src/app/store/ticketSytem/ticket.selectors';
+import { selectAllStatus, selectAllTickets, selectTicketLoading } from 'src/app/store/ticketSytem/ticket.selectors';
 import { Observable } from 'rxjs';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
@@ -35,6 +35,7 @@ export class TicketListComponent implements OnInit {
   status$: Observable<Status[]>;
   allStatus: any[] = [];
   ngOnInit(): void {
+
     this.bugTicketForm = this.fb.group({
       title: ['', Validators.required],
       reportedBy: ['', Validators.required],
@@ -47,11 +48,22 @@ export class TicketListComponent implements OnInit {
       status: [''],
       assignedTo: [''],
       upload: [''],
-      remarks:[''],
+      remarks: [''],
     });
+    this.store.select(selectTicketLoading).subscribe((loading: boolean) => {
+      if (loading) {
+        console.log("loader calleddddddddddd")
+        this.loaderservice.showLoader();
+      } else {
+        this.loaderservice.hideLoader();
+      }
+    });
+
+
     this.store.dispatch(TicketActions.loadTickets())
     this.tickets$ = this.store.select(selectAllTickets);
     this.tickets$.subscribe((tickets: any) => {
+
       this.ticketData = tickets?.data || []; // Ensure it's an array
       console.log('this.ticketData', this.tickets$)
 
@@ -61,23 +73,25 @@ export class TicketListComponent implements OnInit {
         this.allStatus = status?.data || []; // Ensure it's an array
         console.log(' this.allStatus', this.allStatus)
       });
+
+
     });
     // this.loading$ = this.store.select(selectTicketLoading);
     // this.getTickets();
     this.getAllUserList();
 
     this.bugTicketForm.get('assignedTo')?.valueChanges.subscribe((assignedUser) => {
-  const currentStatus = this.bugTicketForm.get('ticketstatus')?.value;
+      const currentStatus = this.bugTicketForm.get('ticketstatus')?.value;
 
-  // Only auto-update if current status is "New"
-  if (assignedUser && currentStatus === 'New') {
-    this.bugTicketForm.patchValue({
-      ticketstatus: 'Assigned'
+      // Only auto-update if current status is "New"
+      if (assignedUser && currentStatus === 'New') {
+        this.bugTicketForm.patchValue({
+          ticketstatus: 'Assigned'
+        });
+      }
     });
-  }
-});
 
-  
+
   }
   // statusOptions = ['Open', 'In Progress', 'Hold', 'UAT', 'Resolved', 'Closed', 'Reopen'];
 
@@ -299,7 +313,7 @@ export class TicketListComponent implements OnInit {
       ticketstatus: ticket.allowedNextStatuses?.[0]?.status || '',
       date: formattedDate,
       description: ticket.description,
-      remarks:ticket.remarks,
+      remarks: ticket.remarks,
       assignedTo: ticket.consultant || '',
       attachments: null
       // attachments: ticket.attachment
@@ -467,14 +481,14 @@ export class TicketListComponent implements OnInit {
       consultant: rawForm.assignedTo,
       date: rawForm.date,
       description: rawForm.description,
-      remarks:rawForm.remarks,
+      remarks: rawForm.remarks,
       upload: this.selectedUploadBase64,
       attachment: this.selectedFileBase64 || ''
     };
 
     console.log("attachment", this.selectedFileBase64);
 
-  
+
 
     this.service.UpdateTicket(payload).subscribe(
       (response: any) => {
