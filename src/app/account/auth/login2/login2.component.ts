@@ -33,8 +33,8 @@ export class Login2Component implements OnInit {
     // 'assets/images/worldMapImage.png',
     // 'assets/images/AircraftFlight.png',
 
-    // 'assets/images/Sap_image.png',
-    'assets/images/flight.png',
+    'assets/images/flightsmoke.png',
+    // 'assets/images/flight.png',
 
     // 'assets/images/Sap_image2.png',
     // 'https://www.innologictechnologies.com/assets/template/images/img/slide_02.jpg',
@@ -381,7 +381,7 @@ export class Login2Component implements OnInit {
         this.spinner.hide();
        console.log("errorrr",err) 
     if (err==='User is already logged in on another session.') {
-      Swal.fire('Login Blocked', 'User is already logged in on another session.', 'warning');
+      Swal.fire('User Already Logged In', 'You are already logged in on another device or browser', 'warning');
     } else {
       Swal.fire('Error', err?.error?.message || 'Login failed. Please try again.', 'error');
     }

@@ -13,21 +13,21 @@ import { Observable } from 'rxjs';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   standalone: true,
-  imports: [RouterOutlet,CommonModule,NgxSpinnerModule],
+  imports: [RouterOutlet, CommonModule, NgxSpinnerModule],
 })
 export class AppComponent implements OnInit {
-   isLoading$: Observable<boolean>;
+  isLoading$: Observable<boolean>;
 
- 
+
   data: any[] = []
   someProperty: boolean;
-  constructor(private sessionService:SessionServiceService,private loaderService: LoaderService, private router: Router, private notificationService: NotificationService,private service:GeneralserviceService,public loaderservice:LoaderService) {
+  constructor(private sessionService: SessionServiceService, private loaderService: LoaderService, private router: Router, private notificationService: NotificationService, private service: GeneralserviceService, public loaderservice: LoaderService) {
     this.isLoading$ = this.loaderService.isLoading$;
   }
 
-    
-ngOnInit() {
-  const tabId = Math.random().toString(36).substring(2, 7);
+
+  ngOnInit() {
+    const tabId = Math.random().toString(36).substring(2, 7);
     const existing = this.sessionService.getSession();
 
     if (existing) {
@@ -39,6 +39,27 @@ ngOnInit() {
     } else {
       // First time → start new session
       this.sessionService.startSession(tabId);
+    }
+
+
+    // ✅ Logout user if token exists (i.e. on refresh)
+    const userName = localStorage.getItem('currentUser');
+
+    const user = JSON.parse(userName);
+    const userId = user.data?.userId;
+    console.log('userId:', userId);
+    
+    if (userId) {
+      this.service.logout(userId).subscribe({
+        next: () => {
+          console.log('Logged out on refresh');
+          localStorage.clear();
+          this.router.navigate(['/auth/login-2']);
+        },
+        error: (err) => {
+          console.error('Logout on refresh failed', err);
+        }
+      });
     }
 
     // Listen for expiry signal
@@ -59,5 +80,5 @@ ngOnInit() {
   ngAfterViewInit() {
     this.someProperty = true; // This can cause the error
   }
-  
+
 }
