@@ -54,7 +54,7 @@ export class Login2Component implements OnInit {
   successMessage: string;
   errorMessage: string;
   constructor(private formBuilder: UntypedFormBuilder, private route: ActivatedRoute, private router: Router, private authenticationService: AuthenticationService,
-    private authFackservice: AuthfakeauthenticationService, public store: Store, private service: GeneralserviceService, private toaster: ToastrService, private spinner: NgxSpinnerService,private cdRef: ChangeDetectorRef,) { }
+    private authFackservice: AuthfakeauthenticationService, public store: Store, private service: GeneralserviceService, private toaster: ToastrService, private spinner: NgxSpinnerService, private cdRef: ChangeDetectorRef,) { }
   loginForm: FormGroup;
   forgotPasswordForm: FormGroup;
   submitted = false;
@@ -341,9 +341,9 @@ export class Login2Component implements OnInit {
 
 
   onSubmit() {
- 
- this.submitted = true;
-  this.cdRef.detectChanges(); 
+
+    this.submitted = true;
+    this.cdRef.detectChanges();
     if (this.loginForm.invalid) {
       return;
     }
@@ -372,14 +372,21 @@ export class Login2Component implements OnInit {
             const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
             this.router.navigate([returnUrl]);
           });
-        } else {
+        } 
+        else {
           Swal.fire('Login Failed', res.message || 'Invalid credentials.', 'error');
         }
       },
       error: (err) => {
         this.spinner.hide();
-        Swal.fire('Error', err?.error?.message || 'Login failed. Please try again.', 'error');
-      }
+       console.log("errorrr",err) 
+    if (err==='User is already logged in on another session.') {
+      Swal.fire('Login Blocked', 'User is already logged in on another session.', 'warning');
+    } else {
+      Swal.fire('Error', err?.error?.message || 'Login failed. Please try again.', 'error');
+    }
+
+  }
     });
   }
 

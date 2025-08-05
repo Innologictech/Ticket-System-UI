@@ -306,6 +306,11 @@ updateUser(payload: any) {
     });
   return this.http.post(environment.baseUrl+'/ticket/authenticationLogin', payload, { headers: headers });
 }
+ 
+logout(userId: string) {
+  return this.http.post(environment.baseUrl+'/ticket/logout', { userId });
+}
+
   DeteleGlobal(obj){
     return this.http.post(environment.baseUrl+'/ticket/deteleGlobal',obj);
  

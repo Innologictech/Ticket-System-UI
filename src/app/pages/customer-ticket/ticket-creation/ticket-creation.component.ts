@@ -456,6 +456,7 @@ formatDateForInput(dateString: string): string {
 
 
   viewTicket(ticket: any, templateRef: any): void {
+    console.log("selected View ticket",ticket);
     this.modalTitle = 'View Ticket';
     this.resetModeFlags(); // Clear previous mode
     this.selectedTicket = ticket;

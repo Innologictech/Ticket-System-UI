@@ -210,30 +210,79 @@ mustMatch(controlName: string, matchingControlName: string) {
 
   
 
-  logout() {
-  Swal.fire({
-    title: 'Are you sure?',
-    text: 'You will be logged out of your session.',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Logout',
-    cancelButtonText: 'Cancel',
-    confirmButtonColor: '#d33',
-    cancelButtonColor: '#3085d6'
-  }).then((result) => {
-    if (result.isConfirmed) {
+//   logout() {
+//   Swal.fire({
+//     title: 'Are you sure?',
+//     text: 'You will be logged out of your session.',
+//     icon: 'warning',
+//     showCancelButton: true,
+//     confirmButtonText: 'Yes, Logout',
+//     cancelButtonText: 'Cancel',
+//     confirmButtonColor: '#d33',
+//     cancelButtonColor: '#3085d6'
+//   }).then((result) => {
+//     if (result.isConfirmed) {
       
-      if (environment.defaultauth === 'firebase') {
-        this.authService.logout();
-      } else {
-        this.authFackservice.logout();
+//       if (environment.defaultauth === 'firebase') {
+//         this.authService.logout();
+//       } else {
+//         this.authFackservice.logout();
+//       }
+//       setTimeout(() => {
+//         this.router.navigate(['/auth/login-2']);
+//       });
+//     }
+//   });
+// }
+
+logout() {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You will be logged out of your session.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Logout',
+      cancelButtonText: 'Cancel',
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const userName = localStorage.getItem('currentUser'); // Or get from token/session
+        //   console.log("userNameee",userName);
+        //  const user = JSON.parse(userName);
+        //  const userId = user.userId;
+        //  console.log("userIdd",userId);
+
+        if (userName) {
+         
+  const user = JSON.parse(userName);
+  const userId = user.data?.userId;
+  console.log('userId:', userId);  // Should print: USR#001
+
+          this.service.logout(userId).subscribe({
+            next: (res) => {
+              console.log('Logout API success:', res);
+
+              // ✅ Step 1: Custom logout API call
+              if (environment.defaultauth === 'firebase') {
+                this.authService.logout(); // Firebase logout logic
+              } else {
+                this.authFackservice.logout(); // Your fake auth logout logic
+              }
+
+              // ✅ Step 2: Clear session and navigate to login
+              // localStorage.clear();
+              this.router.navigate(['/auth/login-2']);
+            },
+            error: (err) => {
+              console.error('Logout API failed:', err);
+              Swal.fire('Error', 'Logout failed. Try again.', 'error');
+            }
+          });
+        }
       }
-      setTimeout(() => {
-        this.router.navigate(['/auth/login-2']);
-      });
-    }
-  });
-}
+    });
+  }
 
   /**
    * Fullscreen method
