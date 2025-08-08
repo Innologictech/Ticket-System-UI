@@ -6,165 +6,223 @@
 
 </div>
 <div class="card1">
-  <div class="ticket-scroll-container">
-    <div class="ticket-row d-flex flex-nowrap">
-        <!-- <div class="row gx-3 gy-4"> -->
-         <!-- assigned Tickets -->
-        <!-- <div class="col-md-3  mr-4"> -->
-            <div class="col-lg-3 col-md-3 col-sm-12   mr-4">
+    <div class="ticket-scroll-container">
+        <div class="ticket-row d-flex flex-nowrap">
 
-            <h4 class="section-title">Assigned</h4>
-            <div class="custom-line"></div> <!-- Black line -->
+            <!-- Assigned Tickets -->
+            <div class="col-lg-3 col-md-3 col-sm-12 mr-4">
+                <h4 class="section-title">Assigned</h4>
+                <div class="custom-line"></div>
 
-            <div *ngFor="let ticket of assignedTickets" class="card ticket-card mb-3">
-                <div class="card-body">
-                    <h5 class="card-title">{{ ticket.title }}<small style="float: right;"
-                            [ngStyle]="{ color: ticket.priority === 'High' ? 'red' : ticket.priority === 'Medium' ? 'orange' : 'green' }">{{ticket.priority}}
-                        </small></h5>
-                    <p class="card-text">{{ ticket.description }}</p>
-                    <p class="card-text">assigned:{{ ticket.assignedDays }}</p>
-                    <div class="ticket-footer">
-                        <span class="badge badge-resolved">Assigned</span>
-                        <a href="javascript:void(0)" class="view-link"
-                            (click)="openTicketModal(ticket, editTicketTemplate)">View</a>
+                <div *ngFor="let ticket of assignedTickets" class="card ticket-card mb-3">
+                    <div class="card-body">
 
+                        <h5 class="card-title">
+                            {{ ticket.title }}
+                            <small style="float: right;" [ngStyle]="{ color: ticket.priority === 'High' ? 'red' : 
+                             ticket.priority === 'Medium' ? 'orange' : 'green' }">
+                                {{ ticket.priority }}
+                            </small>
+                        </h5>
 
+                        
+                            <p class="card-text description" [class.expanded]="ticket.expanded" #descRef>
+                                {{ ticket.expanded ? ticket.description : ticket.shortDescription }}
+                            </p>
+                       
+
+                        <a *ngIf="ticket.showReadMore" href="javascript:void(0)" class="read-more"
+                            (click)="toggleExpand(ticket)">
+                            {{ ticket.expanded ? 'Read Less' : 'Read More' }}
+                        </a>
+
+                        <p class="card-text">assigned: {{ ticket.assignedDays || 'N/A' }}</p>
+
+                        <div class="ticket-footer">
+                            <span class="badge badge-resolved">Assigned</span>
+                            <a href="javascript:void(0)" class="view-link"
+                                (click)="openTicketModal(ticket, editTicketTemplate)">View</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
+            <!-- In Progress Tickets -->
+            <div class="col-lg-3 col-md-3 col-sm-12 mr-4">
+                <h4 class="section-title">In Progress</h4>
+                <div class="custom-line"></div>
 
-        <!-- In Progress Tickets -->
-        <!-- <div class="col-md-3  mr-4"> -->
-            <div class="col-lg-3 col-md-3 col-sm-12   mr-4">
+                <div *ngFor="let ticket of inProgressTickets" class="card ticket-card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            {{ ticket.title }}
+                            <small style="float: right;" [ngStyle]="{ color: ticket.priority === 'High' ? 'red' : 
+                             ticket.priority === 'Medium' ? 'orange' : 'green' }">
+                                {{ ticket.priority }}
+                            </small>
+                        </h5>
 
-            <h4 class="section-title">In Progress</h4>
-            <div class="custom-line"></div> <!-- Black line -->
+                        <p class="card-text description" [class.expanded]="ticket.expanded">
+                            {{ ticket.expanded ? ticket.description : ticket.shortDescription }}
+                        </p>
 
-            <div *ngFor="let ticket of inProgressTickets" class="card ticket-card mb-3">
-                <div class="card-body">
-                    <h5 class="card-title">{{ ticket.title }}<small style="float: right;"
-                            [ngStyle]="{ color: ticket.priority === 'High' ? 'red' : ticket.priority === 'Medium' ? 'orange' : 'green' }">{{ticket.priority}}
-                        </small></h5>
-                    <p class="card-text">{{ ticket.description }}</p>
-                    <p class="card-text">assigned:{{ ticket.assignedDays }}</p>
-                    <div class="ticket-footer">
-                        <span class="badge badge-open">In Progress</span>
-                        <a href="javascript:void(0)" class="view-link"
-                            (click)="openTicketModal(ticket, editTicketTemplate)">View</a>
+                        <a *ngIf="ticket.showReadMore" href="javascript:void(0)" class="read-more"
+                            (click)="toggleExpand(ticket)">
+                            {{ ticket.expanded ? 'Read Less' : 'Read More' }}
+                        </a>
 
+                        <p class="card-text">assigned: {{ ticket.assignedDays || 'N/A' }}</p>
 
+                        <div class="ticket-footer">
+                            <span class="badge badge-open">In Progress</span>
+                            <a href="javascript:void(0)" class="view-link"
+                                (click)="openTicketModal(ticket, editTicketTemplate)">View</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Hold Tickets -->
-        <!-- <div class="col-md-3  mr-4"> -->
-            <div class="col-lg-3 col-md-3 col-sm-12   mr-4">
+            <!-- Hold Tickets -->
+            <div class="col-lg-3 col-md-3 col-sm-12 mr-4">
+                <h4 class="section-title">Hold Tickets</h4>
+                <div class="custom-line"></div>
 
-            <h4 class="section-title">Hold Tickets</h4>
-            <div class="custom-line"></div> <!-- Black line -->
+                <div *ngFor="let ticket of holdTickets" class="card ticket-card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            {{ ticket.title }}
+                            <small style="float: right;" [ngStyle]="{ color: ticket.priority === 'High' ? 'red' : 
+                             ticket.priority === 'Medium' ? 'orange' : 'green' }">
+                                {{ ticket.priority }}
+                            </small>
+                        </h5>
 
-            <div *ngFor="let ticket of holdTickets" class="card ticket-card mb-3">
-                <div class="card-body">
-                    <h5 class="card-title">{{ ticket.title }}<small style="float: right;"
-                            [ngStyle]="{ color: ticket.priority === 'High' ? 'red' : ticket.priority === 'Medium' ? 'orange' : 'green' }">{{ticket.priority}}
-                        </small></h5>
-                    <p class="card-text">assigned:{{ ticket.description }}</p>
-                    <p class="card-text">assigned:{{ ticket.assignedDays }}</p>
-                    <div class="ticket-footer">
-                        <span class="badge badge-hold">Hold</span>
-                        <a href="javascript:void(0)" class="view-link"
-                            (click)="openTicketModal(ticket, editTicketTemplate)">View</a>
+                        <p class="card-text description" [class.expanded]="ticket.expanded">
+                            {{ ticket.expanded ? ticket.description : ticket.shortDescription }}
+                        </p>
 
+                        <a *ngIf="ticket.showReadMore" href="javascript:void(0)" class="read-more"
+                            (click)="toggleExpand(ticket)">
+                            {{ ticket.expanded ? 'Read Less' : 'Read More' }}
+                        </a>
 
+                        <p class="card-text">assigned: {{ ticket.assignedDays || 'N/A' }}</p>
+
+                        <div class="ticket-footer">
+                            <span class="badge badge-hold">Hold</span>
+                            <a href="javascript:void(0)" class="view-link"
+                                (click)="openTicketModal(ticket, editTicketTemplate)">View</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- UAT Tickets -->
-        <!-- <div class="col-md-3  mr-4"> -->
-            <div class="col-lg-3 col-md-3 col-sm-12   mr-4">
+            <!-- UAT Tickets -->
+            <div class="col-lg-3 col-md-3 col-sm-12 mr-4">
+                <h4 class="section-title">UAT Tickets</h4>
+                <div class="custom-line"></div>
 
-            <h4 class="section-title">UAT Tickets</h4>
-            <div class="custom-line"></div> <!-- Black line -->
+                <div *ngFor="let ticket of uatTickets" class="card ticket-card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            {{ ticket.title }}
+                            <small style="float: right;" [ngStyle]="{ color: ticket.priority === 'High' ? 'red' : 
+                             ticket.priority === 'Medium' ? 'orange' : 'green' }">
+                                {{ ticket.priority }}
+                            </small>
+                        </h5>
 
-            <div *ngFor="let ticket of uatTickets" class="card ticket-card mb-3">
-                <div class="card-body">
-                    <h5 class="card-title">{{ ticket.title }}<small style="float: right;"
-                            [ngStyle]="{ color: ticket.priority === 'High' ? 'red' : ticket.priority === 'Medium' ? 'orange' : 'green' }">{{ticket.priority}}
-                        </small></h5>
-                    <p class="card-text">{{ ticket.description }}</p>
-                    <p class="card-text">assigned:{{ ticket.assignedDays }}</p>
-                    <div class="ticket-footer">
-                        <span class="badge badge-uat">UAT</span>
-                        <a href="javascript:void(0)" class="view-link"
-                            (click)="openTicketModal(ticket, editTicketTemplate)">View</a>
+                        <p class="card-text description" [class.expanded]="ticket.expanded">
+                            {{ ticket.expanded ? ticket.description : ticket.shortDescription }}
+                        </p>
 
+                        <a *ngIf="ticket.showReadMore" href="javascript:void(0)" class="read-more"
+                            (click)="toggleExpand(ticket)">
+                            {{ ticket.expanded ? 'Read Less' : 'Read More' }}
+                        </a>
 
+                        <p class="card-text">assigned: {{ ticket.assignedDays || 'N/A' }}</p>
+
+                        <div class="ticket-footer">
+                            <span class="badge badge-uat">UAT</span>
+                            <a href="javascript:void(0)" class="view-link"
+                                (click)="openTicketModal(ticket, editTicketTemplate)">View</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Resolved Tickets -->
-        <!-- <div class="col-md-3  mr-4"> -->
-            <div class="col-lg-3 col-md-3 col-sm-12   mr-4">
+            <!-- Resolved Tickets -->
+            <div class="col-lg-3 col-md-3 col-sm-12 mr-4">
+                <h4 class="section-title">Resolved</h4>
+                <div class="custom-line"></div>
 
-            <h4 class="section-title">Resolved</h4>
-            <div class="custom-line"></div> <!-- Black line -->
+                <div *ngFor="let ticket of resolvedTickets" class="card ticket-card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            {{ ticket.title }}
+                            <small style="float: right;" [ngStyle]="{ color: ticket.priority === 'High' ? 'red' : 
+                             ticket.priority === 'Medium' ? 'orange' : 'green' }">
+                                {{ ticket.priority }}
+                            </small>
+                        </h5>
 
-            <div *ngFor="let ticket of resolvedTickets" class="card ticket-card mb-3">
-                <div class="card-body">
-                    <h5 class="card-title">{{ ticket.title }}<small style="float: right;"
-                            [ngStyle]="{ color: ticket.priority === 'High' ? 'red' : ticket.priority === 'Medium' ? 'orange' : 'green' }">{{ticket.priority}}
-                        </small></h5>
-                    <p class="card-text">{{ ticket.description }}</p>
-                    <p class="card-text">assigned:{{ ticket.assignedDays }}</p>
-                    <div class="ticket-footer">
-                        <span class="badge badge-resolved">Resolved</span>
-                        <a href="javascript:void(0)" class="view-link"
-                            (click)="openTicketModal(ticket, editTicketTemplate)">View</a>
+                        <p class="card-text description" [class.expanded]="ticket.expanded">
+                            {{ ticket.expanded ? ticket.description : ticket.shortDescription }}
+                        </p>
 
+                        <a *ngIf="ticket.showReadMore" href="javascript:void(0)" class="read-more"
+                            (click)="toggleExpand(ticket)">
+                            {{ ticket.expanded ? 'Read Less' : 'Read More' }}
+                        </a>
 
+                        <p class="card-text">assigned: {{ ticket.assignedDays || 'N/A' }}</p>
+
+                        <div class="ticket-footer">
+                            <span class="badge badge-resolved">Resolved</span>
+                            <a href="javascript:void(0)" class="view-link"
+                                (click)="openTicketModal(ticket, editTicketTemplate)">View</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- closed Tickets -->
-        <!-- <div class="col-md-3  mr-4"> -->
-            <div class="col-lg-3 col-md-3 col-sm-12   mr-4">
+            <!-- Completed Tickets -->
+            <div class="col-lg-3 col-md-3 col-sm-12 mr-4">
+                <h4 class="section-title">Completed</h4>
+                <div class="custom-line"></div>
 
-            <h4 class="section-title">Closed</h4>
-            <div class="custom-line"></div> <!-- Black line -->
+                <div *ngFor="let ticket of completedTickets" class="card ticket-card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            {{ ticket.title }}
+                            <small style="float: right;" [ngStyle]="{ color: ticket.priority === 'High' ? 'red' : 
+                             ticket.priority === 'Medium' ? 'orange' : 'green' }">
+                                {{ ticket.priority }}
+                            </small>
+                        </h5>
 
-            <div *ngFor="let ticket of completedTickets" class="card ticket-card mb-3">
-                <div class="card-body">
-                    <h5 class="card-title">{{ ticket.title }}<small style="float: right;"
-                            [ngStyle]="{ color: ticket.priority === 'High' ? 'red' : ticket.priority === 'Medium' ? 'orange' : 'green' }">{{ticket.priority}}
-                        </small></h5>
-                    <p class="card-text">{{ ticket.description }}</p>
-                    <p class="card-text">assigned:{{ ticket.assignedDays }}</p>
-                    <div class="ticket-footer">
-                        <span class="badge badge-resolved">Closed</span>
-                        <a href="javascript:void(0)" class="view-link"
-                            (click)="openTicketModal(ticket, editTicketTemplate)">View</a>
+                        <p class="card-text description" [class.expanded]="ticket.expanded">
+                            {{ ticket.expanded ? ticket.description : ticket.shortDescription }}
+                        </p>
 
+                        <a *ngIf="ticket.showReadMore" href="javascript:void(0)" class="read-more"
+                            (click)="toggleExpand(ticket)">
+                            {{ ticket.expanded ? 'Read Less' : 'Read More' }}
+                        </a>
 
+                        <p class="card-text">assigned: {{ ticket.assignedDays || 'N/A' }}</p>
+
+                        <div class="ticket-footer">
+                            <span class="badge badge-completed">Completed</span>
+                            <a href="javascript:void(0)" class="view-link"
+                                (click)="openTicketModal(ticket, editTicketTemplate)">View</a>
+                        </div>
                     </div>
                 </div>
             </div>
+
         </div>
-
-
-      
-
-
-    </div>   
     </div>
 </div>
 

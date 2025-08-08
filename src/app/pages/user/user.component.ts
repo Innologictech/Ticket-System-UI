@@ -1,4 +1,4 @@
-import { Component, NgModule, OnInit } from '@angular/core';
+import { Component, ElementRef, NgModule, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
 import { LoaderService } from 'src/app/core/services/loader.service';
 import { GeneralserviceService } from 'src/app/generalservice.service';
@@ -26,6 +26,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 
 export class UserComponent {
+  @ViewChildren('descRef') descRefs: QueryList<ElementRef>;
   ticketData: any[] = [];
   holdTickets: any[] = [];
   uatTickets: any[] = [];
@@ -153,24 +154,75 @@ export class UserComponent {
     this.selectedUpload2Base64 = null;
     this.bugTicketForm.get('upload2')?.reset();
   }
-  getTickets(): void {
+  // getTickets(): void {
+  //   this.loaderservice.showLoader();
+  //   this.service.GetTicketDetails().subscribe(
+  //     (response: any) => {
+  //       console.log('Ticket data:', response);
+  //       this.ticketData = response.data;
+
+  //       // Group tickets based on status (case-insensitive)
+  //       this.assignedTickets = this.ticketData.filter(ticket => ticket.status.toLowerCase() === 'assigned');
+  //       this.inProgressTickets = this.ticketData.filter(ticket => ticket.status.toLowerCase() === 'inprocess');
+  //       // this.holdTickets = this.ticketData.filter(ticket => ticket.status.toLowerCase() === 'hold-cust'||'hold-ilt'||'clientaction'||'softwarechange'||'thirdparty');
+  //       this.holdTickets = this.ticketData.filter(ticket =>
+  //         ['hold-cust', 'hold-ilt', 'clientaction', 'softwarechange', 'thirdparty'].includes(ticket.status.toLowerCase())
+  //       );
+
+  //       this.uatTickets = this.ticketData.filter(ticket => ticket.status.toLowerCase() === 'uat');
+  //       this.resolvedTickets = this.ticketData.filter(ticket => ticket.status.toLowerCase() === 'resolved');
+  //       this.completedTickets = this.ticketData.filter(ticket => ticket.status.toLowerCase() === 'completed');
+
+  //       this.loaderservice.hideLoader();
+  //     },
+  //     (error) => {
+  //       console.error('Error fetching tickets', error);
+  //       this.loaderservice.hideLoader();
+  //     }
+  //   );
+  // }
+   getTickets(): void {
     this.loaderservice.showLoader();
     this.service.GetTicketDetails().subscribe(
       (response: any) => {
         console.log('Ticket data:', response);
-        this.ticketData = response.data;
+        this.ticketData = response.data || [];
 
-        // Group tickets based on status (case-insensitive)
-        this.assignedTickets = this.ticketData.filter(ticket => ticket.status.toLowerCase() === 'assigned');
-        this.inProgressTickets = this.ticketData.filter(ticket => ticket.status.toLowerCase() === 'inprocess');
-        // this.holdTickets = this.ticketData.filter(ticket => ticket.status.toLowerCase() === 'hold-cust'||'hold-ilt'||'clientaction'||'softwarechange'||'thirdparty');
-        this.holdTickets = this.ticketData.filter(ticket =>
-          ['hold-cust', 'hold-ilt', 'clientaction', 'softwarechange', 'thirdparty'].includes(ticket.status.toLowerCase())
+        const processTickets = (tickets: any[]) => {
+          return tickets.map(ticket => {
+            const needsReadMore = ticket.description?.length > 100;
+            return {
+              ...ticket,
+              expanded: false,
+              showReadMore: needsReadMore,
+              shortDescription: needsReadMore 
+                ? ticket.description.substring(0, 100) + '...'
+                : ticket.description
+            };
+          });
+        };
+
+        this.assignedTickets = processTickets(
+          this.ticketData.filter(t => t.status?.toLowerCase() === 'assigned')
         );
-
-        this.uatTickets = this.ticketData.filter(ticket => ticket.status.toLowerCase() === 'uat');
-        this.resolvedTickets = this.ticketData.filter(ticket => ticket.status.toLowerCase() === 'resolved');
-        this.completedTickets = this.ticketData.filter(ticket => ticket.status.toLowerCase() === 'completed');
+        this.inProgressTickets = processTickets(
+          this.ticketData.filter(t => t.status?.toLowerCase() === 'inprocess')
+        );
+        this.holdTickets = processTickets(
+          this.ticketData.filter(t => 
+            ['hold-cust', 'hold-ilt', 'clientaction', 'softwarechange', 'thirdparty']
+              .includes(t.status?.toLowerCase())
+          )
+        );
+        this.uatTickets = processTickets(
+          this.ticketData.filter(t => t.status?.toLowerCase() === 'uat')
+        );
+        this.resolvedTickets = processTickets(
+          this.ticketData.filter(t => t.status?.toLowerCase() === 'resolved')
+        );
+        this.completedTickets = processTickets(
+          this.ticketData.filter(t => t.status?.toLowerCase() === 'completed')
+        );
 
         this.loaderservice.hideLoader();
       },
@@ -180,6 +232,39 @@ export class UserComponent {
       }
     );
   }
+getShortDescription(description: string): string {
+  const maxLength = 100; // Adjust based on your needs
+  return description.length > maxLength 
+    ? description.substring(0, maxLength) + '...' 
+    : description;
+}
+// Add these methods to your component class
+isOverflow(element: HTMLElement): boolean {
+  if (!element) return false;
+  const lineHeight = parseInt(getComputedStyle(element).lineHeight);
+  return element.scrollHeight > lineHeight * 2;
+}
+
+toggleExpand(ticket: any) {
+    ticket.expanded = !ticket.expanded;
+    // If you need to calculate whether to show "Read More" based on content length
+    ticket.showReadMore = ticket.description.length > 100; // adjust threshold as needed
+}
+ngAfterViewInit() {
+  this.descRefs.forEach((descEl, index) => {
+    const el = descEl.nativeElement;
+    const lineHeight = parseFloat(getComputedStyle(el).lineHeight);
+    const lines = el.scrollHeight / lineHeight;
+
+    const ticket = this.assignedTickets[index]; // adjust for each section
+    ticket.showReadMore = lines > 2;
+  });
+}
+
+
+checkIfNeedsReadMore(description: string): boolean {
+  return description.length > 100; // Adjust threshold as needed
+}
 
   getAttachmentUrl(ticket: any): string {
     console.log("ticketttttttttt", ticket);
